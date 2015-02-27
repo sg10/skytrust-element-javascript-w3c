@@ -31,6 +31,11 @@ function base64ToArrayBuffer(base64) {
 }
 
 
+
+/* 
+                --------------- UNUSED ----------------------
+*/
+
 /**
  * Loads a polyfill for promises if not available. Uses https://github.com/taylorhakes/promise-polyfill
  * @method loadPromisePolyfill

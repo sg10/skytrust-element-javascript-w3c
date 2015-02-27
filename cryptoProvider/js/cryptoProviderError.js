@@ -29,6 +29,19 @@ function NoSuchProviderError() {
 }
 NoSuchProviderError.prototype = Object.create(Error.prototype);
 
+/**
+ * [UnauthorizedError description]
+ */
+function UnauthorizedError() {
+    Error.call(this);
+    this.name = "UnauthorizedError";
+    this.message = "Please authorize, no active or invalid session."
+    this.stack = (new Error()).stack;
+    this.toString = function() {return "Error: " + this.name + ": " + this.message;}
+}
+UnauthorizedError.prototype = Object.create(Error.prototype);
+
+
 // Errors defined by the W3C Crypto API
 // See http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-Exceptions
 // Errors already defined as DOMException have been equipped with the corresponding

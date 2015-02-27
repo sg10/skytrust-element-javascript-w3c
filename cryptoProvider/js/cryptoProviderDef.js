@@ -9,10 +9,10 @@ window.getCryptoProviderByName = function(provider){
     switch (provider){
     case "w3c":
         return window.crypto || window.msCrypto;
-    case "cordova-iaik":
-        return new CordovaCryptoProvider();
-//    case "crysil": 
-//        return new CrysilCryptoProvider();    
+    // case "cordova-iaik":
+    //     return new CordovaCryptoProvider();
+   case "crysil": 
+       return new CrySILCryptoProvider();    
     default:
         throw new NoSuchProviderError();
     }
