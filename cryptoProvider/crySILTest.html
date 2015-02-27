@@ -3,29 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>crySIL Test Page</title>
+    <title>CrySIL Test Page</title>
 
-    <script type="text/javascript" src="js/lib/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="js/crySILConfig.js"></script>
-    <script type="text/javascript" src="js/cryptoProviderError.js"></script>
-    <script type="text/javascript" src="js/cryptoProviderUtil.js"></script>
-    <script type="text/javascript" src="js/crySILCryptoProvider.js"></script>
-    <script type="text/javascript" src="js/cryptoProviderDef.js"></script>
-
+ <!--    <script type="text/javascript" src="js/CrySIL/providerDef.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-2.1.3.min.js"></script>-->
+    <script data-main="js/main" src="js/lib/require.js"></script>
 </head>
 
 <body>
 
-<script type="text/javascript">
-	
-var cp = window.getCryptoProviderByName("crysil");
+<h1>CrySIL Test Page</h1>
 
-var cryptoKey1 = new cp.subtle.CryptoKey("leaf", "122", "RSA-OAEP", ["encrypt", "decrypt"]);
+<div style="float: left">
 
-console.log(cp.subtle.encrypt("RSA-OAEP", cryptoKey1, "fischers fritz fischt frische fische"));
-// console.log(cp.subtle.decrypt("algo", "key", "data"));
+    <table>
+        <thead>
+            <caption>Encrypt/Decrypt Request</caption>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <textarea id="fieldPlain" cols="100" rows="5"></textarea>
+                </td>
+                <td>
+                    <input type="button" id="btnEncrypt" value="encrypt" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="fieldEncrypted" cols="100" rows="5"></textarea>
+                </td>
+                <td>
+                    <input type="button" id="btnDecrypt" value="decrypt" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="fieldDecrypted" cols="100" rows="5"></textarea>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
-</script>
+</div>
+
+<div style="float: left">
+
+    <p>Server URL: <span id="serverURL"></span></p>
+
+</div>
 
 
 </body>
