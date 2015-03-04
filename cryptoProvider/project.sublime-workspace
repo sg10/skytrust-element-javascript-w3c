@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"compon",
+				"components〔variable〕"
+			],
+			[
+				"debug",
+				"debugPrintComponents〔function〕"
+			],
+			[
+				"compo",
+				"component〔argument〕"
+			],
+			[
+				"componen",
+				"components〔argument〕"
+			],
+			[
+				"setOpera",
+				"setOperationIfValid"
+			],
+			[
+				"setData",
+				"setDataIfValid"
+			],
+			[
+				"ini",
+				"initOperation"
+			],
+			[
 				"Cry",
 				"CryptoKey〔variable〕"
 			],
@@ -96,75 +124,54 @@
 	"buffers":
 	[
 		{
-			"file": "crySILTest.html",
-			"settings":
-			{
-				"buffer_size": 1393,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "js/main.js",
 			"settings":
 			{
-				"buffer_size": 1564,
+				"buffer_size": 1410,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/crySIL/providerDef.js",
+			"file": "js/CrySIL/crysil-node/node.js",
 			"settings":
 			{
-				"buffer_size": 790,
+				"buffer_size": 2376,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/crySIL/provider.js",
+			"contents": "define(function(require) {\n\n\n    // -------------  load modules  -------------------\n\n    var $ = require('jQuery');\n\n    var E = require('./error');\n    var Config = require('./config');\n    var CryptoKey = require('./key');\n    var CrySILNode = require('./node');\n\n\n    // -------------  private  ------------------------\n\n    var CrySILCryptoSubtle = function (){};\n\n    var crySILNode = new CrySILNode();\n\n    // -------------  public  -------------------------\n\n    var CryptoProvider = function() {\n        this.subtle = new CrySILCryptoSubtle();\n    }\n\n    CrySILCryptoSubtle.prototype.CryptoKey = CryptoKey.create;\n\n\n    /**\n     * The encrypt method returns a new Promise object that will \n     * encrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.\n     * @method encrypt\n     * @param {} algorithm\n     * @param {} key\n     * @param {} data\n     * @return {Promise|ciphertext} \n     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is \"encrypt\", \n     * if an error occurred during normalization of algorithm\n     */\n    CrySILCryptoSubtle.prototype.encrypt = function(algorithm, key, data){\n        crySILNode.\n        \n    }\n\n\n    /**\n     * The decrypt method returns a new Promise object that will \n     * decrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.\n     * @method decrypt\n     * @param {} algorithm\n     * @param {} key\n     * @param {} data\n     * @return {Promise|plaintext} \n     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is \"decrypt\", \n     * if an error occurred during normalization of algorithm\n     */\n    CrySILCryptoSubtle.prototype.decrypt = function(algorithm, key, data){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * The sign method returns a new Promise object that will \n     * sign data using the specified AlgorithmIdentifier with the supplied CryptoKey.\n     * @method sign\n     * @param {} algorithm\n     * @param {} key\n     * @param {} data\n     * @return {Promise|result} \n     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is \"sign\", \n     * if an error occurred during normalization of algorithm\n     */\n    CrySILCryptoSubtle.prototype.sign = function(algorithm, key, data){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * The verify method returns a new Promise object that will \n     * verify data using the specified AlgorithmIdentifier with the supplied CryptoKey.\n     * @method verify\n     * @param {} algorithm\n     * @param {} key\n     * @param {} signature\n     * @param {} data\n     * @return {Promise|result} \n     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is \"verify\", \n     * if an error occurred during normalization of algorithm \n     */\n    CrySILCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * The digest method returns a new Promise object that will \n     * digest data using the specified AlgorithmIdentifier.\n     * @method digest\n     * @param {} algorithm\n     * @param {} data\n     * @return {Promise|result} \n     */\n    CrySILCryptoSubtle.prototype.digest = function(algorithm, data){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * Generates a new CryptoKey or CryptoKeyPair object.\n     * @method generateKey\n     * @param {} algorithm\n     * @param {} extractable\n     * @param {} keyUsages\n     * @return {Promise|result} Let result be the result of executing the generate key operation specified by normalizedAlgorithm using algorithm, extractable and usages. Result can be either a CryptoKey or a CryptoKeyPair\n     * @throws SyntaxError if result is a CryptoKey object and if the type internal slot of result is \"secret\" or \"private\" and usages is empty,\n     * or if result is a CryptoKeyPair object and if the usages internal slot of the privateKey attribute of result is the empty sequence\n     */\n    CrySILCryptoSubtle.prototype.generateKey = function(algorithm, extractable, keyUsages){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * Description\n     * @method deriveKey\n     * @param {} algorithm\n     * @param {} baseKey\n     * @param {} derivedKeyType\n     * @param {} extractable\n     * @param {} keyUsages\n     * @return {Promise|result} Let result be the result of executing the import key operation specified by normalizedDerivedKeyAlgorithm using \"raw\" as format, secret as keyData, derivedKeyType as algorithm and using extractable and usages.\n     * @throws NotSupportedError if the name member of normalizedAlgorithm does not identify a registered algorithm that supports the derive bits operation,\n     * or if the name member of normalizedDerivedKeyAlgorithm does not identify a registered algorithm that supports the get key length operation\n     * @throws InvalidAccessError if the name member of the normalized algorithm is not equal to the name attribute of the algorithm internal slot of baseKey,\n     * or if the usages internal slot of baseKey does not contain an entry that is \"deriveKey\"\n     * @throws SyntaxError if the type internal slot of result is \"secret\" or \"private\" and usages is empty\n     */\n    CrySILCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * Derives bits from a given baseKey.\n     * @method deriveBits\n     * @param {} algorithm\n     * @param {} baseKey\n     * @param {} length\n     * @return {Promise|result} Let result be a new ArrayBuffer containing the result of executing the derive bits operation specified by normalizedAlgorithm using baseKey, algorithm and length.\n     * @throws InvalidAccessError if the name member of the normalized algorithm is not equal to the name attribute of the algorithm internal slot of baseKey,\n     * or if the usages internal slot of baseKey does not contain an entry that is \"deriveBits\"\n     */\n    CrySILCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){\n        throw new E.NotYetImplementedException();\n    };\n\n\n    /**\n     * Exports a key.\n     * @method exportKey\n     * @param {} format\n     * @param {} key\n     * @return {Promise|result} Let result be the result of performing the export key operation specified by the algorithm internal slot of key using key and format.\n     * @throws InvalidAccessError if the extractable internal slot of key is false\n     */\n    CrySILCryptoSubtle.prototype.exportKey = function(format, key){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * Wrap key method.\n     * @method wrapKey\n     * @param {} format\n     * @param {} key\n     * @param {} wrappingKey\n     * @param {} wrapAlgorithm\n     * @return {Promise|result} \n     * @throws InvalidAccessError if the usages internal slot of wrappingKey does not contain an entry that is \"wrapKey\"\n     * @throws NotSupportedError If the name member of normalized algorithm does not identify a registered algorithm that supports the encrypt or wrap key operation,\n     * or if the name member of normalized algorithm is not equal to the name attribute of the algorithm internal slot of wrappingKey,\n     * or if the algorithm identified by the algorithm internal slot of key does not support the export key operation,\n     * or if the extractable internal slot of key is false\n     */\n    CrySILCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){\n        throw new E.NotYetImplementedException();\n    };\n\n    /**\n     * Unwrap key method.\n     * @method unwrapKey\n     * @param {} format\n     * @param {} wrappedKey\n     * @param {} unwrappingKey\n     * @param {} unwrapAlgorithm\n     * @param {} unwrappedKeyAlgorithm\n     * @param {} extractable\n     * @param {} keyUsages\n     * @return {Promise|result} \n     * @throws InvalidAccessError\n     * @throws NotSupportedError\n     * @throws Syntax Error if the type internal slot of result is \"secret\" or \"private\" and usages is empty\n     */\n    CrySILCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){\n        throw new E.NotYetImplementedException();\n    };\n\n\n\n    return CryptoProvider;\n\n});",
+			"file": "js/CrySIL/provider.js",
+			"file_size": 8452,
+			"file_write_time": 130698705954775642,
 			"settings":
 			{
-				"buffer_size": 11505,
+				"buffer_size": 8471,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "js/crySIL/authentication.js",
+			"file": "js/CrySIL/crysil-node/communication.js",
 			"settings":
 			{
-				"buffer_size": 46,
+				"buffer_size": 1313,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/crySIL/util.js",
+			"file": "js/CrySIL/crysil-node/receiver.js",
 			"settings":
 			{
-				"buffer_size": 1101,
+				"buffer_size": 2824,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/crySIL/keyStore.js",
+			"file": "js/CrySIL/crysil-node/crypto-object.js",
 			"settings":
 			{
-				"buffer_size": 46,
+				"buffer_size": 2071,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/crySIL/key.js",
-			"settings":
-			{
-				"buffer_size": 1551,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/crySIL/error.js",
-			"settings":
-			{
-				"buffer_size": 6523,
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -247,10 +254,40 @@
 	[
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/lib"
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node"
 	],
 	"file_history":
 	[
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/providerDef.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/error.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/key.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/keyStore.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/util.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/crypto-object.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/component.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/actorplus.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/authentication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/communication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/providerDef.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/main.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/receiver.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/node.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/provider.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/provider.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/.subl384.tmp",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/crySILTest.html",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/.subl876.tmp",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/actor+.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node/abstract-component.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/authentication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/node-crypto-object.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/abstract-node-component.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/node-communication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/provider.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/node-receiver.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/node-auth.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/node-actor+.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/.subl65f.tmp",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/.subl6d4.tmp",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySIL/config.js",
@@ -259,8 +296,6 @@
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySILConfig.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/cryptoProviderError.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/cryptoProviderUtil.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/crySILTest.html",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/main.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crySILCryptoProvider.js",
 		"/C/Users/Stefan/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/Promise.min.js",
@@ -290,6 +325,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"provider",
+			"E.E.",
+			"Receiver",
+			"onReceive",
+			"getNewName",
+			"node1.Component",
+			"c2",
+			"c1",
+			"onReceived",
 			"NotYetImplementedException",
 			"\n<",
 			"crysil",
@@ -313,6 +357,13 @@
 		"regex": false,
 		"replace_history":
 		[
+			"E.",
+			"Communication",
+			"getNewID",
+			"Component",
+			"cAuthentication",
+			"cReceiver",
+			"onReceive",
 			"E.NotYetImplementedException",
 			"CrySIL",
 			"",
@@ -339,207 +390,24 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "crySILTest.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1393,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								391,
-								391
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "js/main.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1564,
+						"buffer_size": 1410,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								777,
-								777
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 57.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "js/crySIL/providerDef.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 790,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								603,
-								603
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "js/crySIL/provider.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11505,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3159,
-								3159
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1596.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "js/crySIL/authentication.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 46,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								46,
-								46
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "js/crySIL/util.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1101,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								572,
-								591
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "js/crySIL/keyStore.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 46,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								46
+								569,
+								569
 							]
 						],
 						"settings":
@@ -555,49 +423,50 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "js/crySIL/key.js",
+					"buffer": 1,
+					"file": "js/CrySIL/crysil-node/node.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1551,
+						"buffer_size": 2376,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1415,
-								1415
+								2330,
+								2330
 							]
 						],
 						"settings":
 						{
 							"auto_complete": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
-						"translation.x": -0.0,
-						"translation.y": 342.0,
+						"translation.x": 0.0,
+						"translation.y": 1425.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "js/crySIL/error.js",
+					"buffer": 2,
+					"file": "js/CrySIL/provider.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6523,
+						"buffer_size": 8471,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6499,
-								6499
+								1197,
+								1197
 							]
 						],
 						"settings":
@@ -607,11 +476,101 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 57.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "js/CrySIL/crysil-node/communication.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1313,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1088,
+								1094
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 171.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "js/CrySIL/crysil-node/receiver.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2824,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1172,
+								1172
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1145.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "js/CrySIL/crysil-node/crypto-object.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 2071,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 798.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]

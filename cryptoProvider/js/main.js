@@ -1,7 +1,4 @@
-// For any third party dependencies, like jQuery, place them in the lib folder.
-// Configure loading modules from the lib directory,
-// except for 'app' ones, which are in a sibling
-// directory.
+
 requirejs.config({
 	baseUrl: 'js/CrySIL/',
     paths: {
@@ -14,44 +11,44 @@ requirejs.config({
     }
 });
 
-// Start loading the main app file. Put all of
-// your application logic in there.
-requirejs([ 'providerDef', 'jQuery', 'config' ], 
-	function(providerDef, $, config) {
+requirejs([ 'providerDef' ], 
+
+	function(providerDef) {
 		// make CrySIL Crypto Provider accessible via window object 		
 		window.getCryptoProviderByName = providerDef.getCryptoProviderByName;
 
 		// init test fields
 		initTestPage();
+
 	});
+
+
 
 
 function initTestPage() {
 
-	var config = require('config');
+	var Config = require('./config');
+	var $ = require('jQuery');
 
 	var provider = window.getCryptoProviderByName("CrySIL");
-    console.log(" - provider - ");
-    console.log(provider);
 
     var algo = "RSA-OAEP";
 
     var cryptoKey1 = new provider.subtle.CryptoKey("leaf", "122", algo, ["encrypt", "decrypt"]);
-    console.log(" - key - ");
-    console.log(cryptoKey1);
+    console.log("CryptoKey: [" + cryptoKey1.id + ", " + cryptoKey1.subId + "]");
 
     // buttons
 	$('#btnEncrypt').on('click', function() {
-		provider.subtle.encrypt(algo, cryptoKey1, $('#fieldPlain').val)
+		provider.subtle.encrypt(algo, cryptoKey1, $('#fieldPlain').val())
          .then(function(encrypted) { $('#fieldEncrypted').val(encrypted) });
 	});
 
 	$('#btnDecrypt').on('click', function() {
-		provider.subtle.decrypt(algo, cryptoKey1, $('#fieldEncrypted').val)
+		provider.subtle.decrypt(algo, cryptoKey1, $('#fieldEncrypted').val())
          .then(function(decrypted) { $('#fieldDecrypted').val(decrypted) });
 	});
 
 	// server config
-	$('#serverURL').html(config.server);
+	$('#serverURL').html(Config.server);
 
 }

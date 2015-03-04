@@ -1,6 +1,7 @@
 define(function(require) {
 
-    var P = require("./provider");
+    var CrySILCryptoProvider = require('./provider');
+
 
     /**
      * Returns a cryptographic provider.
@@ -9,20 +10,20 @@ define(function(require) {
      * @return provider
      * @throws NoSuchProviderError if provider does not exist
      */
-    var getCryptoProviderByName = function(cryptoProvider){
+    var getByName = function(cryptoProvider){
 
         switch (cryptoProvider){
             case "w3c":
                 return window.crypto || window.msCrypto;
             case "CrySIL": 
-               return new P.provider();    
+               return new CrySILCryptoProvider();    
             default:
-                throw new NoSuchProviderError();
+                throw new NoSuchProviderError(); // TODO: check
         }
     };
 
     return {
-        "getCryptoProviderByName": getCryptoProviderByName
+        "getCryptoProviderByName": getByName
     }
 
 });
