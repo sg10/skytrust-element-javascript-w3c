@@ -1,6 +1,6 @@
 
 requirejs.config({
-	baseUrl: 'js/CrySIL/',
+	baseUrl: 'js/crysil/',
     paths: {
         'jQuery': '../lib/jquery-2.1.3.min',
     },
@@ -19,7 +19,6 @@ requirejs([ 'providerDef' ],
 
 		// init test fields
 		initTestPage();
-
 	});
 
 
@@ -47,8 +46,5 @@ function initTestPage() {
 		provider.subtle.decrypt(algo, cryptoKey1, $('#fieldEncrypted').val())
          .then(function(decrypted) { $('#fieldDecrypted').val(decrypted) });
 	});
-
-	// server config
-	$('#serverURL').html(Config.server);
 
 }

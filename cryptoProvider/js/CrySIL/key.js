@@ -32,16 +32,16 @@ define(function(require) {
      */
     var isValidCryptoKey = function(key, operation) {
         if( !( key instanceof CryptoKey ) ) {
-            console.log("cryptoKey passed is not a valid CrySIL CryptoKey object");
+            console.log("[w3c] cryptoKey passed is not a valid CrySIL CryptoKey object");
             return false;
         }
 
         if( $.inArray(operation, key.usages) === -1 ) {
-            console.log("cryptoKey passed cannot be used for this operation");
+            console.log("[w3c] cryptoKey passed cannot be used for this operation");
             return false;
         }
 
-        console.log("CryptoKey passed is valid");
+        console.log("[w3c] CryptoKey passed is valid");
 
         return true;
     }

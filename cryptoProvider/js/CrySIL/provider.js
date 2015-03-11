@@ -5,11 +5,12 @@ define(function(require) {
 
     var $ = require('jQuery');
 
+    var CrySILNode = require('./crysil-node-w3c/node');
+
     var E = require('./error');
     var Config = require('./config');
     var CryptoKey = require('./key');
-    var CrySILNode = require('./crysil-node/node');
-
+    
 
     // -------------  private  ------------------------
 
@@ -38,8 +39,7 @@ define(function(require) {
      * if an error occurred during normalization of algorithm
      */
     CrySILCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
-        console.log("-> CrySILCryptoSubtle.prototype.encrypt()")
-        crySILNode.debugPrintComponents();
+        console.log("[w3c] -> CrySILCryptoSubtle.prototype.encrypt()")
         
         return crySILNode.operation.encrypt(algorithm, key, data);
     }

@@ -7,7 +7,13 @@
 
  <!--    <script type="text/javascript" src="js/CrySIL/providerDef.js"></script>
     <script type="text/javascript" src="js/lib/jquery-2.1.3.min.js"></script>-->
-    <script data-main="js/main" src="js/lib/require.js"></script>
+    <script data-main="js/load-w3c" src="js/lib/require.js"></script>
+    <style type="text/css">
+        iframe.crysil-iframe {
+            border: 1px solid black;
+            overflow: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -46,11 +52,7 @@
         </tbody>
     </table>
 
-</div>
-
-<div style="float: left">
-
-    <p>Server URL: <span id="serverURL"></span></p>
+    <!-- iframe is created dynamically -->
 
 </div>
 

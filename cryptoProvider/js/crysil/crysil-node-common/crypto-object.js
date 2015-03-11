@@ -8,8 +8,10 @@ define(function(require) {
 
     var header = null;
     var payload = null;
+    var postponedObject = null;
 
-    // var transactionInfo = { id : 0, from : "", to : "" };
+    var self = null;
+
 
     // ---------- PRIVATE ----------------------------
 
@@ -17,16 +19,10 @@ define(function(require) {
     function CryptoKey() { } // dummy class for prototype lookup
 
     var isValidHeader = function(h) {
-
-        console.log("[ header validation not yet implemented ]");
-
         return true;
     }
 
     var isValidPayload = function(h) {
-
-        console.log("[ payload validation not yet implemented ]");
-
         return true;
     }
 
@@ -51,12 +47,6 @@ define(function(require) {
         payload = JSON.parse(JSON.stringify(p));
     }
 
-    // var setTransaction = function(from, to, id) {
-    //     transactionInfo.from = from;
-    //     transactionInfo.to = to;
-    //     transactionInfo.id = id;
-    // }
-
     var json = function() {
         return JSON.stringify({
             header : header,
@@ -64,24 +54,25 @@ define(function(require) {
         })
     }
 
-    return function(payload) {
+    return function(p) {
 
-        setPayload(payload);
+        if(p) {
+            setPayload(p);
+        }
+
+        self = this;
 
         return $.extend(this, {
-            getPayload :        function()     { return data; },
+            getPayload :        function() { return payload; },
             setPayload :        setPayload,
 
-            getHeader :         function()     { return header; },
+            getHeader :         function() { return header; },
             setHeader :         setHeader,
-
-            // getTransaction :    function()     { return transactionInfo; },      
-            // setTransaction :    setTransaction,
 
             json :              json,
 
-            resolve :           function()     {},
-            reject :            function()     {}
+            resolve :           function()     {}, // for promise
+            reject :            function()     {}  // for promise
         });
     };
 
