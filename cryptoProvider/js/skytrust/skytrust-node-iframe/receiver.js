@@ -4,8 +4,8 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../crysil-node-common/component');
-	var CryptoObject = require('../crysil-node-common/crypto-object');
+	var Component = require('../skytrust-node-common/component');
+	var CryptoObject = require('../skytrust-node-common/crypto-object');
 	var Config = require('../config');
 	var E = require('../error');
 
@@ -43,7 +43,7 @@ define(function(require) {
 
         object.reject = function(error) {
             console.log("[iframe] sending post message back ...");
-            object.payload.nodeError = error.toString(); // make crysil protocol conform
+            object.payload.nodeError = error.toString(); // make skytrust protocol conform
             event.source.postMessage(this.json(), "*"); // remove *
         };
 

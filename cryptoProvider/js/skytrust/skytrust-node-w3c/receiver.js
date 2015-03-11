@@ -4,9 +4,9 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../crysil-node-common/component');
-	var CryptoObject = require('../crysil-node-common/crypto-object');
-    var Protocol = require('../crysil-node-common/protocol');
+	var Component = require('../skytrust-node-common/component');
+	var CryptoObject = require('../skytrust-node-common/crypto-object');
+    var Protocol = require('../skytrust-node-common/protocol');
 	var Config = require('../config');
 	var E = require('../error');
 
@@ -69,8 +69,36 @@ define(function(require) {
         });
 	}
 
+    var decrypt = function(algorithm, key, data){
+        return new Promise(function(resolve, reject){
+
+            // normalize!
+            if(algorithm.name) {
+                algorithm = algorithm.name;
+            }
+
+            if( !isValidAlgorithm(algorithm, 'encrypt')) { // encrypt same as decrypt
+                reject(new E.NotSupportedError());
+            }
+            else if( !isValidData(data)) {
+                reject(new E.DataError());
+            }
+
+            console.log("[w3c] data to decrypt: " + data);
+    
+            var object = new CryptoObject();
+            var payload = Protocol.setDecryptRequest(object, algorithm, key.id, key.subId, data);       
+            object.resolve = resolve;
+            object.reject = reject;
+
+            self.send('communication', object);
+        });
+    }
+
+
 	var operation = {
-		encrypt : encrypt
+		encrypt : encrypt,
+        decrypt : decrypt
 	};
 
 	var Receiver = function() {
@@ -95,10 +123,10 @@ define(function(require) {
 
             try { // catch invalid response format
                 if("decryptResponse" == responseType) {
-                    object.resolve(payload.plainData[0]);
+                    object.resolve( window.atob(payload.plainData[0]) );
                 } 
                 else if("encryptResponse" == responseType) {
-                    object.resolve(payload.encryptedData[0]);
+                    object.resolve( payload.encryptedData[0] );
                 }
                 else {
                     object.reject(new Error("SkyTrust request failed - unknown response type?"));

@@ -1,6 +1,6 @@
 
 requirejs.config({
-	baseUrl: 'crysil/',
+	baseUrl: 'skytrust/',
     paths: {
         'jQuery': '../lib/jquery-2.1.3.min',
     },
@@ -12,7 +12,7 @@ requirejs.config({
 });
 
 
-requirejs(['config', 'jQuery', 'crysil-node-iframe/node'], function (config, $, Node) {
+requirejs(['config', 'jQuery', 'skytrust-node-iframe/node'], function (config, $, Node) {
 	init(config, $, Node);
 });
 

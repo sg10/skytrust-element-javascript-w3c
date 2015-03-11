@@ -101,6 +101,26 @@ define(function(require) {
         }
     }
 
+    var setDecryptRequest = function(object, algorithm, id, subId, data) {
+        var payload =  {
+            "type" : "decryptRequest",
+            "decryptionKey" : {
+                "type" : "handle",
+                "id" : "leaf",
+                "subId" : "122"
+            },
+            "algorithm" : algorithm,
+            "encryptedData" : [ data ]
+  }
+
+        if(object.setPayload) {
+            object.setPayload(payload);
+        }
+        else {
+            throw Error("not supported yet"); // not a whole object, payload only
+        }
+    }
+
 
     var isAuthRequired = function(object) {
         var payload = object.getPayload();
@@ -145,6 +165,7 @@ define(function(require) {
         getSessionId : getSessionId,
 
         setEncryptRequest : setEncryptRequest,
+        setDecryptRequest : setDecryptRequest,
 
         isAuthRequired : isAuthRequired,
         getAuthTypes : getAuthTypes,

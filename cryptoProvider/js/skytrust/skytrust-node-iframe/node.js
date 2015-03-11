@@ -4,9 +4,9 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../crysil-node-common/component'); // base
-	var CryptoObject = require('../crysil-node-common/crypto-object');
-	var Router = require('../crysil-node-common/router');
+	var Component = require('../skytrust-node-common/component'); // base
+	var CryptoObject = require('../skytrust-node-common/crypto-object');
+	var Router = require('../skytrust-node-common/router');
 	var Receiver = require('./receiver');
 	var ActorPlus = require('./actorplus');
 	var Authentication = require('./authentication');
@@ -35,7 +35,7 @@ define(function(require) {
 	};
 
 	var getNewNodeID = function() {
-		return "crysil-node-" + Math.round(Math.random()*1E8); // make unique
+		return "skytrust-node-" + Math.round(Math.random()*1E8); // make unique
 	};
 
 

@@ -5,7 +5,7 @@ define(function(require) {
 
     var $ = require('jQuery');
 
-    var CrySILNode = require('./crysil-node-w3c/node');
+    var SkyTrustNode = require('./skytrust-node-w3c/node');
 
     var E = require('./error');
     var Config = require('./config');
@@ -14,17 +14,17 @@ define(function(require) {
 
     // -------------  private  ------------------------
 
-    var CrySILCryptoSubtle = function (){};
+    var SkyTrustCryptoSubtle = function (){};
 
-    var crySILNode = new CrySILNode();
+    var skyTrustNode = new SkyTrustNode();
 
     // -------------  public  -------------------------
 
     var CryptoProvider = function() {
-        this.subtle = new CrySILCryptoSubtle();
+        this.subtle = new SkyTrustCryptoSubtle();
     }
 
-    CrySILCryptoSubtle.prototype.CryptoKey = CryptoKey.create;
+    SkyTrustCryptoSubtle.prototype.CryptoKey = CryptoKey.create;
 
 
     /**
@@ -38,10 +38,10 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "encrypt", 
      * if an error occurred during normalization of algorithm
      */
-    CrySILCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
-        console.log("[w3c] -> CrySILCryptoSubtle.prototype.encrypt()")
+    SkyTrustCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.encrypt()")
         
-        return crySILNode.operation.encrypt(algorithm, key, data);
+        return skyTrustNode.operation.encrypt(algorithm, key, data);
     }
 
 
@@ -56,8 +56,10 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "decrypt", 
      * if an error occurred during normalization of algorithm
      */
-    CrySILCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
-        throw new E.NotYetImplementedException();
+    SkyTrustCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decrypt()")
+        
+        return skyTrustNode.operation.decrypt(algorithm, key, data);
     };
 
     /**
@@ -71,7 +73,7 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "sign", 
      * if an error occurred during normalization of algorithm
      */
-    CrySILCryptoSubtle.prototype.sign = function(algorithm, key, data){
+    SkyTrustCryptoSubtle.prototype.sign = function(algorithm, key, data){
         throw new E.NotYetImplementedException();
     };
 
@@ -87,7 +89,7 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "verify", 
      * if an error occurred during normalization of algorithm 
      */
-    CrySILCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
+    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
         throw new E.NotYetImplementedException();
     };
 
@@ -99,7 +101,7 @@ define(function(require) {
      * @param {} data
      * @return {Promise|result} 
      */
-    CrySILCryptoSubtle.prototype.digest = function(algorithm, data){
+    SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){
         throw new E.NotYetImplementedException();
     };
 
@@ -113,7 +115,7 @@ define(function(require) {
      * @throws SyntaxError if result is a CryptoKey object and if the type internal slot of result is "secret" or "private" and usages is empty,
      * or if result is a CryptoKeyPair object and if the usages internal slot of the privateKey attribute of result is the empty sequence
      */
-    CrySILCryptoSubtle.prototype.generateKey = function(algorithm, extractable, keyUsages){
+    SkyTrustCryptoSubtle.prototype.generateKey = function(algorithm, extractable, keyUsages){
         throw new E.NotYetImplementedException();
     };
 
@@ -132,7 +134,7 @@ define(function(require) {
      * or if the usages internal slot of baseKey does not contain an entry that is "deriveKey"
      * @throws SyntaxError if the type internal slot of result is "secret" or "private" and usages is empty
      */
-    CrySILCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){
+    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){
         throw new E.NotYetImplementedException();
     };
 
@@ -146,7 +148,7 @@ define(function(require) {
      * @throws InvalidAccessError if the name member of the normalized algorithm is not equal to the name attribute of the algorithm internal slot of baseKey,
      * or if the usages internal slot of baseKey does not contain an entry that is "deriveBits"
      */
-    CrySILCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){
+    SkyTrustCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){
         throw new E.NotYetImplementedException();
     };
 
@@ -159,7 +161,7 @@ define(function(require) {
      * @return {Promise|result} Let result be the result of performing the export key operation specified by the algorithm internal slot of key using key and format.
      * @throws InvalidAccessError if the extractable internal slot of key is false
      */
-    CrySILCryptoSubtle.prototype.exportKey = function(format, key){
+    SkyTrustCryptoSubtle.prototype.exportKey = function(format, key){
         throw new E.NotYetImplementedException();
     };
 
@@ -177,7 +179,7 @@ define(function(require) {
      * or if the algorithm identified by the algorithm internal slot of key does not support the export key operation,
      * or if the extractable internal slot of key is false
      */
-    CrySILCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){
+    SkyTrustCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){
         throw new E.NotYetImplementedException();
     };
 
@@ -196,7 +198,7 @@ define(function(require) {
      * @throws NotSupportedError
      * @throws Syntax Error if the type internal slot of result is "secret" or "private" and usages is empty
      */
-    CrySILCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){
+    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){
         throw new E.NotYetImplementedException();
     };
 

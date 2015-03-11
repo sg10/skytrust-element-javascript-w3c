@@ -13,7 +13,7 @@ define(function(require) {
 	 */
     var CryptoKey = function(id, subId, algo, usages) {
 
-    	// CrySIL specific
+    	// SkyTrust specific
         Object.defineProperty(this, "id", {value: id});
         Object.defineProperty(this, "subId", {value: subId});
 
@@ -32,7 +32,7 @@ define(function(require) {
      */
     var isValidCryptoKey = function(key, operation) {
         if( !( key instanceof CryptoKey ) ) {
-            console.log("[w3c] cryptoKey passed is not a valid CrySIL CryptoKey object");
+            console.log("[w3c] cryptoKey passed is not a valid SkyTrust CryptoKey object");
             return false;
         }
 

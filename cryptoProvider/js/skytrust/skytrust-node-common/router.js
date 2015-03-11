@@ -3,7 +3,7 @@ define(function(require) {
 	// ------- imports	
 	
 	var $ = require('jQuery');
-	var CryptoObject = require('../crysil-node-common/crypto-object');
+	var CryptoObject = require('../skytrust-node-common/crypto-object');
 
 
 	// ------- private members	

@@ -1,6 +1,6 @@
 
 requirejs.config({
-	baseUrl: 'js/crysil/',
+	baseUrl: 'js/skytrust/',
     paths: {
         'jQuery': '../lib/jquery-2.1.3.min',
     },
@@ -14,7 +14,7 @@ requirejs.config({
 requirejs([ 'providerDef' ], 
 
 	function(providerDef) {
-		// make CrySIL Crypto Provider accessible via window object 		
+		// make SkyTrust Crypto Provider accessible via window object 		
 		window.getCryptoProviderByName = providerDef.getCryptoProviderByName;
 
 		// init test fields
@@ -29,7 +29,7 @@ function initTestPage() {
 	var Config = require('./config');
 	var $ = require('jQuery');
 
-	var provider = window.getCryptoProviderByName("CrySIL");
+	var provider = window.getCryptoProviderByName("SkyTrust");
 
     var algo = "RSA-OAEP";
 

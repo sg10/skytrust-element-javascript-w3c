@@ -1,12 +1,12 @@
 define(function(require) {
 
-    var CrySILCryptoProvider = require('./provider');
+    var SkyTrustCryptoProvider = require('./provider');
 
 
     /**
      * Returns a cryptographic provider.
      * @method getCryptoProviderByName
-     * @param provider String identifying the desired crypto provider, currently supported: "w3c", "cordova-iaik" and "CrySIL"
+     * @param provider String identifying the desired crypto provider, currently supported: "w3c", "cordova-iaik" and "SkyTrust"
      * @return provider
      * @throws NoSuchProviderError if provider does not exist
      */
@@ -15,8 +15,8 @@ define(function(require) {
         switch (cryptoProvider){
             case "w3c":
                 return window.crypto || window.msCrypto;
-            case "CrySIL": 
-               return new CrySILCryptoProvider();    
+            case "SkyTrust": 
+               return new SkyTrustCryptoProvider();    
             default:
                 throw new NoSuchProviderError(); // TODO: check
         }
