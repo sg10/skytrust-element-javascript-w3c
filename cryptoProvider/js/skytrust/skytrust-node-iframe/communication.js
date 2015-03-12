@@ -19,15 +19,17 @@ define(function(require) {
 	// ------- private methods	
 
 	var makeRequest = function(requestObject) {
-		var encryptRequest = requestObject.json();
+		var jsonRequest = requestObject.json();
 
+        // AJAX REQUEST
         $.ajax({
             url: Config.server,
             method: 'post',
             dataType: 'json',
             processData: false,
             contentType: 'application/json',
-            data: encryptRequest })
+            data: jsonRequest })
+                // AJAX RESPONE
                 .done(function(dataReceived) {
 
                     // TODO: validate result structure
@@ -55,6 +57,14 @@ define(function(require) {
 			        		self.send('authentication', responseObject);
 			        	}
 			        }
+                    else if(Protocol.getError(responseObject) == "609") {
+                        console.log("[iframe] wrong username/password");
+                        // keep command id!
+                        var commandId = Protocol.getCommandId(JSON.parse(jsonRequest).header);
+                        console.log("header command id: " + commandId);
+                        Protocol.setCommandId(responseObject, commandId);
+                        self.send('authentication', responseObject);
+                    }
 			        else {
 				        requestObject.setPayload(dataReceived.payload);
 				        requestObject.setHeader(dataReceived.header);
@@ -70,6 +80,8 @@ define(function(require) {
 	var onReceive = function(object) {
 		console.log("[iframe] received at communication component");
 
+        console.log("[iframe] -> " + object.json());
+
 		if(object.getHeader() === null) {
 			var header = Protocol.getBlankHeader();
 			console.log("[iframe] header was blank, setting new header");
@@ -77,6 +89,8 @@ define(function(require) {
 		}
 
 		Protocol.setSessionId(object, sessionId);
+
+        console.log("[iframe] -> " + object.json());
 
 		makeRequest(object);
 	};

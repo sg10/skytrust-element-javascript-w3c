@@ -25,8 +25,8 @@ define(function(require) {
 
 		Protocol.setUserPasswortAuth(object, username, password);
 
-		console.log("[iframe] payload after auth");
-		console.log(object.getPayload());
+		console.log("[iframe] object after auth");
+		console.log(object.json());
 
 		$('#loginform').hide();
 		$('#loginform').off('submit');        
@@ -40,16 +40,22 @@ define(function(require) {
 	var onReceive = function(object) {
 		console.log("[iframe] received at authentication component");
 
-		// TODO: check if unused
+		// TODO: check if request still active
 		$('#loginform').show();
+		$('#loginform-message').hide();
 		$('#loginform').submit(object, onLoginFormSubmit);
+
+		// auth failure
+		if(Protocol.getError(object) == "609") {
+			$('#loginform-message').html("Invalid username/password");
+			$('#loginform-message').show();
+		}
 	};
 
 
 	// ------- export	
 
 	return function() {
-
 		self = this;
 
 		return $.extend(this, Component, {

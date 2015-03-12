@@ -30,10 +30,22 @@ define(function(require) {
 			iframe_id = "skytrust-iframe-" + Math.round(Math.random()*1E8);
 		} while($("#" + iframe_id).length > 0);
 
-		$("body").append("<iframe src=\"js/iframe.html?"+iframe_id+"\" id=\""+iframe_id+"\" class=\"skytrust-iframe\"></iframe>");
+		$("body").append("<iframe src=\"js/skytrust-iframe.html?"+iframe_id+"\" id=\""+iframe_id+"\" class=\"skytrust-iframe\"></iframe>");
 
 		return iframe_id;
 	}
+
+	var addComponent = function(name, component) {
+		if(components.hasOwnProperty(name)) {
+			return false; // already in use
+		}
+
+		components[name] = component;
+
+		component.send = function(to, object) {
+			self.router.route(name, to, object);
+		};
+	};
 
 
 	// ------- public methods
@@ -61,27 +73,12 @@ define(function(require) {
 		});
 	};
 
-	var addComponent = function(name, component) {
-		if(components.hasOwnProperty(name)) {
-			return false; // already in use
-		}
-
-		components[name] = component;
-
-		component.send = function(to, object) {
-			self.router.route(name, to, object);
-		};
-	};
-
+	// TODO: remove, only debug
 	Node.prototype.debugPrintComponents = function() {
 		console.log("[w3c] node components:")
 		for(key in components) {
 			console.log("[w3c]  - " + key);
 		}
-	};
-
-	Node.prototype.getReceiver = function() {
-		return components['receiver'];
 	};
 
 	Node.prototype.getComponent = function(name) {

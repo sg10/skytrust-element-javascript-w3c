@@ -17,6 +17,7 @@ define(function(require) {
     var SkyTrustCryptoSubtle = function (){};
 
     var skyTrustNode = new SkyTrustNode();
+    
 
     // -------------  public  -------------------------
 

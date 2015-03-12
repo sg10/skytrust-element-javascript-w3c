@@ -64,6 +64,8 @@ define(function(require) {
 		});
 	};
 
+
+	// TODO: remove, only debug
 	Node.prototype.getComponent = function(name) {
 		if(components.hasOwnProperty(name)) {
 			return components[name];
@@ -76,10 +78,6 @@ define(function(require) {
 		for(key in components) {
 			console.log("[iframe]  - " + key);
 		}
-	};
-
-	Node.prototype.getReceiver = function() {
-		return components['receiver'];
 	};
 
 

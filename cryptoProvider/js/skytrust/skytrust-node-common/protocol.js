@@ -153,6 +153,22 @@ define(function(require) {
         return false;
     }
 
+    var getCommandId = function(object) {
+        if(!object.getHeader) {
+            return object.commandId;
+        }
+
+        return object.getHeader().commandId;
+    }
+
+    var setCommandId = function(object, commandId) {
+        if(!object.getHeader) {
+            object.commandId = commandId;
+        }
+
+        object.getHeader().commandId = commandId;
+    }
+
     // ------- export
     
     return {
@@ -171,6 +187,9 @@ define(function(require) {
         getAuthTypes : getAuthTypes,
 
         getError : getError,
+
+        getCommandId : getCommandId,
+        setCommandId : setCommandId
     };   
     
 
