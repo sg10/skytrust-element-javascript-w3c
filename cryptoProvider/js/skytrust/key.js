@@ -11,7 +11,7 @@ define(function(require) {
 	 * @param {[type]} algo   [description]
 	 * @param {[type]} usages [description]
 	 */
-    var CryptoKey = function(id, subId, algo, usages) {
+    var CryptoKey = function(algo, usages, id, subId) {
 
     	// SkyTrust specific
         Object.defineProperty(this, "id", {value: id});

@@ -32,17 +32,36 @@ function initTestPage() {
 
     var algo = "RSA-OAEP";
 
-    var cryptoKey1 = new provider.subtle.CryptoKey("leaf", "122", algo, ["encrypt", "decrypt"]);
+/*    var cryptoKey1 = new provider.subtle.CryptoKey(algo, ["encrypt", "decrypt"], "leaf", "122");
     console.log("CryptoKey: [" + cryptoKey1.id + ", " + cryptoKey1.subId + "]");
+*/
+	var cryptoKeysList = [];
+	var fieldKeys = $("#fieldKeys");
 
     // buttons
+	$('#btnDiscoverKeys').on('click', function() {
+		provider.listKeys().then(function(cryptoKeys) {
+		    cryptoKeysList = cryptoKeys;
+		    fieldKeys.html("");
+		    for(var i=0; i<cryptoKeys.length; i++) {
+		        fieldKeys.append($("<option />").val(i).text("id: " + cryptoKeys[i].id + ", subId: " + cryptoKeys[i].subId));
+		    }
+		});
+	});
+
 	$('#btnEncrypt').on('click', function() {
-		provider.subtle.encrypt(algo, cryptoKey1, $('#fieldPlain').val())
+		var cryptoKey = cryptoKeysList[fieldKeys.val()];
+		if(!cryptoKey) return;
+
+		provider.subtle.encrypt(algo, cryptoKey, $('#fieldPlain').val())
          .then(function(encrypted) { $('#fieldEncrypted').val(encrypted) });
 	});
 
 	$('#btnDecrypt').on('click', function() {
-		provider.subtle.decrypt(algo, cryptoKey1, $('#fieldEncrypted').val())
+		var cryptoKey = cryptoKeysList[fieldKeys.val()];
+		if(!cryptoKey) return;
+
+		provider.subtle.decrypt(algo, cryptoKey, $('#fieldEncrypted').val())
          .then(function(decrypted) { $('#fieldDecrypted').val(decrypted) });
 	});
 

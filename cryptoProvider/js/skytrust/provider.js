@@ -18,11 +18,27 @@ define(function(require) {
 
     var skyTrustNode = new SkyTrustNode();
     
+    var listKeys = function() {
+        return new Promise(function(resolve, reject) {
+
+            skyTrustNode.operation.discoverKeys().then(function(result) {
+                var keys = []; // for CryptoObjects
+                for(var i=0; i<result.length; i++) {
+                    keys.push(new CryptoKey.create("?", ["?", "?"], result[i].id, result[i].subId));
+                }
+                resolve(keys);
+            }).catch(function(error) {
+                reject(error);
+            });
+
+        });     
+    }
 
     // -------------  public  -------------------------
 
     var CryptoProvider = function() {
         this.subtle = new SkyTrustCryptoSubtle();
+        this.listKeys = listKeys;
     }
 
     SkyTrustCryptoSubtle.prototype.CryptoKey = CryptoKey.create;

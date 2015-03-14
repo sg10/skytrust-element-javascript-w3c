@@ -43,6 +43,20 @@ define(function(require) {
         object.header = getBlankHeader();
     }
 
+    var setDiscoverKeysRequest = function(object) {
+        var payload = {
+            "type" : "discoverKeysRequest",
+            "representation" : "handle"
+        };
+
+        if(object.setPayload) {
+            object.setPayload(payload);
+        }
+        else {
+            throw Error("not supported yet"); // not a whole object, payload only
+        }
+    };
+
     var setSessionId = function(object, id) {
         if(object.getHeader) { // whole object
             var header = object.getHeader();
@@ -189,7 +203,9 @@ define(function(require) {
         getError : getError,
 
         getCommandId : getCommandId,
-        setCommandId : setCommandId
+        setCommandId : setCommandId,
+
+        setDiscoverKeysRequest : setDiscoverKeysRequest
     };   
     
 

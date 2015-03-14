@@ -95,10 +95,26 @@ define(function(require) {
         });
     }
 
+    // TODO: handle only currently
+    var discoverKeys = function(){
+        return new Promise(function(resolve, reject){
+
+            console.log("[w3c] discover keys");
+    
+            var object = new CryptoObject();
+            var payload = Protocol.setDiscoverKeysRequest(object);       
+            object.resolve = resolve;
+            object.reject = reject;
+
+            self.send('communication', object);
+        });
+    }
+
 
 	var operation = {
 		encrypt : encrypt,
-        decrypt : decrypt
+        decrypt : decrypt,
+        discoverKeys : discoverKeys
 	};
 
 	var Receiver = function() {
@@ -128,13 +144,15 @@ define(function(require) {
                 else if("encryptResponse" == responseType) {
                     object.resolve( payload.encryptedData[0] );
                 }
+                else if("discoverKeysResponse" == responseType) {
+                    object.resolve( payload.key );
+                }
                 else {
                     object.reject(new Error("SkyTrust request failed - unknown response type?"));
                 }
 
 
-/*        "discoverKeysResponse" ,
-        "encryptCMSResponse" ,
+/*      "encryptCMSResponse" ,
         "exportWrappedKeyResponse" ,
         "generateWrappedKeyResponse" ,
         "getKeyResponse" ,

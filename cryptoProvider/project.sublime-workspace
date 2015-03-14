@@ -4,8 +4,16 @@
 		"selected_items":
 		[
 			[
-				"jso",
-				"jsonRequest"
+				"sky",
+				"skyTrustNode〔variable〕"
+			],
+			[
+				"respo",
+				"responseType〔variable〕"
+			],
+			[
+				"getA",
+				"getAuthTypes"
 			],
 			[
 				"session",
@@ -160,10 +168,34 @@
 	"buffers":
 	[
 		{
-			"file": "js/skytrust/skytrust-node-w3c/node.js",
+			"file": "js/skytrust/provider.js",
 			"settings":
 			{
-				"buffer_size": 2099,
+				"buffer_size": 9317,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "js/skytrust/providerDef.js",
+			"settings":
+			{
+				"buffer_size": 815,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "js/load-w3c.js",
+			"settings":
+			{
+				"buffer_size": 1763,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "skytrust-test-page.html",
+			"settings":
+			{
+				"buffer_size": 1809,
 				"line_ending": "Windows"
 			}
 		},
@@ -171,15 +203,7 @@
 			"file": "js/skytrust/skytrust-node-w3c/receiver.js",
 			"settings":
 			{
-				"buffer_size": 4301,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/skytrust/skytrust-node-w3c/communication.js",
-			"settings":
-			{
-				"buffer_size": 1722,
+				"buffer_size": 4877,
 				"line_ending": "Windows"
 			}
 		},
@@ -187,47 +211,15 @@
 			"file": "js/skytrust/skytrust-node-common/protocol.js",
 			"settings":
 			{
-				"buffer_size": 4842,
+				"buffer_size": 5269,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/skytrust/skytrust-node-iframe/node.js",
+			"file": "js/skytrust/key.js",
 			"settings":
 			{
-				"buffer_size": 1886,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/skytrust/skytrust-node-iframe/receiver.js",
-			"settings":
-			{
-				"buffer_size": 1845,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/skytrust/skytrust-node-iframe/communication.js",
-			"settings":
-			{
-				"buffer_size": 3310,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/skytrust/skytrust-node-iframe/authentication.js",
-			"settings":
-			{
-				"buffer_size": 1389,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "js/skytrust-iframe.html",
-			"settings":
-			{
-				"buffer_size": 1333,
+				"buffer_size": 1573,
 				"line_ending": "Windows"
 			}
 		}
@@ -309,55 +301,31 @@
 	},
 	"expanded_folders":
 	[
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/lib",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-common",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-iframe",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-w3c"
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-common",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-iframe",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-w3c"
 	],
 	"file_history":
 	[
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-common/crypto-object.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/skytrust-test-page.html",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-w3c/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-iframe/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/load-w3c.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-common/protocol.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust-iframe.html",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/config.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/provider.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-iframe/authentication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-iframe/authentication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-iframe/receiver.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-iframe/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-iframe/communication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-common/router.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-common/protocol.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-common/crypto-object.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-common/component.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-w3c/receiver.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-w3c/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-w3c/communication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/providerDef.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/skytrust-node-iframe/actorplus.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/crySILTest.html",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/receiver.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/communication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-common/router.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-common/crypto-object.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/node.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/provider.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/receiver.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/config.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-iframe/communication.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-common/protocol.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/load-iframe.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/key.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/actorplus.js",
-		"/G/BA/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/authentication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/config.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust-iframe.html",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/key.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/providerDef.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/config.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-common/router.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/provider.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/communication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/receiver.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/node.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-common/protocol.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-common/crypto-object.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-iframe/authentication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-iframe/communication.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/receiver.js",
+		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/node.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/authentication.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/crysil/crysil-node-w3c/.subldf2.tmp",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/iframe.html",
@@ -368,12 +336,7 @@
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/load-iframe.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/providerDef.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/actorplus.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/receiver.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-common/component.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/communication.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-iframe/node.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/node.js",
-		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/receiver.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/provider.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/component.js",
 		"/P/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/CrySIL/crysil-node-w3c/actorplus.js",
@@ -424,14 +387,13 @@
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 27.0
 	},
 	"find_in_files":
 	{
 		"height": 93.0,
 		"where_history":
 		[
-			"G:\\BA\\skytrust-element-javascript-w3c\\cryptoProvider",
 			"*.js;,P:\\Uni\\6. Semester\\705.002 - Bachelorarbeit Telematik, IAIK\\skytrust-element-javascript-w3c\\cryptoProvider",
 			"P:\\Uni\\6. Semester\\705.002 - Bachelorarbeit Telematik, IAIK\\skytrust-element-javascript-w3c\\cryptoProvider\\*.*",
 			"P:\\Uni\\6. Semester\\705.002 - Bachelorarbeit Telematik, IAIK\\skytrust-element-javascript-w3c",
@@ -447,16 +409,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"encryptRequest",
-			"crysil",
-			"crysil-node-",
-			"crysil-iframe",
-			"createIFrame",
-			"crysil-node-common",
-			"CrySILNode",
-			"crySILNode",
-			"CrySILCryptoSubtle",
-			"crysil",
 			"\n	",
 			"console.log",
 			"loginFormSubmit",
@@ -504,14 +456,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"jsonRequest",
-			"skytrust-node-",
-			"skytrust-iframe",
-			"createIFrameDOMElement",
-			"skytrust-node-common",
-			"SkyTrustNode",
-			"skyTrustNode",
-			"SkyTrustCryptoSubtle",
 			"onLoginFormSubmit",
 			"requestObject",
 			"Config",
@@ -544,59 +488,61 @@
 	[
 		{
 			"follow_symlinks": true,
-			"path": "G:\\BA\\skytrust-element-javascript-w3c\\cryptoProvider"
+			"path": "P:\\Uni\\6. Semester\\705.002 - Bachelorarbeit Telematik, IAIK\\skytrust-element-javascript-w3c\\cryptoProvider"
 		}
 	],
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "js/skytrust/skytrust-node-w3c/node.js",
+					"file": "js/skytrust/provider.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2099,
+						"buffer_size": 9317,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								861,
+								861
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 220.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "js/skytrust/skytrust-node-w3c/receiver.js",
+					"file": "js/skytrust/providerDef.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4301,
+						"buffer_size": 815,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								804,
+								804
 							]
 						],
 						"settings":
@@ -605,61 +551,93 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 130.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "js/skytrust/skytrust-node-w3c/communication.js",
+					"file": "js/load-w3c.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1722,
+						"buffer_size": 1763,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1212,
-								1212
+								1563,
+								1563
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"auto_complete": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.y": 660.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "js/skytrust/skytrust-node-common/protocol.js",
+					"file": "skytrust-test-page.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4842,
+						"buffer_size": 1809,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3914,
-								3914
+								648,
+								648
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 296.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "js/skytrust/skytrust-node-w3c/receiver.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4877,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4325,
+								4325
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -668,167 +646,82 @@
 						"translation.y": 2484.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "js/skytrust/skytrust-node-common/protocol.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5269,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5244,
+								5244
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3752.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "js/skytrust/key.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								485,
+								485
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 4,
-					"file": "js/skytrust/skytrust-node-iframe/node.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1886,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 108.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "js/skytrust/skytrust-node-iframe/receiver.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1845,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "js/skytrust/skytrust-node-iframe/communication.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3310,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2184,
-								2184
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 58.0,
-						"translation.y": 594.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "js/skytrust/skytrust-node-iframe/authentication.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1389,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1293,
-								1293
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 216.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "js/skytrust-iframe.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1333,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								357,
-								357
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 54.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 27.0
 	},
 	"input":
 	{
@@ -845,21 +738,21 @@
 				1
 			],
 			[
-				1,
 				0,
-				2,
-				1
+				1,
+				1,
+				2
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
+			0.71679197995,
 			1.0
 		]
 	},
@@ -875,7 +768,7 @@
 	"project": "",
 	"replace":
 	{
-		"height": 62.0
+		"height": 50.0
 	},
 	"save_all_on_build": true,
 	"select_file":
