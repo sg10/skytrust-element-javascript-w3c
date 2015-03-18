@@ -12,16 +12,17 @@ requirejs.config({
 });
 
 
-requirejs(['config', 'jQuery', 'skytrust-node-iframe/node'], function (config, $, Node) {
-	init(config, $, Node);
+requirejs(['config', 'jQuery', 'skytrust-element-iframe/element'], 
+    function (config, $, Element) {
+	init(config, $, Element);
 });
 
 
 
 
-function init(config, $, Node) {
+function init(config, $, Element) {
 
-	var node = new Node();
+	var element = new Element();
 
 	$('#loginserver').val(config.server);
 

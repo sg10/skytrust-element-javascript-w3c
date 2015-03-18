@@ -5,7 +5,7 @@ define(function(require) {
 
     var $ = require('jQuery');
 
-    var SkyTrustNode = require('./skytrust-node-w3c/node');
+    var SkyTrustElement = require('./skytrust-element-w3c/element');
 
     var E = require('./error');
     var Config = require('./config');
@@ -16,12 +16,12 @@ define(function(require) {
 
     var SkyTrustCryptoSubtle = function (){};
 
-    var skyTrustNode = new SkyTrustNode();
+    var SkyTrustElement = new SkyTrustElement();
     
     var listKeys = function() {
         return new Promise(function(resolve, reject) {
 
-            skyTrustNode.operation.discoverKeys().then(function(result) {
+            SkyTrustElement.operation.discoverKeys().then(function(result) {
                 var keys = []; // for CryptoObjects
                 for(var i=0; i<result.length; i++) {
                     keys.push(new CryptoKey.create("?", ["?", "?"], result[i].id, result[i].subId));
@@ -58,7 +58,7 @@ define(function(require) {
     SkyTrustCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
         console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.encrypt()")
         
-        return skyTrustNode.operation.encrypt(algorithm, key, data);
+        return SkyTrustElement.operation.encrypt(algorithm, key, data);
     }
 
 
@@ -76,7 +76,7 @@ define(function(require) {
     SkyTrustCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
         console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decrypt()")
 
-        return skyTrustNode.operation.decrypt(algorithm, key, data);
+        return SkyTrustElement.operation.decrypt(algorithm, key, data);
     };
 
     /**
@@ -93,7 +93,7 @@ define(function(require) {
     SkyTrustCryptoSubtle.prototype.sign = function(algorithm, key, data){
         console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.sign()")
 
-        return skyTrustNode.operation.sign(algorithm, key, data);
+        return SkyTrustElement.operation.sign(algorithm, key, data);
      };
 
     /**
@@ -118,7 +118,7 @@ define(function(require) {
 
         throw new E.NotYetImplementedException();
 
-        //return skyTrustNode.operation.verify(algorithm, key, data);
+        //return SkyTrustElement.operation.verify(algorithm, key, data);
     };
 
     /**

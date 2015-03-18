@@ -3,13 +3,13 @@ define(function(require) {
 	// ------- imports	
 	
 	var $ = require('jQuery');
-	var CryptoObject = require('../skytrust-node-common/crypto-object');
+	var CryptoObject = require('../skytrust-element-common/crypto-object');
 
 
 	// ------- private members	
 
 	var self = this;
-	var node = null;
+	var element = null;
 
 
 	// ------- private methods	
@@ -19,7 +19,7 @@ define(function(require) {
 	// ------- public methods
 
 	var Router = function(n) {
-		node = n;
+		element = n;
 
 		if(this instanceof Window) {
 			throw Error('Router called statically'); // define exception
@@ -33,19 +33,19 @@ define(function(require) {
 			throw new Error("Router can only transmit CryptoObjects");
 		}
 
-		if(node.getComponent(to) === false) {
+		if(element.getComponent(to) === false) {
 			throw new Error("Router, receiver: no component named " + to);
 		}
 
-		if(node.getComponent(from) === false) {
+		if(element.getComponent(from) === false) {
 			throw new Error("Router, sender: no component named " + from);
 		}
 
-		if(!node.getComponent(to).onReceive) {
+		if(!element.getComponent(to).onReceive) {
 			throw new Error("Router: onReceive() method not defined");
 		}
 
-		node.getComponent(to).onReceive(object);
+		element.getComponent(to).onReceive(object);
 	};
 
 

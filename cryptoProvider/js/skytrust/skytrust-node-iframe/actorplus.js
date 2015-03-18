@@ -4,7 +4,7 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../skytrust-node-common/component');
+	var Component = require('../skytrust-element-common/component');
 
 
 	// ------- private members	

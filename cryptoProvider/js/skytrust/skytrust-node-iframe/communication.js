@@ -4,10 +4,10 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../skytrust-node-common/component');
-	var CryptoObject = require('../skytrust-node-common/crypto-object');
+	var Component = require('../skytrust-element-common/component');
+	var CryptoObject = require('../skytrust-element-common/crypto-object');
     var Config = require('../config');
-    var Protocol = require('../skytrust-node-common/protocol');
+    var Protocol = require('../skytrust-element-common/protocol');
 
 
 	// ------- private members	
@@ -42,7 +42,7 @@ define(function(require) {
 			        responseObject.resolve = requestObject.resolve;
 			        responseObject.reject = requestObject.reject;
 
-			        // set session ID for this node if it has changed
+			        // set session ID for this element if it has changed
 			        var responseSessionId = responseObject.getHeader().sessionId;
 			        if(sessionId !== responseSessionId) {
 	                    console.log("[iframe] setting session ID: " + sessionId);

@@ -4,9 +4,9 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../skytrust-node-common/component'); // base
-	var CryptoObject = require('../skytrust-node-common/crypto-object');
-	var Router = require('../skytrust-node-common/router');
+	var Component = require('../skytrust-element-common/component'); // base
+	var CryptoObject = require('../skytrust-element-common/crypto-object');
+	var Router = require('../skytrust-element-common/router');
 	var Receiver = require('./receiver');
 	var Communication = require('./communication');
 
@@ -20,8 +20,8 @@ define(function(require) {
 
 	// ------- private methods and classes	
 	
-	var getNewNodeID = function() {
-		return "skytrust-node-" + Math.round(Math.random()*1E8); // make unique
+	var getNewElementID = function() {
+		return "skytrust-element-" + Math.round(Math.random()*1E8); // make unique
 	};
 
 	var createIFrameDOMElement = function() {
@@ -50,22 +50,22 @@ define(function(require) {
 
 	// ------- public methods
 
-	var Node = function() {
+	var Element = function() {
 		if(this instanceof Window) {
-			throw Error('Node called statically'); // define exception
+			throw Error('Element called statically'); // define exception
 		}
 
 		self = this;
 
 		self.router = new Router(this);
-		self.id = getNewNodeID();
+		self.id = getNewElementID();
 
 		self.iframe_id = createIFrameDOMElement();
 
 		addComponent('receiver', new Receiver());
 		addComponent('communication', new Communication(self.iframe_id));
 
-		Node.prototype.debugPrintComponents();
+		Element.prototype.debugPrintComponents();
 
 		return $.extend(this, {
 			id : self.id,
@@ -74,14 +74,14 @@ define(function(require) {
 	};
 
 	// TODO: remove, only debug
-	Node.prototype.debugPrintComponents = function() {
-		console.log("[w3c] node components:")
+	Element.prototype.debugPrintComponents = function() {
+		console.log("[w3c] element components:")
 		for(key in components) {
 			console.log("[w3c]  - " + key);
 		}
 	};
 
-	Node.prototype.getComponent = function(name) {
+	Element.prototype.getComponent = function(name) {
 		if(components.hasOwnProperty(name)) {
 			return components[name];
 		}
@@ -92,7 +92,7 @@ define(function(require) {
 
 	// ------- export	
 
-	return Node;
+	return Element;
 
 
 });

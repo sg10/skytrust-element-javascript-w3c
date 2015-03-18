@@ -4,8 +4,8 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../skytrust-node-common/component');
-	var CryptoObject = require('../skytrust-node-common/crypto-object');
+	var Component = require('../skytrust-element-common/component');
+	var CryptoObject = require('../skytrust-element-common/crypto-object');
 	var Config = require('../config');
 	var E = require('../error');
 

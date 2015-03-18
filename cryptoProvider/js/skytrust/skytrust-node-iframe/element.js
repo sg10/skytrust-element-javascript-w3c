@@ -4,9 +4,9 @@ define(function(require) {
 	
 	var $ = require('jQuery');
 
-	var Component = require('../skytrust-node-common/component'); // base
-	var CryptoObject = require('../skytrust-node-common/crypto-object');
-	var Router = require('../skytrust-node-common/router');
+	var Component = require('../skytrust-element-common/component'); // base
+	var CryptoObject = require('../skytrust-element-common/crypto-object');
+	var Router = require('../skytrust-element-common/router');
 	var Receiver = require('./receiver');
 	var ActorPlus = require('./actorplus');
 	var Authentication = require('./authentication');
@@ -34,29 +34,29 @@ define(function(require) {
 		};
 	};
 
-	var getNewNodeID = function() {
-		return "skytrust-node-" + Math.round(Math.random()*1E8); // make unique
+	var getNewElementID = function() {
+		return "skytrust-element-" + Math.round(Math.random()*1E8); // make unique
 	};
 
 
 	// ------- public methods
 
-	var Node = function() {
+	var Element = function() {
 		if(this instanceof Window) {
-			throw Error('Node called statically'); // define exception
+			throw Error('Element called statically'); // define exception
 		}
 
 		self = this;
 
 		self.router = new Router(this);
-		self.id = getNewNodeID();
+		self.id = getNewElementID();
 
 		addComponent('receiver', new Receiver());
 		addComponent('actorplus', new ActorPlus());
 		addComponent('authentication', new Authentication());
 		addComponent('communication', new Communication());
 
-		Node.prototype.debugPrintComponents();
+		Element.prototype.debugPrintComponents();
 
 		return $.extend(this, {
 			id : self.id,
@@ -66,15 +66,15 @@ define(function(require) {
 
 
 	// TODO: remove, only debug
-	Node.prototype.getComponent = function(name) {
+	Element.prototype.getComponent = function(name) {
 		if(components.hasOwnProperty(name)) {
 			return components[name];
 		}
 		return false;
 	}
 
-	Node.prototype.debugPrintComponents = function() {
-		console.log("[iframe] node components:")
+	Element.prototype.debugPrintComponents = function() {
+		console.log("[iframe] element components:")
 		for(key in components) {
 			console.log("[iframe]  - " + key);
 		}
@@ -83,7 +83,7 @@ define(function(require) {
 
 	// ------- export	
 
-	return Node;
+	return Element;
 
 
 });
