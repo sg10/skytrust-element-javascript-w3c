@@ -80,8 +80,6 @@ define(function(require) {
 	var onReceive = function(object) {
 		console.log("[iframe] received at communication component");
 
-        console.log("[iframe] -> " + object.json());
-
 		if(object.getHeader() === null) {
 			var header = Protocol.getBlankHeader();
 			console.log("[iframe] header was blank, setting new header");
@@ -89,8 +87,6 @@ define(function(require) {
 		}
 
 		Protocol.setSessionId(object, sessionId);
-
-        console.log("[iframe] -> " + object.json());
 
 		makeRequest(object);
 	};

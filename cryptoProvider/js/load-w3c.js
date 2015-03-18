@@ -53,13 +53,22 @@ function initTestPage() {
 		var cryptoKey = cryptoKeysList[fieldKeys.val()];
 		if(!cryptoKey) return;
 
-		provider.subtle.encrypt(algo, cryptoKey, $('#fieldPlain').val())
-         .then(function(encrypted) { $('#fieldEncrypted').val(encrypted) });
+		console.log("[w3c] using CryptoKey " + cryptoKey);
+
+		provider.subtle.sign("RSASSA-PKCS1-v1_5-SHA-256", cryptoKey, $('#fieldPlain').val())
+	      .then(function(encrypted) { $('#fieldEncrypted').val(encrypted) });
+
+
+
+		// provider.subtle.encrypt(algo, cryptoKey, $('#fieldPlain').val())
+  //        .then(function(encrypted) { $('#fieldEncrypted').val(encrypted) });
 	});
 
 	$('#btnDecrypt').on('click', function() {
 		var cryptoKey = cryptoKeysList[fieldKeys.val()];
 		if(!cryptoKey) return;
+
+		console.log("[w3c] using CryptoKey " + cryptoKey);
 
 		provider.subtle.decrypt(algo, cryptoKey, $('#fieldEncrypted').val())
          .then(function(decrypted) { $('#fieldDecrypted').val(decrypted) });

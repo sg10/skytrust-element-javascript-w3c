@@ -120,12 +120,35 @@ define(function(require) {
             "type" : "decryptRequest",
             "decryptionKey" : {
                 "type" : "handle",
-                "id" : "leaf",
-                "subId" : "122"
+                "id" : id,
+                "subId" : subId
             },
             "algorithm" : algorithm,
             "encryptedData" : [ data ]
   }
+
+        if(object.setPayload) {
+            object.setPayload(payload);
+        }
+        else {
+            throw Error("not supported yet"); // not a whole object, payload only
+        }
+    }
+
+
+    var setSignRequest = function(object, algorithm, id, subId, data) {
+        var b64Data = window.btoa(data);
+
+        var payload =  {
+                "type" : "signRequest",
+                "signatureKey" : {
+                    "type" : "handle",
+                    "id" : id,
+                    "subId" : subId
+                },
+                "algorithm" : algorithm,
+                "hashesToBeSigned" : [ b64Data ]
+            };
 
         if(object.setPayload) {
             object.setPayload(payload);
@@ -204,6 +227,8 @@ define(function(require) {
 
         getCommandId : getCommandId,
         setCommandId : setCommandId,
+
+        setSignRequest : setSignRequest,
 
         setDiscoverKeysRequest : setDiscoverKeysRequest
     };   

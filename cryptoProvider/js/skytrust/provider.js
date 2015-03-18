@@ -75,7 +75,7 @@ define(function(require) {
      */
     SkyTrustCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
         console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decrypt()")
-        
+
         return skyTrustNode.operation.decrypt(algorithm, key, data);
     };
 
@@ -91,8 +91,10 @@ define(function(require) {
      * if an error occurred during normalization of algorithm
      */
     SkyTrustCryptoSubtle.prototype.sign = function(algorithm, key, data){
-        throw new E.NotYetImplementedException();
-    };
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.sign()")
+
+        return skyTrustNode.operation.sign(algorithm, key, data);
+     };
 
     /**
      * The verify method returns a new Promise object that will 
@@ -107,7 +109,16 @@ define(function(require) {
      * if an error occurred during normalization of algorithm 
      */
     SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.verify()")
+
+        /*
+            1. signature --> data that was previously signed via sign()
+            2. decrypt signature and compare to 
+         */
+
         throw new E.NotYetImplementedException();
+
+        //return skyTrustNode.operation.verify(algorithm, key, data);
     };
 
     /**

@@ -95,7 +95,33 @@ define(function(require) {
         });
     }
 
-    // TODO: handle only currently
+    var sign = function(algorithm, key, data){
+        return new Promise(function(resolve, reject){
+
+            // normalize!
+            if(algorithm.name) {
+                algorithm = algorithm.name;
+            }
+
+            if( !isValidAlgorithm(algorithm, 'sign')) {
+                reject(new E.NotSupportedError());
+            }
+            else if( !isValidData(data)) {
+                reject(new E.DataError());
+            }
+
+            console.log("[w3c] data to sign: " + data);
+    
+            var object = new CryptoObject();
+            var payload = Protocol.setSignRequest(object, algorithm, key.id, key.subId, data);       
+            object.resolve = resolve;
+            object.reject = reject;
+
+            self.send('communication', object);
+        });
+    }
+
+    // TODO: only "handle" currently
     var discoverKeys = function(){
         return new Promise(function(resolve, reject){
 
@@ -114,6 +140,7 @@ define(function(require) {
 	var operation = {
 		encrypt : encrypt,
         decrypt : decrypt,
+        sign : sign,
         discoverKeys : discoverKeys
 	};
 
@@ -147,6 +174,9 @@ define(function(require) {
                 else if("discoverKeysResponse" == responseType) {
                     object.resolve( payload.key );
                 }
+                else if("signResponse" == responseType) {
+                    object.resolve( payload.signedHashes[0] );
+                }
                 else {
                     object.reject(new Error("SkyTrust request failed - unknown response type?"));
                 }
@@ -155,8 +185,7 @@ define(function(require) {
 /*      "encryptCMSResponse" ,
         "exportWrappedKeyResponse" ,
         "generateWrappedKeyResponse" ,
-        "getKeyResponse" ,
-        "signResponse" , */
+        "getKeyResponse" */
 
             }
             catch(e) {

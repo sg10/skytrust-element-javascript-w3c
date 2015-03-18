@@ -24,6 +24,10 @@ define(function(require) {
         Object.defineProperty(this, "usages", {value: usages});
     };
 
+    CryptoKey.prototype.toString = function() {
+        return "[SkyTrust CryptoKey object] id=" + this.id + ", subId=" + this.subId;
+    }
+
     /**
      * [isValidCryptoKey description]
      * @param  {[type]}  key       [description]
