@@ -243,9 +243,6 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-	],
 	"file_history":
 	[
 		"/Y/Uni/6. Semester/705.002 - Bachelorarbeit Telematik, IAIK/skytrust-element-javascript-w3c/cryptoProvider/js/skytrust/skytrust-node-common/protocol.js",
@@ -438,20 +435,8 @@
 		"whole_word": false,
 		"wrap": true
 	},
-	"folders":
-	[
-		{
-			"follow_symlinks": true,
-			"path": "P:\\Uni\\6. Semester\\705.002 - Bachelorarbeit Telematik, IAIK\\skytrust-element-javascript-w3c\\cryptoProvider"
-		}
-	],
 	"groups":
 	[
-		{
-			"sheets":
-			[
-			]
-		},
 		{
 			"sheets":
 			[
@@ -475,12 +460,6 @@
 				0,
 				1,
 				1
-			],
-			[
-				0,
-				1,
-				1,
-				2
 			]
 		],
 		"cols":
@@ -491,7 +470,6 @@
 		"rows":
 		[
 			0.0,
-			0.71679197995,
 			1.0
 		]
 	},
@@ -504,7 +482,7 @@
 	{
 		"height": 0.0
 	},
-	"project": "",
+	"project": "skytrust-js-home.sublime-project",
 	"replace":
 	{
 		"height": 50.0
