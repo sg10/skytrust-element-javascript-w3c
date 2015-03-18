@@ -7,6 +7,8 @@ define(function(require) {
 
     // ------- private members      
 
+    var Protocol = {};
+
 
     // ------- private methods      
 
@@ -28,9 +30,10 @@ define(function(require) {
         return val;
     }
 
+
     // ------- public methods   
     
-    var getBlankHeader = function() {
+    Protocol.getBlankHeader = function() {
         return {
             "type" : "standardSkyTrustHeader",
             "commandId" : "",
@@ -39,11 +42,11 @@ define(function(require) {
             "protocolVersion" : "2.0" };
     };
 
-    var setBlankHeader = function(object) {
-        object.header = getBlankHeader();
+    Protocol.setBlankHeader = function(object) {
+        object.header = Protocol.getBlankHeader();
     }
 
-    var setDiscoverKeysRequest = function(object) {
+    Protocol.setDiscoverKeysRequest = function(object) {
         var payload = {
             "type" : "discoverKeysRequest",
             "representation" : "handle"
@@ -52,32 +55,27 @@ define(function(require) {
         if(object.setPayload) {
             object.setPayload(payload);
         }
-        else {
-            throw Error("not supported yet"); // not a whole object, payload only
-        }
     };
 
-    var setSessionId = function(object, id) {
-        if(object.getHeader) { // whole object
+    Protocol.setSessionId = function(object, id) {
+        if(object.getHeader) {
             var header = object.getHeader();
             header.sessionId = id;
             object.setHeader(header);
         }
+        // only header was passed as object
         else {
             object.sessionId = id;
         }
     };
 
-    var getSessionId = function(object) {
+    Protocol.getSessionId = function(object) {
         if(object.getHeader) { // whole object
             return getKey(object.getHeader(), "sessionId");
         }
-        else {
-            return getKey(object, "sessionId");
-        }
     };
 
-    var setUserPasswortAuth = function(object, username, password) {
+    Protocol.setUserPasswortAuth = function(object, username, password) {
         var payload = {
             "type": "authChallengeResponse",
             "authInfo": {
@@ -88,12 +86,9 @@ define(function(require) {
         if(object.setPayload) {
             object.setPayload(payload);
         }
-        else {
-            throw Error("not supported yet"); // not a whole object, payload only
-        }
     }
 
-    var setEncryptRequest = function(object, algorithm, id, subId, data) {
+    Protocol.setEncryptRequest = function(object, algorithm, id, subId, data) {
         var b64Data = window.btoa(data); // Base64 conversion
 
         var payload = {
@@ -110,12 +105,9 @@ define(function(require) {
         if(object.setPayload) {
             object.setPayload(payload);
         }
-        else {
-            throw Error("not supported yet"); // not a whole object, payload only
-        }
     }
 
-    var setDecryptRequest = function(object, algorithm, id, subId, data) {
+    Protocol.setDecryptRequest = function(object, algorithm, id, subId, data) {
         var payload =  {
             "type" : "decryptRequest",
             "decryptionKey" : {
@@ -125,18 +117,49 @@ define(function(require) {
             },
             "algorithm" : algorithm,
             "encryptedData" : [ data ]
-  }
+        };
 
         if(object.setPayload) {
             object.setPayload(payload);
         }
-        else {
-            throw Error("not supported yet"); // not a whole object, payload only
+    }
+
+    Protocol.setEncryptCMSRequest = function(object, algorithm, id, subId, data) {
+        var b64Data = window.btoa(data); // Base64 conversion
+
+        var payload = {
+            "type" : "encryptCMSRequest",
+            "encryptionKeys" : [ {
+                "type" : "handle",
+                "id" : id,
+                "subId" : subId
+                } ],
+            "algorithm" : algorithm,
+            "plainData" : [ b64Data ]
+            };
+
+        if(object.setPayload) {
+            object.setPayload(payload);
         }
     }
 
+    Protocol.setDecryptCMSRequest = function(object, algorithm, id, subId, data) {
+        var payload =  {
+            "type" : "decryptCMSRequest",
+            "decryptionKey" : {
+                "type" : "handle",
+                "id" : id,
+                "subId" : subId
+            },
+            "encryptedCMSData" : [ data ]
+            }
 
-    var setSignRequest = function(object, algorithm, id, subId, data) {
+        if(object.setPayload) {
+            object.setPayload(payload);
+        }
+    }
+
+    Protocol.setSignRequest = function(object, algorithm, id, subId, data) {
         var b64Data = window.btoa(data);
 
         var payload =  {
@@ -153,13 +176,10 @@ define(function(require) {
         if(object.setPayload) {
             object.setPayload(payload);
         }
-        else {
-            throw Error("not supported yet"); // not a whole object, payload only
-        }
     }
 
 
-    var isAuthRequired = function(object) {
+    Protocol.isAuthRequired = function(object) {
         var payload = object.getPayload();
 
         if(payload && payload.type == "authChallengeRequest") {
@@ -169,7 +189,7 @@ define(function(require) {
         return false;
     }
 
-    var getAuthTypes = function(object) {
+    Protocol.getAuthTypes = function(object) {
         var types = object.getPayload().authTypes;
         var typesArray = [];
 
@@ -180,7 +200,7 @@ define(function(require) {
         return typesArray;
     }
 
-    var getError = function(object) {
+    Protocol.getError = function(object) {
         var payload = object.getPayload();
 
         if(payload && payload.type == "status") {
@@ -190,7 +210,7 @@ define(function(require) {
         return false;
     }
 
-    var getCommandId = function(object) {
+    Protocol.getCommandId = function(object) {
         if(!object.getHeader) {
             return object.commandId;
         }
@@ -198,7 +218,7 @@ define(function(require) {
         return object.getHeader().commandId;
     }
 
-    var setCommandId = function(object, commandId) {
+    Protocol.setCommandId = function(object, commandId) {
         if(!object.getHeader) {
             object.commandId = commandId;
         }
@@ -206,32 +226,10 @@ define(function(require) {
         object.getHeader().commandId = commandId;
     }
 
+
     // ------- export
     
-    return {
-        getBlankHeader : getBlankHeader,
-        setBlankHeader : setBlankHeader,
-
-        setUserPasswortAuth : setUserPasswortAuth,
-
-        setSessionId : setSessionId,
-        getSessionId : getSessionId,
-
-        setEncryptRequest : setEncryptRequest,
-        setDecryptRequest : setDecryptRequest,
-
-        isAuthRequired : isAuthRequired,
-        getAuthTypes : getAuthTypes,
-
-        getError : getError,
-
-        getCommandId : getCommandId,
-        setCommandId : setCommandId,
-
-        setSignRequest : setSignRequest,
-
-        setDiscoverKeysRequest : setDiscoverKeysRequest
-    };   
+    return Protocol;   
     
 
 

@@ -1,48 +1,32 @@
 define(function(require) {
 
-    // ---------- IMPORTS ----------------------------
+    // ------- imports 
 
     var $ = require('jQuery');
 
-    // ---------- MEMBERS ----------------------------
+
+    // ------- private members  
 
     var header = null;
     var payload = null;
-    var postponedObject = null;
 
     var self = null;
 
 
-    // ---------- PRIVATE ----------------------------
+    // ------- private methods/classes  
 
 
     function CryptoKey() { } // dummy class for prototype lookup
 
-    var isValidHeader = function(h) {
-        return true;
-    }
 
-    var isValidPayload = function(h) {
-        return true;
-    }
-
-
-    // ---------- PUBLIC -----------------------------
+    // ------- public methods  
 
     var setHeader = function(h) {
-        if( !isValidHeader(h) ) {
-            return false;
-        }
-
         // clone object
         header = JSON.parse(JSON.stringify(h));
     }
 
     var setPayload = function(p) {
-        if( !isValidPayload(p) ) {
-            return false;
-        }
-
         // clone object
         payload = JSON.parse(JSON.stringify(p));
     }
@@ -51,16 +35,16 @@ define(function(require) {
         return JSON.stringify({
             header : header,
             payload : payload
-        })
+        });
     }
 
-    return function(p) {
+    var CryptoObject = function(p) {
+
+        self = this;
 
         if(p) {
             setPayload(p);
         }
-
-        self = this;
 
         return $.extend(this, {
             getPayload :        function() { return payload; },
@@ -75,6 +59,11 @@ define(function(require) {
             reject :            function()     {}  // for promise
         });
     };
+    
+
+    // ------- export  
+
+    return CryptoObject;
 
 
 });

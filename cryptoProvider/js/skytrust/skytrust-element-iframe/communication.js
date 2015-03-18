@@ -18,7 +18,7 @@ define(function(require) {
 
 	// ------- private methods	
 
-	var makeRequest = function(requestObject) {
+	var makeServerRequest = function(requestObject) {
 		var jsonRequest = requestObject.json();
 
         // AJAX REQUEST
@@ -29,50 +29,57 @@ define(function(require) {
             processData: false,
             contentType: 'application/json',
             data: jsonRequest })
-                // AJAX RESPONE
                 .done(function(dataReceived) {
-
-                    // TODO: validate result structure
-                    
-                    console.log("[iframe] ajax response received")
-
-                    // use new?!
-			        var responseObject = new CryptoObject(dataReceived.payload);
-			        responseObject.setHeader(dataReceived.header);
-			        responseObject.resolve = requestObject.resolve;
-			        responseObject.reject = requestObject.reject;
-
-			        // set session ID for this element if it has changed
-			        var responseSessionId = responseObject.getHeader().sessionId;
-			        if(sessionId !== responseSessionId) {
-	                    console.log("[iframe] setting session ID: " + sessionId);
-	                    sessionId = responseSessionId;
-			        }
-
-			        if(Protocol.isAuthRequired(responseObject)) {
-			        	var authTypes = Protocol.getAuthTypes(responseObject);
-
-				        // username password authentication
-			        	if($.inArray("authChallengeRequest", authTypes)) {
-			        		self.send('authentication', responseObject);
-			        	}
-			        }
-                    else if(Protocol.getError(responseObject) == "609") {
-                        console.log("[iframe] wrong username/password");
-                        // keep command id!
-                        var commandId = Protocol.getCommandId(JSON.parse(jsonRequest).header);
-                        console.log("header command id: " + commandId);
-                        Protocol.setCommandId(responseObject, commandId);
-                        self.send('authentication', responseObject);
-                    }
-			        else {
-				        requestObject.setPayload(dataReceived.payload);
-				        requestObject.setHeader(dataReceived.header);
-
-			        	self.send('receiver', requestObject);
-			        }
+                    handleServerResponse(dataReceived, requestObject, jsonRequest)
+                })
+                .fail(function(jqXHR) {
+                    console.log("[iframe] request error")
+                    self.send('receiver', requestObject);
                 });
 	};
+
+    var handleServerResponse = function(dataReceived, requestObject, jsonRequest) {
+        console.log("[iframe] ajax response received")
+
+        var responseObject = requestObject;
+        responseObject.setHeader(dataReceived.header);
+
+        // set session ID for this SkyTrust element if it has changed
+        var responseSessionId = responseObject.getHeader().sessionId;
+        if(sessionId !== responseSessionId) {
+            console.log("[iframe] setting session ID: " + sessionId);
+            sessionId = responseSessionId;
+        }
+
+        // Authentication: enter username/password
+        if(Protocol.isAuthRequired(responseObject)) {
+            var authTypes = Protocol.getAuthTypes(responseObject);
+
+            // username password authentication
+            if($.inArray("authChallengeRequest", authTypes)) {
+                self.send('authentication', responseObject);
+            }
+            else {
+                // TODO: error handling other auth methods
+            }
+        }
+        // Authentication: sent credentials were incorrect
+        else if(Protocol.getError(responseObject) == "609") {
+            console.log("[iframe] wrong username/password");
+            // keep command id!
+            var commandId = Protocol.getCommandId(JSON.parse(jsonRequest).header);
+            console.log("header command id: " + commandId);
+            Protocol.setCommandId(responseObject, commandId);
+            self.send('authentication', responseObject);
+        }
+        // correct result
+        else {
+            requestObject.setPayload(dataReceived.payload);
+            requestObject.setHeader(dataReceived.header);
+
+            self.send('receiver', requestObject);
+        }
+    }
 
 
 	// ------- public methods
@@ -88,7 +95,7 @@ define(function(require) {
 
 		Protocol.setSessionId(object, sessionId);
 
-		makeRequest(object);
+		makeServerRequest(object);
 	};
 
 

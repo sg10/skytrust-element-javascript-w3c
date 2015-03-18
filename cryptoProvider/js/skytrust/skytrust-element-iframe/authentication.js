@@ -45,7 +45,7 @@ define(function(require) {
 		$('#loginform-message').hide();
 		$('#loginform').submit(object, onLoginFormSubmit);
 
-		// auth failure
+		// auth failure on SkyTrust server
 		if(Protocol.getError(object) == "609") {
 			$('#loginform-message').html("Invalid username/password");
 			$('#loginform-message').show();
@@ -59,9 +59,7 @@ define(function(require) {
 		self = this;
 
 		return $.extend(this, Component, {
-
 			onReceive : onReceive
-
 		});
 	};
 

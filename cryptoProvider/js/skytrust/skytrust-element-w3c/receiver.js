@@ -40,36 +40,10 @@ define(function(require) {
     	return false;		
     }
 
+    // for all requests that have "algorithm, key, data" as input
+    var createSimpleRequestPromise = function(protocolFunction, algorithmType, 
+        algorithm, key, data) {
 
-	// ------- public methods
-
-	var encrypt = function(algorithm, key, data){
-		return new Promise(function(resolve, reject){
-
-            // normalize!
-            if(algorithm.name) {
-                algorithm = algorithm.name;
-            }
-
-            if( !isValidAlgorithm(algorithm, 'encrypt')) {
-                reject(new E.NotSupportedError());
-            }
-            else if( !isValidData(data)) {
-                reject(new E.DataError());
-            }
-
-            console.log("[w3c] plaintext data to encrypt: " + data);
-    
-            var object = new CryptoObject();
-            var payload = Protocol.setEncryptRequest(object, algorithm, key.id, key.subId, data);       
-            object.resolve = resolve;
-            object.reject = reject;
-
-            self.send('communication', object);
-        });
-	}
-
-    var decrypt = function(algorithm, key, data){
         return new Promise(function(resolve, reject){
 
             // normalize!
@@ -77,17 +51,15 @@ define(function(require) {
                 algorithm = algorithm.name;
             }
 
-            if( !isValidAlgorithm(algorithm, 'encrypt')) { // encrypt same as decrypt
+            if( !isValidAlgorithm(algorithm, algorithmType)) {
                 reject(new E.NotSupportedError());
             }
             else if( !isValidData(data)) {
                 reject(new E.DataError());
             }
 
-            console.log("[w3c] data to decrypt: " + data);
-    
             var object = new CryptoObject();
-            var payload = Protocol.setDecryptRequest(object, algorithm, key.id, key.subId, data);       
+            var payload = protocolFunction(object, algorithm, key.id, key.subId, data);       
             object.resolve = resolve;
             object.reject = reject;
 
@@ -95,30 +67,51 @@ define(function(require) {
         });
     }
 
+	// ------- public methods
+
+	var encrypt = function(algorithm, key, data){
+        console.log("[w3c] plaintext data to encrypt: " + data);
+
+        return createSimpleRequestPromise(
+            Protocol.setEncryptRequest, 
+            "encrypt",
+            algorithm, key, data);
+	}
+
+    var decrypt = function(algorithm, key, data){
+        console.log("[w3c] data to decrypt: " + data);
+
+        return createSimpleRequestPromise(
+            Protocol.setDecryptRequest, 
+            "encrypt",
+            algorithm, key, data);
+    }
+
     var sign = function(algorithm, key, data){
-        return new Promise(function(resolve, reject){
+        console.log("[w3c] data to sign: " + data);
 
-            // normalize!
-            if(algorithm.name) {
-                algorithm = algorithm.name;
-            }
+        return createSimpleRequestPromise(
+            Protocol.setSignRequest, 
+            "sign",
+            algorithm, key, data);
+    }
 
-            if( !isValidAlgorithm(algorithm, 'sign')) {
-                reject(new E.NotSupportedError());
-            }
-            else if( !isValidData(data)) {
-                reject(new E.DataError());
-            }
+    var encryptCMS = function(algorithm, key, data){
+        console.log("[w3c] plaintext data to encrypt (CMS): " + data);
 
-            console.log("[w3c] data to sign: " + data);
-    
-            var object = new CryptoObject();
-            var payload = Protocol.setSignRequest(object, algorithm, key.id, key.subId, data);       
-            object.resolve = resolve;
-            object.reject = reject;
+        return createSimpleRequestPromise(
+            Protocol.setEncryptCMSRequest, 
+            "cms",
+            algorithm, key, data);
+    }
 
-            self.send('communication', object);
-        });
+    var decryptCMS = function(algorithm, key, data){
+        console.log("[w3c] data to decrypt (CMS): " + data);
+
+        return createSimpleRequestPromise(
+            Protocol.setDecryptCMSRequest, 
+            "cms",
+            algorithm, key, data);
     }
 
     // TODO: only "handle" currently
@@ -141,6 +134,8 @@ define(function(require) {
 		encrypt : encrypt,
         decrypt : decrypt,
         sign : sign,
+        encryptCMS : encryptCMS,
+        decryptCMS : decryptCMS,
         discoverKeys : discoverKeys
 	};
 
@@ -171,14 +166,23 @@ define(function(require) {
                 else if("encryptResponse" == responseType) {
                     object.resolve( payload.encryptedData[0] );
                 }
-                else if("discoverKeysResponse" == responseType) {
-                    object.resolve( payload.key );
-                }
                 else if("signResponse" == responseType) {
                     object.resolve( payload.signedHashes[0] );
                 }
+                else if("encryptCMSResponse" == responseType) {
+                    object.resolve( payload.encryptedCMSData[0] );
+                }
+                else if("decryptCMSResponse" == responseType) {
+                    object.resolve( window.atob(payload.plainData[0]) );
+                }
+                else if("discoverKeysResponse" == responseType) {
+                    object.resolve( payload.key );
+                }
+                else if("discoverKeysResponse" == responseType) {
+                    object.resolve( payload.key );
+                }
                 else {
-                    object.reject(new Error("SkyTrust request failed - unknown response type?"));
+                    object.reject(new Error("SkyTrust request failed - unknown response type? No data?"));
                 }
 
 

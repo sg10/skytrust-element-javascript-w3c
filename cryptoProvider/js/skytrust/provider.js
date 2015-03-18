@@ -14,7 +14,8 @@ define(function(require) {
 
     // -------------  private  ------------------------
 
-    var SkyTrustCryptoSubtle = function (){};
+    var SkyTrustCryptoSubtle = function() {};
+    var SkyTrustCryptoExtended = function() {};
 
     var SkyTrustElement = new SkyTrustElement();
     
@@ -27,9 +28,7 @@ define(function(require) {
                     keys.push(new CryptoKey.create("?", ["?", "?"], result[i].id, result[i].subId));
                 }
                 resolve(keys);
-            }).catch(function(error) {
-                reject(error);
-            });
+            }).catch(reject);
 
         });     
     }
@@ -38,6 +37,7 @@ define(function(require) {
 
     var CryptoProvider = function() {
         this.subtle = new SkyTrustCryptoSubtle();
+        this.extended = new SkyTrustCryptoExtended();
         this.listKeys = listKeys;
     }
 
@@ -231,6 +231,53 @@ define(function(require) {
     };
 
 
+    /*
+        EXTENDED
+    */
+
+    /**
+     * The encrypt method returns a new Promise object that will 
+     * encrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.
+     * @method encrypt
+     * @param {} algorithm
+     * @param {} key
+     * @param {} data
+     * @return {Promise|ciphertext} 
+     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "encrypt", 
+     * if an error occurred during normalization of algorithm
+     */
+    SkyTrustCryptoSubtle.prototype.encryptCMS = function(algorithm, key, data){ // data=array
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.encryptCMS()")
+        
+        return SkyTrustElement.operation.encryptCMS(algorithm, key, data);
+    }
+
+
+    /**
+     * The decrypt method returns a new Promise object that will 
+     * decrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.
+     * @method decrypt
+     * @param {} algorithm
+     * @param {} key
+     * @param {} data
+     * @return {Promise|plaintext} 
+     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "decrypt", 
+     * if an error occurred during normalization of algorithm
+     */
+    SkyTrustCryptoSubtle.prototype.decryptCMS = function(algorithm, key, data){ // data=array
+        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decryptCMS()")
+
+        return SkyTrustElement.operation.decryptCMS(algorithm, key, data);
+    };
+
+
+/*
+    generateWrappedKey
+    decryptRequest-wrappedKey
+    decryptCMSRequest-wrappedKey
+    modifyWrappedKeyRequest
+    exportWrappedKeyRequest
+*/
 
     return CryptoProvider;
 

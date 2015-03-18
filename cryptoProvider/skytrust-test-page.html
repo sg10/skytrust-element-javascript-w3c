@@ -20,6 +20,8 @@
 
 <h1>SkyTrust Test Page</h1>
 
+<div id="errorField" style="clear: both; background-color: red; margin: 30px;"></div>
+
 <div style="float: left">
 
     <table>
@@ -48,7 +50,9 @@
                     <textarea id="fieldPlain" cols="100" rows="5"></textarea>
                 </td>
                 <td>
-                    <input type="button" id="btnEncrypt" value="encrypt" />
+                    <input type="button" id="btnEncrypt" value="encrypt" /><br />
+                    <input type="button" id="btnSign" value="sign" /><br />
+                    <input type="button" id="btnEncryptCMS" value="encrypt (CMS)" />
                 </td>
             </tr>
             <tr>
@@ -56,7 +60,8 @@
                     <textarea id="fieldEncrypted" cols="100" rows="5"></textarea>
                 </td>
                 <td>
-                    <input type="button" id="btnDecrypt" value="decrypt" />
+                    <input type="button" id="btnDecrypt" value="decrypt" /><br />
+                    <input type="button" id="btnDecryptCMS" value="decrypt (CMS)" />
                 </td>
             </tr>
             <tr>

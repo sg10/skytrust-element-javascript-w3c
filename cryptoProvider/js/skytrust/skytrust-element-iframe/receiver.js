@@ -26,8 +26,7 @@ define(function(require) {
 
     var onReceivePostMessage = function(event) {
         console.log("[iframe] received post message ...");
-
-        // check origin
+        console.log("[iframe] postMessage origin: " + event.origin);
 
         var dataReceived = JSON.parse(event.data);
 

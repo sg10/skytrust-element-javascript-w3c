@@ -9,7 +9,7 @@ define(function(require) {
 	// ------- private members	
 
 	var self = this;
-	var element = null;
+	var element = null; // SkyTrust element this router is part of
 
 
 	// ------- private methods	
@@ -19,11 +19,11 @@ define(function(require) {
 	// ------- public methods
 
 	var Router = function(n) {
-		element = n;
-
 		if(this instanceof Window) {
 			throw Error('Router called statically'); // define exception
 		}
+		
+		element = n;
 	}
 
 	Router.prototype.route = function(from, to, object) {

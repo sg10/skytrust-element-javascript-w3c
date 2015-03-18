@@ -23,8 +23,9 @@ define(function(require) {
 	// ------- private methods	
 	
 	var addComponent = function(name, component) {
+		// already in use?
 		if(components.hasOwnProperty(name)) {
-			return false; // already in use
+			return false;
 		}
 
 		components[name] = component;

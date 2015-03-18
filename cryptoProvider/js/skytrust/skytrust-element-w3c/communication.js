@@ -19,7 +19,7 @@ define(function(require) {
 
 	// ------- private methods	
 
-	var makeRequest = function(requestObject) {
+	var makeIFrameRequest = function(requestObject) {
 		console.log("[w3c] sending post message to iframe [" + self.iframe_id + "] ...");
 
 		var iframe = document.getElementById(self.iframe_id);
@@ -27,13 +27,15 @@ define(function(require) {
 		console.log("[w3c] data to send: ");
 		console.log(requestObject.json());
 
-		iframe.contentWindow.postMessage(requestObject.json(), "*"); // remove *
+		var url = iframe.src;
+		iframe.contentWindow.postMessage(requestObject.json(), "*");
 
 		// problem: multiple 
 		window.removeEventListener("message", onPostMessageReceive, false);
 
 		onPostMessageReceive = function(event) {
 	        console.log("[w3c] received post message ...");
+        	console.log("[w3c] postMessage origin: " + event.origin);
 
 	        // check origin
 
@@ -56,7 +58,7 @@ define(function(require) {
 
 		Protocol.setBlankHeader(object);
 
-		makeRequest(object);
+		makeIFrameRequest(object);
 	};
 
 
