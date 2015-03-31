@@ -63,7 +63,6 @@ define(function(require) {
 		console.log('[iframe] received at receiver component');
 		console.log(JSON.parse(object.json()));
 
-
         object.resolve();
 	};
 

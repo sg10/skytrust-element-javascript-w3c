@@ -43,11 +43,13 @@ define(function(require) {
 
         var responseObject = requestObject;
         responseObject.setHeader(dataReceived.header);
+        responseObject.setPayload(dataReceived.payload);
+        console.log(requestObject.getHeader());
 
         // set session ID for this SkyTrust element if it has changed
         var responseSessionId = responseObject.getHeader().sessionId;
         if(sessionId !== responseSessionId) {
-            console.log("[iframe] setting session ID: " + sessionId);
+            console.log("[iframe] setting session ID: " + responseSessionId);
             sessionId = responseSessionId;
         }
 
@@ -74,8 +76,6 @@ define(function(require) {
         }
         // correct result
         else {
-            requestObject.setPayload(dataReceived.payload);
-            requestObject.setHeader(dataReceived.header);
 
             self.send('receiver', requestObject);
         }

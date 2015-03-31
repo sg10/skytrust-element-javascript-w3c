@@ -1,27 +1,40 @@
 define(function(require) {
 
 	var $ = require('jQuery');
-	var p = require('jQuery');
 
 
-	/**
-	 * [CryptoKey description]
-	 * @param {[type]} id     [description]
-	 * @param {[type]} subId  [description]
-	 * @param {[type]} algo   [description]
-	 * @param {[type]} usages [description]
-	 */
-    var CryptoKey = function(algo, usages, id, subId) {
+    var CryptoKey = function(algo, usages, keyType, keyData) {
 
     	// SkyTrust specific
-        Object.defineProperty(this, "id", {value: id});
-        Object.defineProperty(this, "subId", {value: subId});
+        Object.defineProperty(this, "keyType", {value: keyType});
+
+        if(keyType == "handle" || keyType == "internalCertificate") {
+            Object.defineProperty(this, "id", {value: keyData.id});
+            Object.defineProperty(this, "subId", {value: keyData.subId});
+            if(keyType == "internalCertificate") {
+                Object.defineProperty(this, "encodedCertificate", {value: keyData.encodedCertificate});
+            }
+
+            // according to W3C specification
+            Object.defineProperty(this, "extractable", {value: false});
+        }
+        else if(keyType == "wrappedKey") {
+            Object.defineProperty(this, "encodedWrappedKey", {value: keyData.encodedWrappedKey});
+            
+            // according to W3C specification
+            Object.defineProperty(this, "extractable", {value: true});
+        }
+        else if(keyType == "externalCertificate") {
+            Object.defineProperty(this, "encodedCertificate", {value: keyData.encodedCertificate});
+            
+            // according to W3C specification
+            Object.defineProperty(this, "extractable", {value: true});
+        }
 
         // according to W3C specification
-        Object.defineProperty(this, "type", {value: "secret"});
-        Object.defineProperty(this, "extractable", {value: false});
-        Object.defineProperty(this, "algorithm", {value: algo});
-        Object.defineProperty(this, "usages", {value: usages});
+        Object.defineProperty(this, "type", {value: "secret"}); // unused
+        Object.defineProperty(this, "algorithm", {value: algo}); // unused
+        Object.defineProperty(this, "usages", {value: usages}); // unused
     };
 
     CryptoKey.prototype.toString = function() {

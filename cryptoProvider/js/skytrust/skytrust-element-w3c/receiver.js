@@ -8,6 +8,7 @@ define(function(require) {
 	var CryptoObject = require('../skytrust-element-common/crypto-object');
     var Protocol = require('../skytrust-element-common/protocol');
 	var Config = require('../config');
+    var Util = require('../skytrust-element-common/util')
 	var E = require('../error');
 
 
@@ -32,14 +33,6 @@ define(function(require) {
         return true;
     }
 
-    var isValidData = function(data) {
-    	if(typeof data === 'string' && data !== null) {
-	    	return true;
-    	}
-    	
-    	return false;		
-    }
-
     // for all requests that have "algorithm, key, data" as input
     var createSimpleRequestPromise = function(protocolFunction, algorithmType, 
         algorithm, key, data) {
@@ -54,12 +47,9 @@ define(function(require) {
             if( !isValidAlgorithm(algorithm, algorithmType)) {
                 reject(new E.NotSupportedError());
             }
-            else if( !isValidData(data)) {
-                reject(new E.DataError());
-            }
 
             var object = new CryptoObject();
-            var payload = protocolFunction(object, algorithm, key.id, key.subId, data);       
+            var payload = protocolFunction(object, algorithm, key, data);       
             object.resolve = resolve;
             object.reject = reject;
 
@@ -114,18 +104,27 @@ define(function(require) {
             algorithm, key, data);
     }
 
-    // TODO: only "handle" currently
+    // TODO?: only "handle" currently
     var discoverKeys = function(){
         return new Promise(function(resolve, reject){
-
             console.log("[w3c] discover keys");
     
             var object = new CryptoObject();
-            var payload = Protocol.setDiscoverKeysRequest(object);       
+            Protocol.setDiscoverKeysRequest(object);       
             object.resolve = resolve;
             object.reject = reject;
 
             self.send('communication', object);
+        });
+    }
+
+    var generateWrappedKey = function(algorithm, encryptionKeys, signingKey, certificateSubject) {
+        return new Promise(function(resolve, reject) {
+            console.log("[w3c] wrapped key request");
+
+            var object = new CryptoObject();
+            Protocol.setGenerateWrappedKeyRequest(object, 
+                algorithm.name, encryptionKeys, signingKey, certificateSubject);
         });
     }
 
@@ -136,7 +135,8 @@ define(function(require) {
         sign : sign,
         encryptCMS : encryptCMS,
         decryptCMS : decryptCMS,
-        discoverKeys : discoverKeys
+        discoverKeys : discoverKeys,
+        generateWrappedKey : generateWrappedKey
 	};
 
 	var Receiver = function() {
@@ -170,13 +170,10 @@ define(function(require) {
                     object.resolve( payload.signedHashes[0] );
                 }
                 else if("encryptCMSResponse" == responseType) {
-                    object.resolve( payload.encryptedCMSData[0] );
+                    object.resolve( payload.encryptedCMSData );
                 }
                 else if("decryptCMSResponse" == responseType) {
-                    object.resolve( window.atob(payload.plainData[0]) );
-                }
-                else if("discoverKeysResponse" == responseType) {
-                    object.resolve( payload.key );
+                    object.resolve( Util.atob(payload.plainData) );
                 }
                 else if("discoverKeysResponse" == responseType) {
                     object.resolve( payload.key );
@@ -186,8 +183,7 @@ define(function(require) {
                 }
 
 
-/*      "encryptCMSResponse" ,
-        "exportWrappedKeyResponse" ,
+/*      "exportWrappedKeyResponse" ,
         "generateWrappedKeyResponse" ,
         "getKeyResponse" */
 

@@ -21,9 +21,6 @@ requirejs(['config', 'jQuery', 'skytrust-element-iframe/element'],
 
 
 function init(config, $, Element) {
-
 	var element = new Element();
-
 	$('#loginserver').val(config.server);
-
 }

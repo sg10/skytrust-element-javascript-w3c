@@ -5,75 +5,141 @@
     <meta charset="UTF-8">
     <title>SkyTrust JavaScript Element Test Page</title>
 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
     <script data-main="js/load-w3c" src="js/lib/require.js"></script>
+
     <style type="text/css">
-        iframe.skytrust-iframe {
+        
+        #skytrust-iframe {
             border: 1px solid black;
             overflow: auto;
             width: 350px;
             height: 200px;
         }
+
+        .btn {
+            margin-left: 2px;
+            margin-bottom: 2px;
+        }
+
+        #wrapper {
+            width: 1024px;
+            margin: auto;
+        }
     </style>
+
+
 </head>
 
 <body>
 
-<h1>SkyTrust Test Page</h1>
 
-<div id="errorField" style="clear: both; background-color: red; margin: 30px;"></div>
+<div id="wrapper">
 
-<div style="float: left">
+    <form>
 
-    <table>
-        <thead>
-            <caption>Discover Keys</caption>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <input type="button" id="btnDiscoverKeys" value="discover" />
-                </td>
-                <td>
-                    <select id="fieldKeys"></select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <button type="reset" class="btn btn-default" aria-label="Left Align" style="float: right;">
+            <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
+    
 
-    <table>
-        <thead>
-            <caption>Encrypt/Decrypt Request</caption>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <textarea id="fieldPlain" cols="100" rows="5"></textarea>
-                </td>
-                <td>
-                    <input type="button" id="btnEncrypt" value="encrypt" /><br />
-                    <input type="button" id="btnSign" value="sign" /><br />
-                    <input type="button" id="btnEncryptCMS" value="encrypt (CMS)" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <textarea id="fieldEncrypted" cols="100" rows="5"></textarea>
-                </td>
-                <td>
-                    <input type="button" id="btnDecrypt" value="decrypt" /><br />
-                    <input type="button" id="btnDecryptCMS" value="decrypt (CMS)" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <textarea id="fieldDecrypted" cols="100" rows="5"></textarea>
-                </td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+        <h1>SkyTrust Test Page</h1>
 
-    <!-- iframe is created dynamically -->
+        <div id="errorField" style="clear: both; margin: 30px 0; display: none;" class="alert alert-warning"></div>
+
+        <div class="row">
+
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="fieldKeys">Select Key</label>
+                    <select id="fieldKeys" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="btnDiscoverKeys">Discover Keys</label><br />
+                    <input type="button" id="btnDiscoverKeys" value="discover" class="btn btn-default" />
+                </div>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldPlain">Plaintext Data</label><br />
+                    <textarea id="fieldPlain" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldPlain2">Plaintext Data #2</label><br />
+                    <textarea id="fieldPlain2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Operation</label><br />
+                    <input type="button" id="btnEncrypt" value="encrypt" class="btn btn-default" /><br />
+                    <input type="button" id="btnSign" value="sign" class="btn btn-default" /><br />
+                    <input type="button" id="btnEncryptCMS" value="encrypt (CMS)" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldEncrypted">Encrypted Data</label><br />
+                    <textarea id="fieldEncrypted" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldEncrypted2">Encrypted Data #2</label><br />
+                    <textarea id="fieldEncrypted2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Operation</label><br />
+                    <input type="button" id="btnDecrypt" value="decrypt" class="btn btn-default" /><br />
+                    <input type="button" id="btnDecryptCMS" value="decrypt (CMS)" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldDecrypted">Decrypted Data</label><br />
+                    <textarea id="fieldDecrypted" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldDecrypted2">Decrypted Data #2</label><br />
+                    <textarea id="fieldDecrypted2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <iframe src="#" id="skytrust-iframe"></iframe>
 
 </div>
 

@@ -18,27 +18,13 @@ define(function(require) {
     var SkyTrustCryptoExtended = function() {};
 
     var SkyTrustElement = new SkyTrustElement();
-    
-    var listKeys = function() {
-        return new Promise(function(resolve, reject) {
 
-            SkyTrustElement.operation.discoverKeys().then(function(result) {
-                var keys = []; // for CryptoObjects
-                for(var i=0; i<result.length; i++) {
-                    keys.push(new CryptoKey.create("?", ["?", "?"], result[i].id, result[i].subId));
-                }
-                resolve(keys);
-            }).catch(reject);
-
-        });     
-    }
 
     // -------------  public  -------------------------
 
     var CryptoProvider = function() {
         this.subtle = new SkyTrustCryptoSubtle();
         this.extended = new SkyTrustCryptoExtended();
-        this.listKeys = listKeys;
     }
 
     SkyTrustCryptoSubtle.prototype.CryptoKey = CryptoKey.create;
@@ -56,7 +42,7 @@ define(function(require) {
      * if an error occurred during normalization of algorithm
      */
     SkyTrustCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.encrypt()")
+        console.log("[w3c] -> SkyTrustCryptoSubtle.encrypt()")
         
         return SkyTrustElement.operation.encrypt(algorithm, key, data);
     }
@@ -74,7 +60,7 @@ define(function(require) {
      * if an error occurred during normalization of algorithm
      */
     SkyTrustCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decrypt()")
+        console.log("[w3c] -> SkyTrustCryptoSubtle.decrypt()")
 
         return SkyTrustElement.operation.decrypt(algorithm, key, data);
     };
@@ -91,50 +77,27 @@ define(function(require) {
      * if an error occurred during normalization of algorithm
      */
     SkyTrustCryptoSubtle.prototype.sign = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.sign()")
+        console.log("[w3c] -> SkyTrustCryptoSubtle.sign()")
 
         return SkyTrustElement.operation.sign(algorithm, key, data);
      };
 
     /**
-     * The verify method returns a new Promise object that will 
-     * verify data using the specified AlgorithmIdentifier with the supplied CryptoKey.
-     * @method verify
-     * @param {} algorithm
-     * @param {} key
-     * @param {} signature
-     * @param {} data
-     * @return {Promise|result} 
-     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "verify", 
-     * if an error occurred during normalization of algorithm 
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
      */
     SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.verify()")
-
-        /*
-            1. signature --> data that was previously signed via sign()
-            2. decrypt signature and compare to 
-         */
-
-        throw new E.NotYetImplementedException();
-
-        //return SkyTrustElement.operation.verify(algorithm, key, data);
+        throw new E.OperationNotSupportedError();
     };
 
     /**
-     * The digest method returns a new Promise object that will 
-     * digest data using the specified AlgorithmIdentifier.
-     * @method digest
-     * @param {} algorithm
-     * @param {} data
-     * @return {Promise|result} 
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
      */
     SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){
-        throw new E.NotYetImplementedException();
+        throw new E.OperationNotSupportedError();
     };
 
     /**
-     * Generates a new CryptoKey or CryptoKeyPair object.
+     * Generates a wrapped key
      * @method generateKey
      * @param {} algorithm
      * @param {} extractable
@@ -148,36 +111,17 @@ define(function(require) {
     };
 
     /**
-     * Description
-     * @method deriveKey
-     * @param {} algorithm
-     * @param {} baseKey
-     * @param {} derivedKeyType
-     * @param {} extractable
-     * @param {} keyUsages
-     * @return {Promise|result} Let result be the result of executing the import key operation specified by normalizedDerivedKeyAlgorithm using "raw" as format, secret as keyData, derivedKeyType as algorithm and using extractable and usages.
-     * @throws NotSupportedError if the name member of normalizedAlgorithm does not identify a registered algorithm that supports the derive bits operation,
-     * or if the name member of normalizedDerivedKeyAlgorithm does not identify a registered algorithm that supports the get key length operation
-     * @throws InvalidAccessError if the name member of the normalized algorithm is not equal to the name attribute of the algorithm internal slot of baseKey,
-     * or if the usages internal slot of baseKey does not contain an entry that is "deriveKey"
-     * @throws SyntaxError if the type internal slot of result is "secret" or "private" and usages is empty
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
      */
     SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){
-        throw new E.NotYetImplementedException();
+        throw new E.OperationNotSupportedError();
     };
 
     /**
-     * Derives bits from a given baseKey.
-     * @method deriveBits
-     * @param {} algorithm
-     * @param {} baseKey
-     * @param {} length
-     * @return {Promise|result} Let result be a new ArrayBuffer containing the result of executing the derive bits operation specified by normalizedAlgorithm using baseKey, algorithm and length.
-     * @throws InvalidAccessError if the name member of the normalized algorithm is not equal to the name attribute of the algorithm internal slot of baseKey,
-     * or if the usages internal slot of baseKey does not contain an entry that is "deriveBits"
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
      */
     SkyTrustCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){
-        throw new E.NotYetImplementedException();
+        throw new E.OperationNotSupportedError();
     };
 
 
@@ -235,42 +179,43 @@ define(function(require) {
         EXTENDED
     */
 
-    /**
-     * The encrypt method returns a new Promise object that will 
-     * encrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.
-     * @method encrypt
-     * @param {} algorithm
-     * @param {} key
-     * @param {} data
-     * @return {Promise|ciphertext} 
-     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "encrypt", 
-     * if an error occurred during normalization of algorithm
-     */
-    SkyTrustCryptoSubtle.prototype.encryptCMS = function(algorithm, key, data){ // data=array
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.encryptCMS()")
+    SkyTrustCryptoExtended.prototype.listKeys = function() {
+        return new Promise(function(resolve, reject) {
+
+            SkyTrustElement.operation.discoverKeys().then(function(result) {
+                var keys = []; // for CryptoObjects
+                for(var i=0; i<result.length; i++) {
+                    // TODO: replace "?"
+                    var keyType = "handle";
+                    var keyData = { id : result[i].id, subId : result[i].subId };
+                    keys.push(new CryptoKey.create("?", ["?"], keyType, keyData));
+                }
+                resolve(keys);
+            }).catch(reject);
+
+        });     
+    }
+
+    SkyTrustCryptoExtended.prototype.encryptCMS = function(algorithm, key, data){
+        console.log("[extended] -> SkyTrustCryptoExtended.encryptCMS()");
         
         return SkyTrustElement.operation.encryptCMS(algorithm, key, data);
     }
 
 
-    /**
-     * The decrypt method returns a new Promise object that will 
-     * decrypt data using the specified AlgorithmIdentifier with the supplied CryptoKey.
-     * @method decrypt
-     * @param {} algorithm
-     * @param {} key
-     * @param {} data
-     * @return {Promise|plaintext} 
-     * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "decrypt", 
-     * if an error occurred during normalization of algorithm
-     */
-    SkyTrustCryptoSubtle.prototype.decryptCMS = function(algorithm, key, data){ // data=array
-        console.log("[w3c] -> SkyTrustCryptoSubtle.prototype.decryptCMS()")
+    SkyTrustCryptoExtended.prototype.decryptCMS = function(algorithm, key, data){
+        console.log("[extended] -> SkyTrustCryptoExtended.decryptCMS()");
 
         return SkyTrustElement.operation.decryptCMS(algorithm, key, data);
     };
 
 
+    SkyTrustCryptoExtended.prototype.generateWrappedKey = function(keyType, encryptionKeys, certificateSubject, signingKey){
+        console.log("[extended] -> SkyTrustCryptoExtended.generateWrappedKey()");
+
+       // return SkyTrustElement.operation.generateWrappedKey(keyType, encryptionKeys, certificateSubject, signingKey);
+    }
+ 
 /*
     generateWrappedKey
     decryptRequest-wrappedKey

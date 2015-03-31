@@ -100,15 +100,30 @@ define(function(require) {
      * @method NotSupportedError
      * @return 
      */
-    var NotSupported = function() {
+    var AlgorithmNotSupported = function() {
         Error.call(this);
-        this.name = "NotSupportedError";
+        this.name = "AlgorithmNotSupportedError";
         this.message = "The algorithm is not supported.";
         this.code = 9;
         this.stack = (new Error()).stack;
         this.toString = function() {return "Error: " + this.name + ": " + this.message;}
     }
-    NotSupported.prototype = Object.create(Error.prototype);
+    AlgorithmNotSupported.prototype = Object.create(Error.prototype);
+
+    /**
+     * Description
+     * @method NotSupportedError
+     * @return 
+     */
+    var OperationNotSupported = function() {
+        Error.call(this);
+        this.name = "OperationNotSupported";
+        this.message = "SkyTrust doesn't support this operation.";
+        this.code = 9;
+        this.stack = (new Error()).stack;
+        this.toString = function() {return "Error: " + this.name + ": " + this.message;}
+    }
+    OperationNotSupported.prototype = Object.create(Error.prototype);
 
     /**
      * Description
@@ -188,7 +203,8 @@ define(function(require) {
         QuotaExceededError :            QuotaExceeded,
         InvalidStateError :             InvalidState,
         SyntaxError :                   Syntax,
-        NotSupportedError :             NotSupported,
+        OperationNotSupportedError :    OperationNotSupported,
+        AlgorithmNotSupportedError :    AlgorithmNotSupported,
         InvalidStateError :             InvalidState,
         OperationError :                Operation,
         UnknownError :                  Unknown,

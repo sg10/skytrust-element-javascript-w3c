@@ -3,6 +3,7 @@ define(function(require) {
     // ------- imports  
     
     var $ = require('jQuery');
+    var Util = require('../skytrust-element-common/util');
 
 
     // ------- private members      
@@ -31,19 +32,56 @@ define(function(require) {
     }
 
 
+    var cryptoKeysToSkyTrustKeys = function(objects) {
+        if( Object.prototype.toString.call( plainTextData ) !== '[object Array]' ) {
+            return cryptoKeyToSkyTrustKey(object);
+        }
+        else {
+            var keys = [];
+            for(var i=0; i<objects.length; i++) {
+                keys.push(cryptoKeyToSkyTrustKey(objects[i]));
+            }
+            return keys;
+        }
+    }
+
+    var cryptoKeyToSkyTrustKey = function(key) {
+        var skyTrustKey = { type : key.keyType };
+
+        if(key.keyType == "handle" || key.keyType == "internalCertificate") {
+            skyTrustKey.id = key.id,
+            skyTrustKey.subId = key.subId
+        }
+        if(key.keyType == "internalCertificate") {
+            skyTrustKey.encodedCertificate = key.encodedCertificate;
+        }
+        if(key.keyType == "wrappedKey") {
+            skyTrustKey.encodedWrappedKey = key.encodedWrappedKey;
+        }
+        if(key.keyType == "externalCertificate") {
+            skyTrustKey.encodedCertificate = key.encodedCertificate;
+        }
+
+        return skyTrustKey
+    }
+
+
+
     // ------- public methods   
     
     Protocol.getBlankHeader = function() {
-        return {
+        var header = {
             "type" : "standardSkyTrustHeader",
             "commandId" : "",
             "sessionId" : "",
             "path" : [ "java-api-instance" ],
             "protocolVersion" : "2.0" };
+
+        return header;
     };
 
     Protocol.setBlankHeader = function(object) {
-        object.header = Protocol.getBlankHeader();
+        object.setHeader(Protocol.getBlankHeader());
     }
 
     Protocol.setDiscoverKeysRequest = function(object) {
@@ -88,16 +126,12 @@ define(function(require) {
         }
     }
 
-    Protocol.setEncryptRequest = function(object, algorithm, id, subId, data) {
+    Protocol.setEncryptRequest = function(object, algorithm, key, data) {
         var b64Data = window.btoa(data); // Base64 conversion
 
         var payload = {
             "type" : "encryptRequest",
-                "encryptionKeys" : [ {
-                    "type" : "handle",
-                    "id" : id,
-                    "subId" : subId
-                } ],
+                "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
             "algorithm" : algorithm,
             "plainData" : [ b64Data ]
         };
@@ -107,14 +141,10 @@ define(function(require) {
         }
     }
 
-    Protocol.setDecryptRequest = function(object, algorithm, id, subId, data) {
+    Protocol.setDecryptRequest = function(object, algorithm, key, data) {
         var payload =  {
             "type" : "decryptRequest",
-            "decryptionKey" : {
-                "type" : "handle",
-                "id" : id,
-                "subId" : subId
-            },
+            "decryptionKey" : cryptoKeyToSkyTrustKey(key),
             "algorithm" : algorithm,
             "encryptedData" : [ data ]
         };
@@ -124,34 +154,26 @@ define(function(require) {
         }
     }
 
-    Protocol.setEncryptCMSRequest = function(object, algorithm, id, subId, data) {
-        var b64Data = window.btoa(data); // Base64 conversion
+    Protocol.setEncryptCMSRequest = function(object, algorithm, key, data) {
+        var b64Data = Util.btoa(data); // Base64 conversion
 
         var payload = {
             "type" : "encryptCMSRequest",
-            "encryptionKeys" : [ {
-                "type" : "handle",
-                "id" : id,
-                "subId" : subId
-                } ],
+            "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
             "algorithm" : algorithm,
-            "plainData" : [ b64Data ]
-            };
+            "plainData" : (b64Data[0] ? b64Data : [ b64Data ])
+        };
 
         if(object.setPayload) {
             object.setPayload(payload);
         }
     }
 
-    Protocol.setDecryptCMSRequest = function(object, algorithm, id, subId, data) {
+    Protocol.setDecryptCMSRequest = function(object, algorithm, key, data) {
         var payload =  {
             "type" : "decryptCMSRequest",
-            "decryptionKey" : {
-                "type" : "handle",
-                "id" : id,
-                "subId" : subId
-            },
-            "encryptedCMSData" : [ data ]
+            "decryptionKey" : cryptoKeyToSkyTrustKey(key),
+            "encryptedCMSData" : (data[0] ? data : [ data ])
             }
 
         if(object.setPayload) {
@@ -159,16 +181,12 @@ define(function(require) {
         }
     }
 
-    Protocol.setSignRequest = function(object, algorithm, id, subId, data) {
-        var b64Data = window.btoa(data);
+    Protocol.setSignRequest = function(object, algorithm, key, data) {
+        var b64Data = Util.btoa(data);
 
         var payload =  {
                 "type" : "signRequest",
-                "signatureKey" : {
-                    "type" : "handle",
-                    "id" : id,
-                    "subId" : subId
-                },
+                "signatureKey" : cryptoKeyToSkyTrustKey(key),
                 "algorithm" : algorithm,
                 "hashesToBeSigned" : [ b64Data ]
             };
@@ -178,6 +196,21 @@ define(function(require) {
         }
     }
 
+    Protocol.setGenerateWrappedKeyRequest = 
+        function(object, algorithm, encryptionKeys, signingKey, certificateSubject) {
+
+        var payload = {
+            "type" : "generateWrappedKeyRequest",
+            "keyType" : algorithm,
+            "encryptionKeys" : cryptoKeysToSkyTrustKeys(encryptionKeys), // array
+            "signingKey" : cryptoKeyToSkyTrustKey(signingKey),
+            "certificateSubject" : certificateSubject
+        };
+
+        if(object.setPayload) {
+            object.setPayload(payload);
+        }       
+    }
 
     Protocol.isAuthRequired = function(object) {
         var payload = object.getPayload();

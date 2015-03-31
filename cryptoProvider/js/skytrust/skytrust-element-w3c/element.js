@@ -24,17 +24,6 @@ define(function(require) {
 		return "skytrust-element-" + Math.round(Math.random()*1E8); // make unique
 	};
 
-	var createIFrameDOMElement = function() {
-		var iframe_id = "";
-		do {
-			iframe_id = "skytrust-iframe-" + Math.round(Math.random()*1E8);
-		} while($("#" + iframe_id).length > 0);
-
-		$("body").append("<iframe src=\"js/skytrust-iframe.html?"+iframe_id+"\" id=\""+iframe_id+"\" class=\"skytrust-iframe\"></iframe>");
-
-		return iframe_id;
-	}
-
 	var addComponent = function(name, component) {
 		if(components.hasOwnProperty(name)) {
 			return false; // already in use
@@ -60,10 +49,11 @@ define(function(require) {
 		self.router = new Router(this);
 		self.id = getNewElementID();
 
-		self.iframe_id = createIFrameDOMElement();
+		var iframe_id = "skytrust-iframe";
+		document.getElementById(iframe_id).src = "js/skytrust-iframe.html?"+iframe_id;
 
 		addComponent('receiver', new Receiver());
-		addComponent('communication', new Communication(self.iframe_id));
+		addComponent('communication', new Communication(iframe_id));
 
 		Element.prototype.debugPrintComponents();
 
