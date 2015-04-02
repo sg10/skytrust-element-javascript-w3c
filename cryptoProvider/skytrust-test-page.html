@@ -17,6 +17,10 @@
 
     <style type="text/css">
         
+        div.skytrust-iframe {
+            float:right;
+        }
+
         #skytrust-iframe {
             border: 1px solid black;
             overflow: auto;
@@ -56,16 +60,38 @@
 
         <div class="row">
 
-            <div class="col-md-8">
+            <div class="col-md-5 skytrust-iframe">
+                <iframe src="#" id="skytrust-iframe"></iframe>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="fieldKeys">Select Key</label>
                     <select id="fieldKeys" class="form-control"></select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="btnDiscoverKeys">Discover Keys</label><br />
                     <input type="button" id="btnDiscoverKeys" value="discover" class="btn btn-default" />
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Wrapped Key</label><br />
+                    <input type="button" id="btnGenWrappedKey2048" value="RSA-2048" class="btn btn-default" />
+                    <input type="button" id="btnGenWrappedKey4096" value="RSA-4096" class="btn btn-default" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Export Key</label><br />
+                    <input type="button" id="btnExport" value="key+certificate" class="btn btn-default" />
                 </div>
             </div>
 
@@ -137,9 +163,25 @@
             </div>
         </div>
 
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldExportedKey">Exported Wrapped Key</label><br />
+                    <textarea id="fieldExportedKey" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldExportedCertificate">Exported Certificate</label><br />
+                    <textarea id="fieldExportedCertificate" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+
     </form>
 
-    <iframe src="#" id="skytrust-iframe"></iframe>
 
 </div>
 

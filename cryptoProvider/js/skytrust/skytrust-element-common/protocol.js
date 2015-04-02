@@ -33,8 +33,9 @@ define(function(require) {
 
 
     var cryptoKeysToSkyTrustKeys = function(objects) {
-        if( Object.prototype.toString.call( plainTextData ) !== '[object Array]' ) {
-            return cryptoKeyToSkyTrustKey(object);
+
+        if( Object.prototype.toString.call( objects ) !== '[object Array]' ) {
+            return cryptoKeyToSkyTrustKey(objects);
         }
         else {
             var keys = [];
@@ -46,6 +47,8 @@ define(function(require) {
     }
 
     var cryptoKeyToSkyTrustKey = function(key) {
+        if(key == null || !key.keyType) return null;
+
         var skyTrustKey = { type : key.keyType };
 
         if(key.keyType == "handle" || key.keyType == "internalCertificate") {
@@ -199,17 +202,22 @@ define(function(require) {
     Protocol.setGenerateWrappedKeyRequest = 
         function(object, algorithm, encryptionKeys, signingKey, certificateSubject) {
 
+        var skyTrustSigningKey = cryptoKeyToSkyTrustKey(signingKey);
+
         var payload = {
             "type" : "generateWrappedKeyRequest",
-            "keyType" : algorithm,
             "encryptionKeys" : cryptoKeysToSkyTrustKeys(encryptionKeys), // array
-            "signingKey" : cryptoKeyToSkyTrustKey(signingKey),
+            "keyType" : algorithm,
             "certificateSubject" : certificateSubject
         };
 
+        if(skyTrustSigningKey != null) {
+            payload.signingKey = skyTrustSigningKey;
+        }
+
         if(object.setPayload) {
             object.setPayload(payload);
-        }       
+        }
     }
 
     Protocol.isAuthRequired = function(object) {

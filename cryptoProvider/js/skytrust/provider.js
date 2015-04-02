@@ -41,11 +41,7 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "encrypt", 
      * if an error occurred during normalization of algorithm
      */
-    SkyTrustCryptoSubtle.prototype.encrypt = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.encrypt()")
-        
-        return SkyTrustElement.operation.encrypt(algorithm, key, data);
-    }
+    SkyTrustCryptoSubtle.prototype.encrypt = SkyTrustElement.operation.encrypt;
 
 
     /**
@@ -59,11 +55,8 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "decrypt", 
      * if an error occurred during normalization of algorithm
      */
-    SkyTrustCryptoSubtle.prototype.decrypt = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.decrypt()")
+    SkyTrustCryptoSubtle.prototype.decrypt = SkyTrustElement.operation.decrypt;
 
-        return SkyTrustElement.operation.decrypt(algorithm, key, data);
-    };
 
     /**
      * The sign method returns a new Promise object that will 
@@ -76,25 +69,8 @@ define(function(require) {
      * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "sign", 
      * if an error occurred during normalization of algorithm
      */
-    SkyTrustCryptoSubtle.prototype.sign = function(algorithm, key, data){
-        console.log("[w3c] -> SkyTrustCryptoSubtle.sign()")
+    SkyTrustCryptoSubtle.prototype.sign = SkyTrustElement.operation.sign;
 
-        return SkyTrustElement.operation.sign(algorithm, key, data);
-     };
-
-    /**
-     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
-     */
-    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
-        throw new E.OperationNotSupportedError();
-    };
-
-    /**
-     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
-     */
-    SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){
-        throw new E.OperationNotSupportedError();
-    };
 
     /**
      * Generates a wrapped key
@@ -106,9 +82,21 @@ define(function(require) {
      * @throws SyntaxError if result is a CryptoKey object and if the type internal slot of result is "secret" or "private" and usages is empty,
      * or if result is a CryptoKeyPair object and if the usages internal slot of the privateKey attribute of result is the empty sequence
      */
-    SkyTrustCryptoSubtle.prototype.generateKey = function(algorithm, extractable, keyUsages){
-        throw new E.NotYetImplementedException();
-    };
+    SkyTrustCryptoSubtle.prototype.generateKey = SkyTrustElement.operation.generateWrappedKey;
+
+
+    /**
+     * Exports a key.
+     * @method exportKey
+     * @param {} format
+     * @param {} key
+     * @return {Promise|result} Let result be the result of performing the export key operation specified by the algorithm internal slot of key using key and format.
+     * @throws InvalidAccessError if the extractable internal slot of key is false
+     */
+    SkyTrustCryptoSubtle.prototype.exportKey = SkyTrustElement.operation.exportKey;
+
+
+//---------------------------------------------------------------------------------
 
     /**
      * @throws OperationNotSupportedError because this isn't supported by SkyTrust
@@ -124,17 +112,18 @@ define(function(require) {
         throw new E.OperationNotSupportedError();
     };
 
+    /**
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
+     */
+    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){
+        throw new E.OperationNotSupportedError();
+    };
 
     /**
-     * Exports a key.
-     * @method exportKey
-     * @param {} format
-     * @param {} key
-     * @return {Promise|result} Let result be the result of performing the export key operation specified by the algorithm internal slot of key using key and format.
-     * @throws InvalidAccessError if the extractable internal slot of key is false
+     * @throws OperationNotSupportedError because this isn't supported by SkyTrust
      */
-    SkyTrustCryptoSubtle.prototype.exportKey = function(format, key){
-        throw new E.NotYetImplementedException();
+    SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){
+        throw new E.OperationNotSupportedError();
     };
 
     /**
@@ -179,50 +168,14 @@ define(function(require) {
         EXTENDED
     */
 
-    SkyTrustCryptoExtended.prototype.listKeys = function() {
-        return new Promise(function(resolve, reject) {
+    SkyTrustCryptoExtended.prototype.listKeys = SkyTrustElement.operation.discoverKeys;
 
-            SkyTrustElement.operation.discoverKeys().then(function(result) {
-                var keys = []; // for CryptoObjects
-                for(var i=0; i<result.length; i++) {
-                    // TODO: replace "?"
-                    var keyType = "handle";
-                    var keyData = { id : result[i].id, subId : result[i].subId };
-                    keys.push(new CryptoKey.create("?", ["?"], keyType, keyData));
-                }
-                resolve(keys);
-            }).catch(reject);
+    SkyTrustCryptoExtended.prototype.encryptCMS = SkyTrustElement.operation.encryptCMS;
 
-        });     
-    }
-
-    SkyTrustCryptoExtended.prototype.encryptCMS = function(algorithm, key, data){
-        console.log("[extended] -> SkyTrustCryptoExtended.encryptCMS()");
-        
-        return SkyTrustElement.operation.encryptCMS(algorithm, key, data);
-    }
+    SkyTrustCryptoExtended.prototype.decryptCMS = SkyTrustElement.operation.decryptCMS;
 
 
-    SkyTrustCryptoExtended.prototype.decryptCMS = function(algorithm, key, data){
-        console.log("[extended] -> SkyTrustCryptoExtended.decryptCMS()");
 
-        return SkyTrustElement.operation.decryptCMS(algorithm, key, data);
-    };
-
-
-    SkyTrustCryptoExtended.prototype.generateWrappedKey = function(keyType, encryptionKeys, certificateSubject, signingKey){
-        console.log("[extended] -> SkyTrustCryptoExtended.generateWrappedKey()");
-
-       // return SkyTrustElement.operation.generateWrappedKey(keyType, encryptionKeys, certificateSubject, signingKey);
-    }
- 
-/*
-    generateWrappedKey
-    decryptRequest-wrappedKey
-    decryptCMSRequest-wrappedKey
-    modifyWrappedKeyRequest
-    exportWrappedKeyRequest
-*/
 
     return CryptoProvider;
 

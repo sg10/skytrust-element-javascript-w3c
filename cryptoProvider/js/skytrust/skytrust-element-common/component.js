@@ -5,22 +5,27 @@ define(function(require) {
 	var $ = require('jQuery');
 
 
-	// ------- public members	
+	// ------- C'tor
 
 	var Component = function() {
 		if(this instanceof Window) {
 			return false;
 		}
-
-		return {
-			// event handler for receiving an object (via router)
-			onReceive : function(object) {},
-
-			// send object to another component
-			send : function(to, object) {} 
-		};
-
 	};
+
+
+	// ------- private/"protected" methods	
+
+	// send object to another component
+	Component.prototype.send = function(to, object) {};
+
+
+	// ------- public methods	
+
+	// event handler for receiving an object (via router)
+	Component.prototype.onReceive = function(object) {};
+
+
 
 
 	// ------- export	

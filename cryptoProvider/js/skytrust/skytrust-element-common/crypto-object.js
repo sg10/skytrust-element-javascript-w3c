@@ -4,62 +4,60 @@ define(function(require) {
 
     var $ = require('jQuery');
 
+    var CryptoObject = function(payload_) {
 
-    // ------- private members  
+        // ------- private members  
 
-    var header = null;
-    var payload = null;
-
-    var self = null;
-
-
-    // ------- private methods/classes  
+        var header = {};
+        var payload = {};
 
 
-    function CryptoKey() { } // dummy class for prototype lookup
+        // ------- public members
 
+        this.resolve = function() {}; // for promise
+        this.reject = function() {}; // for promise
+        
 
-    // ------- public methods  
+        // ------- public methods  
 
-    var setHeader = function(h) {
-        // clone object
-        header = JSON.parse(JSON.stringify(h));
-    }
-
-    var setPayload = function(p) {
-        // clone object
-        payload = JSON.parse(JSON.stringify(p));
-    }
-
-    var json = function() {
-        return JSON.stringify({
-            header : header,
-            payload : payload
-        });
-    }
-
-    var CryptoObject = function(p) {
-
-        self = this;
-
-        if(p) {
-            setPayload(p);
+        this.setHeader = function(h) {
+            // clone object
+            header = JSON.parse(JSON.stringify(h));
         }
 
-        return $.extend(this, {
-            getPayload :        function() { return payload; },
-            setPayload :        setPayload,
+        this.getHeader = function() {
+            return header;
+        }
 
-            getHeader :         function() { return header; },
-            setHeader :         setHeader,
+        this.setPayload = function(p) {
+            // clone object
+            payload = JSON.parse(JSON.stringify(p));
+        }
 
-            json :              json,
+        this.getPayload = function() {
+            return payload;
+        }
 
-            resolve :           function()     {}, // for promise
-            reject :            function()     {}  // for promise
-        });
-    };
-    
+        this.json = function() {
+            return JSON.stringify({
+                "header" : header,
+                "payload" : payload
+            });
+        }
+
+        this.toString = function() {
+            return "[CryptoObject] header=" + header + ", payload=" + payload;
+        }
+
+
+        // ------- C'tor
+
+        if(payload_) {
+            this.setPayload(payload_);
+        }
+
+    }
+
 
     // ------- export  
 

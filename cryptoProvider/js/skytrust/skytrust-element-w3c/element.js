@@ -11,78 +11,59 @@ define(function(require) {
 	var Communication = require('./communication');
 
 
-	// ------- private members	
-	
-	var components = {};
+	return function() {
 
-	var self = null;
+		// ------- private members
+
+		var components = {};
+		var router = new Router(this);
+		var iframe_id = "skytrust-iframe";
 
 
-	// ------- private methods and classes	
-	
-	var getNewElementID = function() {
-		return "skytrust-element-" + Math.round(Math.random()*1E8); // make unique
-	};
+		// ------- private methods
+		
+		var addComponent = function(name, component) {
+			if(components.hasOwnProperty(name)) {
+				return false; // already in use
+			}
 
-	var addComponent = function(name, component) {
-		if(components.hasOwnProperty(name)) {
-			return false; // already in use
+			components[name] = component;
+
+			component.send = function(to, object) {
+				router.route(name, to, object);
+			};
+		};
+
+
+		// ------- public members
+
+		this.operation = {};
+
+		// ------- public methods
+
+		this.getComponent = function(name) {
+			if(components.hasOwnProperty(name)) {
+				return components[name];
+			}
+
+			return false;
 		}
 
-		components[name] = component;
 
-		component.send = function(to, object) {
-			self.router.route(name, to, object);
-		};
-	};
+		// ------- C'tor
 
-
-	// ------- public methods
-
-	var Element = function() {
 		if(this instanceof Window) {
 			throw Error('Element called statically'); // define exception
 		}
 
-		self = this;
-
-		self.router = new Router(this);
-		self.id = getNewElementID();
-
-		var iframe_id = "skytrust-iframe";
-		document.getElementById(iframe_id).src = "js/skytrust-iframe.html?"+iframe_id;
+		document.getElementById(iframe_id).src = "js/skytrust-iframe.html";
 
 		addComponent('receiver', new Receiver());
 		addComponent('communication', new Communication(iframe_id));
 
-		Element.prototype.debugPrintComponents();
+		this.operation = components['receiver'].operation;
 
-		return $.extend(this, {
-			id : self.id,
-			operation : components['receiver'].operation
-		});
-	};
-
-	// TODO: remove, only debug
-	Element.prototype.debugPrintComponents = function() {
-		console.log("[w3c] element components:")
-		for(key in components) {
-			console.log("[w3c]  - " + key);
-		}
-	};
-
-	Element.prototype.getComponent = function(name) {
-		if(components.hasOwnProperty(name)) {
-			return components[name];
-		}
-		return false;
 	}
-
-
-
-	// ------- export	
-
-	return Element;
 
 
 });

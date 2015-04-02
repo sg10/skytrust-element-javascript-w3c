@@ -205,7 +205,7 @@ define(function(require) {
         SyntaxError :                   Syntax,
         OperationNotSupportedError :    OperationNotSupported,
         AlgorithmNotSupportedError :    AlgorithmNotSupported,
-        InvalidStateError :             InvalidState,
+        InvalidAccessError :            InvalidAccess,
         OperationError :                Operation,
         UnknownError :                  Unknown,
         DataError :                     Data,

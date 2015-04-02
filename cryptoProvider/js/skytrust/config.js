@@ -1,6 +1,6 @@
 define({
 	
-    "server":                "http://skytrust-dev.iaik.tugraz.at/skytrust-server-no-auth-2.0/rest/json",
+    "server":                "http://skytrust-dev.iaik.tugraz.at/skytrust-server-with-auth-2.0/rest/json",
 
     "algorithms":  {
             "encrypt":    [  "RSA-OAEP", "RSAES-PKCS1-v1_5", "RSAES-RAW"  ],

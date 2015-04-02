@@ -11,6 +11,7 @@ define(function(require) {
         if(keyType == "handle" || keyType == "internalCertificate") {
             Object.defineProperty(this, "id", {value: keyData.id});
             Object.defineProperty(this, "subId", {value: keyData.subId});
+
             if(keyType == "internalCertificate") {
                 Object.defineProperty(this, "encodedCertificate", {value: keyData.encodedCertificate});
             }
@@ -20,7 +21,8 @@ define(function(require) {
         }
         else if(keyType == "wrappedKey") {
             Object.defineProperty(this, "encodedWrappedKey", {value: keyData.encodedWrappedKey});
-            
+            Object.defineProperty(this, "encodedX509Certificate", {value: keyData.encodedX509Certificate});
+
             // according to W3C specification
             Object.defineProperty(this, "extractable", {value: true});
         }
@@ -38,7 +40,23 @@ define(function(require) {
     };
 
     CryptoKey.prototype.toString = function() {
-        return "[SkyTrust CryptoKey object] id=" + this.id + ", subId=" + this.subId;
+        var str = "";
+
+        if(this.keyType == "handle" || this.keyType == "encodedCertificate") {
+            str = str + "id=" + this.id + ", subId=" + this.subId;
+
+            if(this.keyType == "internalCertificate") {
+                str = str + " certificate=" + this.encodedCertificate.substr(0,8) + "...";
+            }
+        }
+        else if(this.keyType == "wrappedKey") {
+            str = str + "wrappedKey=" + this.encodedWrappedKey.substr(0,8) + "...";
+        }
+        else if(this.keyType == "externalCertificate") {
+            str = str + "certificate=" + this.encodedCertificate.substr(0,8) + "...";
+        }
+
+        return str;
     }
 
     /**

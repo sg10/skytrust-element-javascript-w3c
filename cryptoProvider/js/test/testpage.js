@@ -72,6 +72,42 @@ define(function(require) {
              }).catch(displayError);
         });
 
+        $('#btnGenWrappedKey2048').on('click', function() { genWrappedKey("RSA-2048") });
+        $('#btnGenWrappedKey4096').on('click', function() { genWrappedKey("RSA-4096") });
+
+        var genWrappedKey = function(algoWrappedKey) {
+            var cryptoKey = cryptoKeysList[fieldKeys.val()];
+
+            if(!cryptoKey) return;
+
+            console.log("[w3c] using CryptoKey " + cryptoKey + ", algorithm " + algoWrappedKey);
+
+            provider.subtle.generateKey(algoWrappedKey, true, null, [cryptoKey], null, "CN=Wonderful")
+             .then(function(result) { 
+                var i = cryptoKeysList.length;
+                cryptoKeysList[i] = result;
+                fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
+                fieldKeys.val(i);
+                console.log(i + ": " + cryptoKeysList[i]);
+             })
+             .catch(displayError);
+        }
+
+        $('#btnExport').on('click', function() {
+            var cryptoKey = cryptoKeysList[fieldKeys.val()];
+
+            if(!cryptoKey) return;
+
+            console.log("[w3c] using CryptoKey " + cryptoKey);
+
+            provider.subtle.exportKey("x509", cryptoKey)
+             .then(function(result) {
+                $("#fieldExportedKey").val(result.key);
+                $("#fieldExportedCertificate").val(result.certificate);
+             })
+             .catch(displayError);
+        });
+
         window.setTimeout(function() {
             provider.extended.listKeys().then(updateCryptoKeysList);
         }, 2000);
@@ -97,19 +133,15 @@ define(function(require) {
         $('#errorField').html(e.toString());
     }
 
-
     var updateCryptoKeysList = function(cryptoKeys) {
         var fieldKeys = $("#fieldKeys");
 
         cryptoKeysList = cryptoKeys;
         fieldKeys.html("");
         for(var i=0; i<cryptoKeys.length; i++) {
-            fieldKeys.append($("<option />").val(i).text("id: " + cryptoKeys[i].id + ", subId: " + cryptoKeys[i].subId));
+            fieldKeys.append($("<option />").val(i).text(cryptoKeys[i]));
         }
     }
 
-    // window.addEventListener("load", initTestPage);
-
     return initTestPage;
-
 });

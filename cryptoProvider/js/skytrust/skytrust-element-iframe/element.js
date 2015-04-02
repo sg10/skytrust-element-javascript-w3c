@@ -12,77 +12,64 @@ define(function(require) {
 	var Authentication = require('./authentication');
 	var Communication = require('./communication');
 
-
-	// ------- private members	
 	
-	var components = {};
 
-	var self = null;
+	var Element = function() {
+
+		// ------- private members
+
+		var router = null;
+		var components = {};
+
+		
+		// ------- private methods	
+		
+		var addComponent = function(name, component) {
+			// already in use?
+			if(components.hasOwnProperty(name)) {
+				return false;
+			}
+
+			components[name] = component;
+
+			component.send = function(to, object) {
+				router.route(name, to, object);
+			};
+		};
 
 
-	// ------- private methods	
-	
-	var addComponent = function(name, component) {
-		// already in use?
-		if(components.hasOwnProperty(name)) {
+		// ------- public members
+
+		this.operation = null;		
+
+
+		// ------- public methods
+		
+		this.getComponent = function(name) {
+			if(components.hasOwnProperty(name)) {
+				return components[name];
+			}
+
 			return false;
 		}
 
-		components[name] = component;
 
-		component.send = function(to, object) {
-			self.router.route(name, to, object);
-		};
-	};
+		// ------- C'tor
 
-	var getNewElementID = function() {
-		return "skytrust-element-" + Math.round(Math.random()*1E8); // make unique
-	};
-
-
-	// ------- public methods
-
-	var Element = function() {
 		if(this instanceof Window) {
 			throw Error('Element called statically'); // define exception
 		}
 
-		self = this;
-
-		self.router = new Router(this);
-		self.id = getNewElementID();
+		router = new Router(this);
 
 		addComponent('receiver', new Receiver());
 		addComponent('actorplus', new ActorPlus());
 		addComponent('authentication', new Authentication());
 		addComponent('communication', new Communication());
 
-		Element.prototype.debugPrintComponents();
-
-		return $.extend(this, {
-			id : self.id,
-			operation : components['receiver'].operation
-		});
-	};
-
-
-	// TODO: remove, only debug
-	Element.prototype.getComponent = function(name) {
-		if(components.hasOwnProperty(name)) {
-			return components[name];
-		}
-		return false;
+		this.operation = components['receiver'].operation;
 	}
 
-	Element.prototype.debugPrintComponents = function() {
-		console.log("[iframe] element components:")
-		for(key in components) {
-			console.log("[iframe]  - " + key);
-		}
-	};
-
-
-	// ------- export	
 
 	return Element;
 

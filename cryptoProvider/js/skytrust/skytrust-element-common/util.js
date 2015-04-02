@@ -1,6 +1,10 @@
 define(function(require) {
 
-    var atob = function(base64Data) {
+    // ------- public methods
+
+    var Util = {};
+
+    Util.atob = function(base64Data) {
 
         if( Object.prototype.toString.call( base64Data ) === '[object Array]' ) {
             var plainTextArray = [];
@@ -16,7 +20,7 @@ define(function(require) {
 
     };
 
-    var btoa = function(plainTextData) {
+    Util.btoa = function(plainTextData) {
 
         if( Object.prototype.toString.call( plainTextData ) === '[object Array]' ) {
             var base64Array = [];
@@ -32,9 +36,9 @@ define(function(require) {
 
     }
 
-    return {
-        atob : atob,
-        btoa : btoa
-    }
+
+    // ------- export
+
+    return Util;
 
 });
