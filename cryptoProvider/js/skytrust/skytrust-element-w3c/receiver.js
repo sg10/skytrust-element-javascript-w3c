@@ -14,41 +14,52 @@ define(function(require) {
 
     var Receiver = function() {
 
-	   // ------- private members	
+	    // ------- private members	
 
-       var self = this;
+        var self = this;
 
-	   // ------- private methods	
 
-        var isValidAlgorithm = function(algorithm, operation) {
-            if(!algorithm || typeof algorithm !== "string") {
-                console.log("[w3c] algorithm " + algorithm + " is not an instance of string");
-                return false;
-            }
+	    // ------- private methods	
 
-            if($.inArray(algorithm, Config.algorithms[operation]) === -1) {
-                console.log("[w3c] algorithm " + algorithm + " does not support operation '" + operation + "' (and it's complementary operation)");
-                return false;
-            }
-
-            return true;
+        var rejectedPromise = function(error) {
+            return new Promise(function(resolve, reject) {
+                reject(error);
+            });
         }
+
+        var normalizeAlgorithm = function(algorithm, operation) {
+            var algo = algorithm.name ? algorithm.name : algorithm;
+            algo = ("" + algo).toLowerCase();
+
+            var op = ("" + operation).toLowerCase();
+
+            // used to check in config file if this algorithm
+            // is available for this operation 
+            var opConfig = (op === "decrypt") ? "encrypt" : op;
+
+            var algorithmsForOperation = Config.supportedAlgorithms[opConfig];
+
+            var algoConfig = Util.inArray(algo, algorithmsForOperation);
+
+            if(!algorithmsForOperation || !algoConfig) {
+                throw new E.NotSupportedError(algo);
+            }
+
+            return algoConfig;
+        };
+
 
         // for all requests that have "algorithm, key, data" as input
         var createSimpleRequestPromise = function(protocolFunction, algorithmType, 
             algorithm, key, data) {
 
+            try {
+                algorithm = normalizeAlgorithm(algorithm, algorithmType);
+            } catch(e) {
+                return rejectedPromise(e);
+            }
+
             return new Promise(function(resolve, reject){
-
-                // normalize!
-                if(algorithm.name) {
-                    algorithm = algorithm.name;
-                }
-
-                if( !isValidAlgorithm(algorithm, algorithmType)) {
-                    reject(new E.NotSupportedError());
-                }
-
                 var object = new CryptoObject();
                 var payload = protocolFunction(object, algorithm, key, data);       
                 object.resolve = resolve;
@@ -65,18 +76,23 @@ define(function(require) {
                 request : function(algorithm, key, data){
                     return createSimpleRequestPromise(
                         Protocol.setEncryptRequest, "encrypt",
-                        algorithm, key, data);
+                        algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
-                    object.resolve( payload.encryptedData[0] );
+                    if( payload.encryptedData[0] && payload.encryptedData[0][0] ) {
+                        object.resolve( payload.encryptedData[0][0] );
+                    }
+                    else {
+                        object.rejected( new Error("skyTrust error") );
+                    }
                 }
             },
 
             decrypt : {
                 request : function(algorithm, key, data){
                     return createSimpleRequestPromise(
-                        Protocol.setDecryptRequest, "encrypt",
-                        algorithm, key, data);
+                        Protocol.setDecryptRequest, "decrypt",
+                        algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
                     object.resolve( window.atob(payload.plainData[0]) );
@@ -87,7 +103,7 @@ define(function(require) {
                 request : function(algorithm, key, data){
                     return createSimpleRequestPromise(
                         Protocol.setSignRequest, "sign",
-                        algorithm, key, data);
+                        algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
                     object.resolve( payload.signedHashes[0] );
@@ -98,7 +114,7 @@ define(function(require) {
                 request : function(algorithm, key, data){
                     return createSimpleRequestPromise(
                         Protocol.setEncryptCMSRequest, "cms",
-                        algorithm, key, data);
+                        algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
                     object.resolve( payload.encryptedCMSData );
@@ -109,7 +125,7 @@ define(function(require) {
                 request : function(algorithm, key, data){
                     return createSimpleRequestPromise(
                         Protocol.setDecryptCMSRequest, "cms",
-                        algorithm, key, data);
+                        algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
                     object.resolve( Util.atob(payload.plainData) );
@@ -133,7 +149,7 @@ define(function(require) {
                     var keys = []; // for CryptoObjects
                     for(var i=0; i<result.length; i++) {
                         var keyData = { id : result[i].id, subId : result[i].subId };
-                        keys.push(new CryptoKey.create(null, null, "handle", keyData));
+                        keys.push(new CryptoKey(null, null, "handle", keyData));
                     }
 
                     object.resolve(keys);
@@ -142,12 +158,15 @@ define(function(require) {
 
             generateWrappedKey : {
                 request : function(algorithm, extractable, keyUsages, encryptionKeys, signingKey, certificateSubject) {
-                    return new Promise(function(resolve, reject) {
-                        // normalize!
-                        if(algorithm.name) {
-                            algorithm = algorithm.name;
-                        }
+                    var certificateSubject = Util.copyOf(certificateSubject);
 
+                    try {
+                        algorithm = normalizeAlgorithm(algorithm, "wrapped");
+                    } catch(e) {
+                        return rejectedPromise(e);
+                    }
+
+                    return new Promise(function(resolve, reject) {
                         var object = new CryptoObject();
                         Protocol.setGenerateWrappedKeyRequest(object, algorithm,
                             encryptionKeys, signingKey, certificateSubject);
@@ -159,7 +178,8 @@ define(function(require) {
                     });
                 },
                 response : function(object, payload) {
-                    var key = new CryptoKey.create("?", "?", "wrappedKey", payload);
+                    // payload object's keys matches the ones CryptoKey needs
+                    var key = new CryptoKey(null, null, "wrappedKey", payload);
                     object.resolve( key );
                 }
             },
@@ -170,7 +190,7 @@ define(function(require) {
                         reject(new E.InvalidAccessError());
                     }
 
-                    if(format == "x509") {
+                    if(format === "x509") {
                         resolve({
                             key : key.encodedWrappedKey,
                             certificate : key.encodedX509Certificate
@@ -183,12 +203,17 @@ define(function(require) {
             },
 
             importKey : function(format, keyData, algorithm, extractable, keyUsages) {
+                var keyData = Util.copyOf(keyData);
+
                 return new Promise(function(resolve, reject) {
-                    if(format == "x509") {
+                    if(format === "x509") {
                         
                     }
-                    else if(format == "id") {
+                    else if(format === "id") {
 
+                    }
+                    else {
+                        reject(new E.NotSupportedError(format));
                     }
                 });
             }
@@ -204,7 +229,7 @@ define(function(require) {
 
             var error = Protocol.getError(object);
             if(error !== false) {
-                object.reject(new Error("SkyTrust error code " + error));
+                object.reject(new Error("SkyTrust/HTTP error code " + error));
             }
             else {
                 var payload = object.getPayload();
@@ -242,8 +267,6 @@ define(function(require) {
             importKey : operations.importKey,
         };
 
-
-        console.log("C'tor!")
 
     };
 

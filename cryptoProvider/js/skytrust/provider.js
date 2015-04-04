@@ -27,7 +27,7 @@ define(function(require) {
         this.extended = new SkyTrustCryptoExtended();
     }
 
-    SkyTrustCryptoSubtle.prototype.CryptoKey = CryptoKey.create;
+    SkyTrustCryptoSubtle.prototype.CryptoKey = CryptoKey;
 
 
     /**

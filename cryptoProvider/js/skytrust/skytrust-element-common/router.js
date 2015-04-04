@@ -15,7 +15,7 @@ define(function(require) {
 		// ------- public methods
 
 		this.route = function(from, to, object) {
-			console.log("[iframe][router]  FROM=" + from + " TO=" + to);
+			console.log("[common][router]  FROM=" + from + " TO=" + to);
 
 			if(!(object instanceof CryptoObject)) {
 				throw new Error("Router can only transmit instances of CryptoObject");

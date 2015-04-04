@@ -39,6 +39,7 @@ define(function(require) {
 
 		this.operation = {};
 
+
 		// ------- public methods
 
 		this.getComponent = function(name) {

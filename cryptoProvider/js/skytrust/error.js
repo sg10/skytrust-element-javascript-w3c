@@ -100,15 +100,15 @@ define(function(require) {
      * @method NotSupportedError
      * @return 
      */
-    var AlgorithmNotSupported = function() {
+    var NotSupported = function(algorithm) {
         Error.call(this);
-        this.name = "AlgorithmNotSupportedError";
-        this.message = "The algorithm is not supported.";
+        this.name = "NotSupportedError";
+        this.message = "This algorithm is not supported: " + algorithm;
         this.code = 9;
         this.stack = (new Error()).stack;
         this.toString = function() {return "Error: " + this.name + ": " + this.message;}
     }
-    AlgorithmNotSupported.prototype = Object.create(Error.prototype);
+    NotSupported.prototype = Object.create(Error.prototype);
 
     /**
      * Description
@@ -204,7 +204,7 @@ define(function(require) {
         InvalidStateError :             InvalidState,
         SyntaxError :                   Syntax,
         OperationNotSupportedError :    OperationNotSupported,
-        AlgorithmNotSupportedError :    AlgorithmNotSupported,
+        NotSupportedError :    NotSupported,
         InvalidAccessError :            InvalidAccess,
         OperationError :                Operation,
         UnknownError :                  Unknown,

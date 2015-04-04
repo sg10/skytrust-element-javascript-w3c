@@ -1,12 +1,17 @@
 define(function(require) {
 
+    var $ = require('jQuery');
+
+
     // ------- public methods
 
     var Util = {};
 
     Util.atob = function(base64Data) {
-
-        if( Object.prototype.toString.call( base64Data ) === '[object Array]' ) {
+        if( typeof plainTextData === "string" ) {
+            return window.atob(base64Data);
+        }
+        else {
             var plainTextArray = [];
             for(var i=0; i<base64Data.length; i++) {
                 plainTextArray.push(window.atob(base64Data[i]));
@@ -14,15 +19,13 @@ define(function(require) {
 
             return plainTextArray;
         }
-        else {
-            return window.atob(base64Data);
-        }
-
     };
 
     Util.btoa = function(plainTextData) {
-
-        if( Object.prototype.toString.call( plainTextData ) === '[object Array]' ) {
+        if( typeof plainTextData === "string" ) {
+            return window.btoa(plainTextData);
+        }
+        else {
             var base64Array = [];
             for(var i=0; i<plainTextData.length; i++) {
                 base64Array.push(window.btoa(plainTextData[i]));
@@ -30,11 +33,56 @@ define(function(require) {
 
             return base64Array;
         }
-        else {
-            return window.btoa(plainTextData);
+    };
+
+    Util.inArray = function(matchString, arr) {
+        if(!arr || !arr.length) {
+            return false;
         }
 
-    }
+        var matchString = matchString.toLowerCase();
+
+        for(var i=0; i<arr.length; i++) {
+            if(matchString === arr[i].toLowerCase()) {
+                return arr[i];
+            }
+        }
+
+        return false;
+    };
+
+
+    Util.copyOf = function(obj) {
+        if(typeof obj === "string") {
+            return "" + obj;
+        }
+
+        if(typeof obj === "number" || typeof obj === "boolean") {
+            return obj;
+        }
+
+        if(typeof obj === "date") {
+            var copy = new Date();
+            copy.setTime(obj.getTime());
+            return copy;
+        }
+
+        if(Array.isArray(obj)) {
+            var copy = [];
+            for (var i = 0; i < obj.length; i++) {
+                copy[i] = Util.copyOf(obj[i]);
+            }
+            return copy;
+        }
+
+        if(typeof obj === "object" || obj instanceof Object) {
+            return $.extend(true, {}, obj);
+        }
+
+        throw new Error("Copying type " + (typeof obj) + " is not supported!");
+
+
+    };
 
 
     // ------- export

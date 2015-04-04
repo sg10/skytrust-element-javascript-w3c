@@ -51,17 +51,17 @@ define(function(require) {
 
         var skyTrustKey = { type : key.keyType };
 
-        if(key.keyType == "handle" || key.keyType == "internalCertificate") {
+        if(key.keyType === "handle" || key.keyType === "internalCertificate") {
             skyTrustKey.id = key.id,
             skyTrustKey.subId = key.subId
         }
-        if(key.keyType == "internalCertificate") {
+        if(key.keyType === "internalCertificate") {
             skyTrustKey.encodedCertificate = key.encodedCertificate;
         }
-        if(key.keyType == "wrappedKey") {
+        if(key.keyType === "wrappedKey") {
             skyTrustKey.encodedWrappedKey = key.encodedWrappedKey;
         }
-        if(key.keyType == "externalCertificate") {
+        if(key.keyType === "externalCertificate") {
             skyTrustKey.encodedCertificate = key.encodedCertificate;
         }
 
@@ -130,13 +130,13 @@ define(function(require) {
     }
 
     Protocol.setEncryptRequest = function(object, algorithm, key, data) {
-        var b64Data = window.btoa(data); // Base64 conversion
+        var b64Data = Util.btoa(data); // Base64 conversion
 
         var payload = {
             "type" : "encryptRequest",
                 "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
             "algorithm" : algorithm,
-            "plainData" : [ b64Data ]
+            "plainData" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
         };
 
         if(object.setPayload) {
@@ -149,7 +149,7 @@ define(function(require) {
             "type" : "decryptRequest",
             "decryptionKey" : cryptoKeyToSkyTrustKey(key),
             "algorithm" : algorithm,
-            "encryptedData" : [ data ]
+            "encryptedData" : ((typeof data === "string") ? [ data ] : data)
         };
 
         if(object.setPayload) {
@@ -164,7 +164,7 @@ define(function(require) {
             "type" : "encryptCMSRequest",
             "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
             "algorithm" : algorithm,
-            "plainData" : (b64Data[0] ? b64Data : [ b64Data ])
+            "plainData" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
         };
 
         if(object.setPayload) {
@@ -176,8 +176,8 @@ define(function(require) {
         var payload =  {
             "type" : "decryptCMSRequest",
             "decryptionKey" : cryptoKeyToSkyTrustKey(key),
-            "encryptedCMSData" : (data[0] ? data : [ data ])
-            }
+            "encryptedCMSData" : ((typeof data === "string") ? [ data ] : data)
+        };
 
         if(object.setPayload) {
             object.setPayload(payload);
@@ -191,7 +191,7 @@ define(function(require) {
                 "type" : "signRequest",
                 "signatureKey" : cryptoKeyToSkyTrustKey(key),
                 "algorithm" : algorithm,
-                "hashesToBeSigned" : [ b64Data ]
+                "hashesToBeSigned" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
             };
 
         if(object.setPayload) {
@@ -223,7 +223,7 @@ define(function(require) {
     Protocol.isAuthRequired = function(object) {
         var payload = object.getPayload();
 
-        if(payload && payload.type == "authChallengeRequest") {
+        if(payload && payload.type === "authChallengeRequest") {
             return true;
         }
 
@@ -244,7 +244,7 @@ define(function(require) {
     Protocol.getError = function(object) {
         var payload = object.getPayload();
 
-        if(payload && payload.type == "status") {
+        if(payload && payload.type === "status") {
             return payload.code;
         }
 

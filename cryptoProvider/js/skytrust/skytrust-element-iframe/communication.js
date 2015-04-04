@@ -35,8 +35,13 @@ define(function(require) {
                     .done(function(dataReceived) {
                         handleServerResponse(dataReceived, requestObject, jsonRequest)
                     })
-                    .fail(function(jqXHR) {
-                        console.log("[iframe] request error")
+                    .fail(function(jqXHR, statusText, errorThrown) {
+                        console.log("[iframe] request error " + errorThrown);
+                        var errorPayload = {
+                            "type" : "status",
+                            "code" : jqXHR.status }; // ?
+                        console.log(jqXHR);
+                        requestObject.setPayload(errorPayload);
                         self.send('receiver', requestObject);
                     });
     	};
@@ -71,7 +76,7 @@ define(function(require) {
                 }
             }
             // Authentication: sent credentials were incorrect
-            else if(Protocol.getError(responseObject) == "609") {
+            else if(Protocol.getError(responseObject) === "609") {
                 console.log("[iframe] wrong username/password");
                 // keep command id!
                 var commandId = Protocol.getCommandId(JSON.parse(jsonRequest).header);

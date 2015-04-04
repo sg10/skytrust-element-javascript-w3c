@@ -32,20 +32,21 @@ define(function(require) {
 
             var dataReceived = JSON.parse(event.data);
 
-            var object = new CryptoObject(dataReceived.payload);
             console.log("[iframe] data received post message");
-            console.log(dataReceived);
-            object.setHeader(dataReceived.header);
 
+            var object = new CryptoObject(dataReceived.payload);
+            object.setHeader(dataReceived.header);
+            object.setRequestID(dataReceived.requestID);
+            
             object.resolve = function() {
                 console.log("[iframe] sending post message back ...");
-                event.source.postMessage(object.json(), "*"); // remove *
+                event.source.postMessage(object.jsonWithRequestID(), "*"); // remove *
             };
 
             object.reject = function(error) {
                 console.log("[iframe] sending post message back ...");
                 object.payload.nodeError = error.toString(); // make skytrust protocol conform
-                event.source.postMessage(object.json(), "*"); // remove *
+                event.source.postMessage(object.jsonWithRequestID(), "*"); // remove *
             };
 
             self.send('communication', object);
@@ -55,8 +56,6 @@ define(function(require) {
 
         this.onReceive = function(object) {
     		console.log('[iframe] received at receiver component');
-    		console.log(JSON.parse(object.json()));
-
             object.resolve();
     	};
 

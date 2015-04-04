@@ -10,6 +10,7 @@ define(function(require) {
 
         var header = {};
         var payload = {};
+        var requestID = -1;
 
 
         // ------- public members
@@ -38,6 +39,14 @@ define(function(require) {
             return payload;
         }
 
+        this.setRequestID = function(id) {
+            requestID = id;
+        }
+
+        this.getRequestID = function() {
+            return requestID;
+        }
+
         this.json = function() {
             return JSON.stringify({
                 "header" : header,
@@ -45,8 +54,16 @@ define(function(require) {
             });
         }
 
+        this.jsonWithRequestID = function() {
+            return JSON.stringify({
+                "header" : header,
+                "payload" : payload,
+                "requestID" : requestID
+            });
+        }
+
         this.toString = function() {
-            return "[CryptoObject] header=" + header + ", payload=" + payload;
+            return "[CryptoObject #"+requestID+"] header=" + header + ", payload=" + payload;
         }
 
 
