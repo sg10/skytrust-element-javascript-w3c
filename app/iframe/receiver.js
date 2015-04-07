@@ -16,7 +16,7 @@ define(function(require) {
     	// ------- private methods	
 
         var initPostMessageListener = function() {
-            console.log("[iframe] init post message listener (iframe)");
+            console.log("[iframe] init post message listener");
 
             window.addEventListener("message", onReceivePostMessage, false);
         };

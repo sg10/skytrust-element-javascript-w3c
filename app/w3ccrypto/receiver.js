@@ -20,20 +20,13 @@ define(function(require) {
 
 	    // ------- private methods	
 
-        var rejectedPromise = function(error) {
-            return new Promise(function(resolve, reject) {
-                reject(error);
-            });
-        };
-
         var normalizeAlgorithm = function(algorithm, operation) {
             var algo = algorithm.name ? algorithm.name : algorithm;
             algo = ("" + algo).toLowerCase();
 
             var op = ("" + operation).toLowerCase();
 
-            // used to check in config file if this algorithm
-            // is available for this operation 
+            // for decrypt are the same operations available
             var opConfig = (op === "decrypt") ? "encrypt" : op;
 
             var algorithmsForOperation = Config.supportedAlgorithms[opConfig];
@@ -52,10 +45,12 @@ define(function(require) {
         var createSimpleRequestPromise = function(protocolFunction, algorithmType, 
             algorithm, key, data) {
 
+            if(CryptoKey)
+
             try {
                 algorithm = normalizeAlgorithm(algorithm, algorithmType);
             } catch(e) {
-                return rejectedPromise(e);
+                return Util.rejectedPromise(e);
             }
 
             return new Promise(function(resolve, reject){
@@ -156,7 +151,7 @@ define(function(require) {
             },
 
             generateWrappedKey : {
-                request : function(algorithm, extractable, keyUsages, encryptionKeys, signingKey, certificateSubject) {
+                request : function(algorithm, encryptionKeys, signingKey, certificateSubject) {
                     var certificateSubject2 = Util.copyOf(certificateSubject);
 
                     try {
@@ -185,6 +180,10 @@ define(function(require) {
 
             exportKey : function(format, key) {
                 return new Promise(function(resolve, reject) {
+                    if(!(key instanceof CryptoKey)) {
+                        reject(new Error("invalid CryptoKey object"));
+                    }
+
                     if(key.extractable !== true) {
                         reject(new E.InvalidAccessError());
                     }
@@ -201,7 +200,7 @@ define(function(require) {
                 });
             },
 
-            importKey : function(format, keyData, algorithm, extractable, keyUsages) {
+            importKey : function(format, keyData) {
                 var keyData2 = Util.copyOf(keyData);
 
                 return new Promise(function(resolve, reject) {

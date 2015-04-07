@@ -1,7 +1,7 @@
 {
   "name": "skytrust-javascript-element",
   "description": "A JavaScript Element for SkyTrust",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -9,9 +9,8 @@
     "test": "grunt qunit"
   },
   "author": {
-    "name": "Author Name",
-    "email": "email@domain.com",
-    "url": "http://bower.io/"
+    "name": "Stefan Gruber",
+    "email": "sgruber@student.tugraz.at"
   },
   "licenses": [
     {
@@ -31,5 +30,8 @@
     "grunt-contrib-requirejs": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*"
+  },
+  "dependencies": {
+    "promise": "^6.1.0"
   }
 }

@@ -13,12 +13,13 @@ define(function(require) {
 		var iframe_id = "";
 		var self = this;
 		var pendingRequests = {};
+		var iFrameLoaded = false;
 
 
 		// ------- private methods	
 
         var initPostMessageListener = function() {
-            console.log("[iframe] init post message listener (iframe)");
+            console.log("[w3c   ] init post message listener");
 
             window.addEventListener("message", onPostMessageReceive, false);
         };
@@ -38,7 +39,19 @@ define(function(require) {
 			pendingRequests[id] = requestObject;
 
 			var jsonData = requestObject.jsonWithRequestID();
-			iframe.contentWindow.postMessage(jsonData, "*");
+			
+			// IFrame not yet loaded --> wait
+			if(iFrameLoaded === false) {
+				var interval = window.setInterval(function() {
+					if(iFrameLoaded === true) {
+						window.clearInterval(interval);
+						iframe.contentWindow.postMessage(jsonData, "*");
+					}
+				}, 500);
+			}
+			else {
+				iframe.contentWindow.postMessage(jsonData, "*");
+			}
 
 			console.log("[w3c   ] pending requests: " + Object.keys(pendingRequests).length);
 		};
@@ -78,8 +91,6 @@ define(function(require) {
         	self.send('receiver', requestObject);
         };
 
-
-
 		// ------- public methods
 
 		this.onReceive = function(object) {
@@ -89,6 +100,10 @@ define(function(require) {
 
 			makeIFrameRequest(object);
 		};
+
+        this.start = function() {
+        	iFrameLoaded = true;
+        };
 
 
 		// ------- C'tor

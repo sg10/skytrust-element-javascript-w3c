@@ -21,10 +21,11 @@ module.exports = function(grunt) {
                 stripBanners: true
             },
             dist: {
-                src: ['bower_components/requirejs/require.js', '<%= concat.dist.dest %>'],
-                dest: 'dist/require.js'
+                src: ['<%= concat.dist.dest %>'],
+                dest: 'dist/skytrust.js'
             },
         },
+        // does not work since PhantomJS does not support Promises yet
         qunit: {
             files: ['test/**/*.html']
         },
@@ -71,7 +72,7 @@ module.exports = function(grunt) {
                     optimize: 'uglify2',
                     findNestedDependencies: true,
                     //include : ["w3ccrypto/load-w3c"],
-                    exclude : ["jQuery"]
+                    exclude : ["jQuery", "skytrust-config"]
                 }
 /*
                 options: {
@@ -95,11 +96,18 @@ module.exports = function(grunt) {
             }
         },
         copy: {
+            dist: {
+                files: [
+                    // includes files within path
+                    {expand: false, src: ['app/skytrust-config.js'], dest: 'dist/skytrust-config.js', filter: 'isFile'},
+                ],
+            },
             disttest: {
                 files: [
                     // includes files within path
                     {expand: false, src: ['app/skytrust-iframe.html'], dest: 'test/dist-test/lib/skytrust-iframe.html', filter: 'isFile'},
                     {expand: false, src: ['dist/skytrust.js'], dest: 'test/dist-test/lib/skytrust.js', filter: 'isFile'},
+                    {expand: false, src: ['app/skytrust-config.js'], dest: 'test/dist-test/lib/skytrust-config.js', filter: 'isFile'},
                 ],
             },
         },
@@ -142,9 +150,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    // Default task.
-    grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'requirejs', 'concat']);
-    grunt.registerTask('buildonly', ['clean', 'requirejs', 'concat', 'copy:disttest']);
+    // Default task
+    grunt.registerTask('default', ['jshint', /*'qunit', */'clean', 'requirejs', 'concat', 'copy:dist']);
+    grunt.registerTask('buildtest', ['clean', 'requirejs', 'concat', 'copy:disttest']);
     grunt.registerTask('preview', ['connect:development']);
     grunt.registerTask('preview-live', ['default', 'connect:production']);
 

@@ -17,7 +17,7 @@ define(function(require) {
 		var iframe_id = "skytrust-iframe";
 		// URL relative to caller HTML file
 		var IFRAME_SRC = require.toUrl("skytrust-iframe.html"); 
-
+		var iframe_loaded = false;
 
 		// ------- private methods
 		
@@ -31,6 +31,11 @@ define(function(require) {
 			component.send = function(to, object) {
 				router.route(name, to, object);
 			};
+		};
+
+		var setIFrameLoaded = function() {
+			console.log("[w3c   ] IFrame target loaded");
+			components['communication'].start();
 		};
 
 
@@ -57,7 +62,9 @@ define(function(require) {
 		}
 
 		$( document ).ready(function() {
-			$('#' + iframe_id).attr('src', IFRAME_SRC);//.src = IFRAME_SRC;
+			console.log("[w3c   ] loading iframe target ...");
+			$('#' + iframe_id).attr('src', IFRAME_SRC);
+			$('#' + iframe_id).on('load', setIFrameLoaded);
 		});
 
 		addComponent('receiver', new Receiver());

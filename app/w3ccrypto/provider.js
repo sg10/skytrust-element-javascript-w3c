@@ -6,16 +6,21 @@ define(function(require) {
     var SkyTrustElement = require('../w3ccrypto/element');
     var E = require('../common/error');
     var CryptoKey = require('../common/key');
+    var Util = require('../common/util');
+
+    var skyTrustElement = null;
 
 
     // -------- static
 
     var CryptoProvider = function() {
 
-        // ------- private
+        // ------- C'tor
 
-
-        var skyTrustElement = new SkyTrustElement();
+        // singleton!
+        if(skyTrustElement === null) {
+            skyTrustElement = new SkyTrustElement();
+        }
 
 
         // ------- public
@@ -37,8 +42,9 @@ define(function(require) {
          * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "encrypt", 
          * if an error occurred during normalization of algorithm
          */
-        this.subtle.encrypt = skyTrustElement.operation.encrypt;
-
+        this.subtle.encrypt = function(algorithm, key, data) {
+            return skyTrustElement.operation.encrypt(algorithm, key, data);
+        }
 
         /**
          * The decrypt method returns a new Promise object that will 
@@ -51,8 +57,9 @@ define(function(require) {
          * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "decrypt", 
          * if an error occurred during normalization of algorithm
          */
-        this.subtle.decrypt = skyTrustElement.operation.decrypt;
-
+        this.subtle.decrypt = function(algorithm, key, data) {
+            return skyTrustElement.operation.decrypt(algorithm, key, data);
+        }
 
         /**
          * The sign method returns a new Promise object that will 
@@ -65,8 +72,9 @@ define(function(require) {
          * @throws InvalidAccessError if the usages internal slot of key does not contain an entry that is "sign", 
          * if an error occurred during normalization of algorithm
          */
-        this.subtle.sign = skyTrustElement.operation.sign;
-
+        this.subtle.sign = function(algorithm, key, data) {
+            return skyTrustElement.operation.sign(algorithm, key, data);
+        }
 
         /**
          * Generates a wrapped key
@@ -78,7 +86,11 @@ define(function(require) {
          * @throws SyntaxError if result is a CryptoKey object and if the type internal slot of result is "secret" or "private" and usages is empty,
          * or if result is a CryptoKeyPair object and if the usages internal slot of the privateKey attribute of result is the empty sequence
          */
-        this.subtle.generateKey = skyTrustElement.operation.generateWrappedKey;
+        this.subtle.generateKey = function(algorithm, extractable, keyUsages, encryptionKeys, signingKey, certificateSubject) {
+            Util.warningIfNotNull({'extractable' : extractable, 'keyUsages' : keyUsages});
+
+            return skyTrustElement.operation.generateWrappedKey(algorithm, encryptionKeys, signingKey, certificateSubject);
+        }
 
 
         /**
@@ -89,38 +101,37 @@ define(function(require) {
          * @return {Promise|result} Let result be the result of performing the export key operation specified by the algorithm internal slot of key using key and format.
          * @throws InvalidAccessError if the extractable internal slot of key is false
          */
-        this.subtle.exportKey = skyTrustElement.operation.exportKey;
+        this.subtle.exportKey = function(format, key) {
+            return skyTrustElement.operation.exportKey(format, key);
+        }
 
+
+        this.subtle.importKey = function(format, keyData, algorithm, extractable, keyUsages) {
+            Util.warningIfNotNull({'algorithm' : algorithm,'extractable' : extractable, 'keyUsages' : keyUsages});
+
+            return skyTrustElement.operation.exportKey(format, keyData);
+        }
 
     //---------------------------------------------------------------------------------
 
         /**
          * @throws OperationNotSupportedError because this isn't supported by SkyTrust
          */
-        this.subtle.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){
-            throw new E.OperationNotSupportedError();
-        };
+        this.subtle.deriveKey = Util.throwNotSupportedError;
 
         /**
          * @throws OperationNotSupportedError because this isn't supported by SkyTrust
          */
-        this.subtle.deriveBits = function(algorithm, baseKey, length){
-            throw new E.OperationNotSupportedError();
-        };
+        this.subtle.deriveBits = Util.throwNotSupportedError;
+        /**
+         * @throws OperationNotSupportedError because this isn't supported by SkyTrust
+         */
+        this.subtle.verify = Util.throwNotSupportedError;
 
         /**
          * @throws OperationNotSupportedError because this isn't supported by SkyTrust
          */
-        this.subtle.verify = function(algorithm, key, signature, data){
-            throw new E.OperationNotSupportedError();
-        };
-
-        /**
-         * @throws OperationNotSupportedError because this isn't supported by SkyTrust
-         */
-        this.subtle.digest = function(algorithm, data){
-            throw new E.OperationNotSupportedError();
-        };
+        this.subtle.digest = Util.throwNotSupportedError;
 
         /**
          * Wrap key method.
@@ -169,6 +180,8 @@ define(function(require) {
         this.extended.encryptCMS = skyTrustElement.operation.encryptCMS;
 
         this.extended.decryptCMS = skyTrustElement.operation.decryptCMS;
+
+
 
     }
 

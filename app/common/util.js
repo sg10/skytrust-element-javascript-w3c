@@ -1,6 +1,6 @@
 define(function(require) {
 
-    // var $ = require('jQuery');
+    var E = require('../common/error');
 
 
     // ------- public methods
@@ -84,6 +84,26 @@ define(function(require) {
         throw new Error("Copying type " + (typeof obj) + " is not supported!");
 
 
+    };
+
+    Util.rejectedPromise = function(error) {
+        return new Promise(function(resolve, reject) {
+            reject(error);
+        });
+    };
+
+
+    Util.warningIfNotNull = function(objectLiteral) {
+        $.each(objectLiteral, function(key, value) {
+            if(value != null) {
+                console.warn("Parameter '" + key + "' is not used via this API."
+                    + " To disable this warning, set it to null.");
+            }
+        });
+    };
+
+    Util.throwNotSupportedError = function() {
+        throw new E.OperationNotSupportedError();
     };
 
 

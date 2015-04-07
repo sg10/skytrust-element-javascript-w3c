@@ -1,6 +1,14 @@
-define(function() {
+define(function(require) {
+
+    var Util = require("./util");
 
     var CryptoKey = function(algo, usages, keyType, keyData) {
+        if(!(this instanceof CryptoKey)) {
+            throw new Error("CryptoKey called statically");
+        }
+
+        Util.warningIfNotNull({'algo' : algo, 'usages' : usages});
+
         // SkyTrust specific
         Object.defineProperty(this, "keyType", {value: keyType});
 
@@ -28,6 +36,9 @@ define(function() {
             // according to W3C specification
             Object.defineProperty(this, "extractable", {value: true});
         }
+        else {
+            throw new Error("Invalid keyType specified");
+        }
 
         // according to W3C specification
         Object.defineProperty(this, "type", {value: "secret"}); // unused
@@ -35,8 +46,9 @@ define(function() {
         Object.defineProperty(this, "usages", {value: usages}); // unused
     };
 
+
     CryptoKey.prototype.toString = function() {
-        var str = "";
+        var str = "[CryptoKey] ";
 
         if(this.keyType === "handle" || this.keyType === "encodedCertificate") {
             str = str + "id=" + this.id + ", subId=" + this.subId;
