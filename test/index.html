@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <title>Test Suite</title>
   <!-- Load local QUnit. -->
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
   <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
   <script src="../bower_components/qunit/qunit/qunit.js"></script>
   <script>
     QUnit.config.autostart = false;
   </script>
 
-  <script data-main="../app/config" src="../bower_components/requirejs/require.js"></script> 
+  <script data-main="../app/skytrust.js" src="../bower_components/requirejs/require.js"></script> 
   <script>
     window.requireTestMode = true;
     require.config({
