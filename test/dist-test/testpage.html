@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>SkyTrust JavaScript Element Test Page</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+    <script data-main="lib/skytrust" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+    <script src="testpage.js"></script>
+
+    <style type="text/css">
+        
+        div.skytrust-iframe {
+            float: right;
+        }
+
+        #skytrust-iframe {
+            border: 1px solid black;
+            overflow: auto;
+            width: 350px;
+            height: 200px;
+        }
+
+        .btn {
+            margin-left: 2px;
+            margin-bottom: 2px;
+        }
+
+        #wrapper {
+            width: 1024px;
+            margin: auto;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+    <form>
+
+        <button type="reset" class="btn btn-default" aria-label="Left Align" style="float: right;">
+            <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
+    
+
+        <h1>SkyTrust Test Page</h1>
+
+        <div id="errorField" style="clear: both; margin: 30px 0; display: none;" class="alert alert-warning"></div>
+
+        <div class="row">
+
+            <div class="col-md-5 skytrust-iframe">
+                <iframe src="#" id="skytrust-iframe"></iframe>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="fieldKeys">Select Key</label>
+                    <select id="fieldKeys" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="btnDiscoverKeys">Discover Keys</label><br />
+                    <input type="button" id="btnDiscoverKeys" value="discover" class="btn btn-default" />
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Wrapped Key</label><br />
+                    <input type="button" id="btnGenWrappedKey2048" value="RSA-2048" class="btn btn-default" />
+                    <input type="button" id="btnGenWrappedKey4096" value="RSA-4096" class="btn btn-default" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Export Key</label><br />
+                    <input type="button" id="btnExport" value="key+certificate" class="btn btn-default" />
+                </div>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldPlain">Plaintext Data</label><br />
+                    <textarea id="fieldPlain" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldPlain2">Plaintext Data #2</label><br />
+                    <textarea id="fieldPlain2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Operation</label><br />
+                    <input type="button" id="btnEncrypt" value="encrypt" class="btn btn-default" /><br />
+                    <input type="button" id="btnSign" value="sign" class="btn btn-default" /><br />
+                    <input type="button" id="btnEncryptCMS" value="encrypt (CMS)" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldEncrypted">Encrypted Data</label><br />
+                    <textarea id="fieldEncrypted" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldEncrypted2">Encrypted Data #2</label><br />
+                    <textarea id="fieldEncrypted2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Operation</label><br />
+                    <input type="button" id="btnDecrypt" value="decrypt" class="btn btn-default" /><br />
+                    <input type="button" id="btnDecryptCMS" value="decrypt (CMS)" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldDecrypted">Decrypted Data</label><br />
+                    <textarea id="fieldDecrypted" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldDecrypted2">Decrypted Data #2</label><br />
+                    <textarea id="fieldDecrypted2" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldExportedKey">Exported Wrapped Key</label><br />
+                    <textarea id="fieldExportedKey" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fieldExportedCertificate">Exported Certificate</label><br />
+                    <textarea id="fieldExportedCertificate" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    window.setTimeout(initTestpage, 500);
+</script>
+
+</body>
+</html>

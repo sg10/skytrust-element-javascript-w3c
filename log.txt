@@ -1,0 +1,103 @@
+[4mRunning "jshint:gruntfile" (jshint) task[24m
+
+[1m   Gruntfile.js[22m
+[31m>> [39mES5 option is now set per default
+
+[31m>> [39m1 error in 1 file
+[33mWarning: Task "jshint:gruntfile" failed. [4mUsed --force, continuing.[24m[39m
+
+[4mRunning "jshint:app" (jshint) task[24m
+
+[1m   app/iframe/element.js[22m
+      7 |[90m    var ActorPlus = require('./actorplus');[39m
+                 ^ 'ActorPlus' is defined but never used.
+[1m   app/w3ccrypto/provider.js[22m
+    101 |[90m    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){[39m
+                                                                                                                  ^ 'keyUsages' is defined but never used.
+    101 |[90m    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){[39m
+                                                                                                     ^ 'extractable' is defined but never used.
+    101 |[90m    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){[39m
+                                                                                     ^ 'derivedKeyType' is defined but never used.
+    101 |[90m    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){[39m
+                                                                            ^ 'baseKey' is defined but never used.
+    101 |[90m    SkyTrustCryptoSubtle.prototype.deriveKey = function(algorithm, baseKey, derivedKeyType, extractable, keyUsages){[39m
+                                                                 ^ 'algorithm' is defined but never used.
+    108 |[90m    SkyTrustCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){[39m
+                                                                                      ^ 'length' is defined but never used.
+    108 |[90m    SkyTrustCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){[39m
+                                                                             ^ 'baseKey' is defined but never used.
+    108 |[90m    SkyTrustCryptoSubtle.prototype.deriveBits = function(algorithm, baseKey, length){[39m
+                                                                  ^ 'algorithm' is defined but never used.
+    115 |[90m    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){[39m
+                                                                                         ^ 'data' is defined but never used.
+    115 |[90m    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){[39m
+                                                                              ^ 'signature' is defined but never used.
+    115 |[90m    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){[39m
+                                                                         ^ 'key' is defined but never used.
+    115 |[90m    SkyTrustCryptoSubtle.prototype.verify = function(algorithm, key, signature, data){[39m
+                                                              ^ 'algorithm' is defined but never used.
+    122 |[90m    SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){[39m
+                                                                         ^ 'data' is defined but never used.
+    122 |[90m    SkyTrustCryptoSubtle.prototype.digest = function(algorithm, data){[39m
+                                                              ^ 'algorithm' is defined but never used.
+    140 |[90m    SkyTrustCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){[39m
+                                                                                         ^ 'wrapAlgorithm' is defined but never used.
+    140 |[90m    SkyTrustCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){[39m
+                                                                            ^ 'wrappingKey' is defined but never used.
+    140 |[90m    SkyTrustCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){[39m
+                                                                       ^ 'key' is defined but never used.
+    140 |[90m    SkyTrustCryptoSubtle.prototype.wrapKey = function(format, key, wrappingKey, wrapAlgorithm){[39m
+                                                               ^ 'format' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                                                                                                         ^ 'keyUsages' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                                                                                            ^ 'extractable' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                                                                     ^ 'unwrappedKeyAlgorithm' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                                                    ^ 'unwrapAlgorithm' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                                     ^ 'unwrappingKey' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                         ^ 'wrappedKey' is defined but never used.
+    159 |[90m    SkyTrustCryptoSubtle.prototype.unwrapKey = function(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages){[39m
+                                                                 ^ 'format' is defined but never used.
+[1m   app/w3ccrypto/providerDef.js[22m
+     27 |[90m    }[39m
+              ^ Missing semicolon.
+[1m   app/w3ccrypto/receiver.js[22m
+      5 |[90m    var $ = require('jQuery');[39m
+                 ^ '$' is defined but never used.
+    206 |[90m                var keyData2 = Util.copyOf(keyData);[39m
+                             ^ 'keyData2' is defined but never used.
+    205 |[90m            importKey : function(format, keyData, algorithm, extractable, keyUsages) {[39m
+                                                                                   ^ 'keyUsages' is defined but never used.
+    205 |[90m            importKey : function(format, keyData, algorithm, extractable, keyUsages) {[39m
+                                                                      ^ 'extractable' is defined but never used.
+    205 |[90m            importKey : function(format, keyData, algorithm, extractable, keyUsages) {[39m
+                                                           ^ 'algorithm' is defined but never used.
+
+[31m>> [39m32 errors in 20 files
+[33mWarning: Task "jshint:app" failed. [4mUsed --force, continuing.[24m[39m
+
+[4mRunning "jshint:test" (jshint) task[24m
+[32m>> [39m1 file lint free.
+
+[4mRunning "qunit:files" (qunit) task[24m
+Testing test/index.html 
+[31m>> [39mPhantomJS timed out, possibly due to a missing QUnit start() call.
+[33mWarning: 1/1 assertions failed (0ms) [4mUsed --force, continuing.[24m[39m
+[33mWarning: Task "qunit:files" failed. [4mUsed --force, continuing.[24m[39m
+
+[4mRunning "clean:files" (clean) task[24m
+[32m>> [39m1 path cleaned.
+
+[4mRunning "requirejs:compile" (requirejs) task[24m
+
+[4mRunning "concat:dist" (concat) task[24m
+File dist/require.js created.
+
+[4mRunning "uglify:dist" (uglify) task[24m
+[32m>> [39m1 file created.
+
+[31mDone, but with warnings.[39m
