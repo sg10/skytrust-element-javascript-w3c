@@ -51,8 +51,8 @@ define(function(require) {
 
 		// ------- C'tor
 
-		if(this.window === window) {
-			throw Error('Element called statically'); // define exception
+		if(!(this instanceof Element)) {
+			throw new Error('Element called statically'); // define exception
 		}
 
 		router = new Router(this);

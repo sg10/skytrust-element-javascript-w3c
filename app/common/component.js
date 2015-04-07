@@ -6,8 +6,8 @@ define(function() {
 	// ------- C'tor
 
 	var Component = function() {
-		if(this.window === window) {
-			return false;
+		if(!(this instanceof Component)) {
+			throw new Error("Component called statically");
 		}
 	};
 

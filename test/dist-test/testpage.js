@@ -9,7 +9,6 @@ var initTestpage = function() {
     var algoCMS = "CMS-AES-192-GCM";
     var algoSign = "RSASSA-PKCS1-v1_5-SHA-256";
 
-
     // buttons
     $('#btnDiscoverKeys').on('click', function() {
         provider.extended.listKeys().then(updateCryptoKeysList);
@@ -73,24 +72,21 @@ var initTestpage = function() {
     $('#btnGenWrappedKey4096').on('click', function() { genWrappedKey("RSA-4096") });
 
     var genWrappedKey = function(algoWrappedKey) {
-        for(var i=0; i<5; i++) {
-            //var cryptoKey = cryptoKeysList[fieldKeys.val()];
-            var cryptoKey = cryptoKeysList[i%12];
+        var cryptoKey = cryptoKeysList[fieldKeys.val()];
+        
+        if(!cryptoKey) return;
 
-            if(!cryptoKey) return;
+        console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoWrappedKey);
 
-            console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoWrappedKey);
-
-            provider.subtle.generateKey(algoWrappedKey, true, null, [cryptoKey], null, "CN=Wonderful")
-             .then(function(result) { 
-                var i = cryptoKeysList.length;
-                cryptoKeysList[i] = result;
-                fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
-                fieldKeys.val(i);
-                console.log(i + ": " + cryptoKeysList[i]);
-             })
-             .catch(displayError);
-         }
+        provider.subtle.generateKey(algoWrappedKey, true, null, [cryptoKey], null, "CN=Wonderful")
+         .then(function(result) { 
+            var i = cryptoKeysList.length;
+            cryptoKeysList[i] = result;
+            fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
+            fieldKeys.val(i);
+            console.log(i + ": " + cryptoKeysList[i]);
+         })
+         .catch(displayError);
     };
 
     $('#btnExport').on('click', function() {

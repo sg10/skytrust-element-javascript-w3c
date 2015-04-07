@@ -108,7 +108,7 @@ define(function(require) {
 
 		// ------- C'tor
 
-		if(this.window === window) {
+		if(!(this instanceof Communication)) {
 			throw new Error("Communication called statically");
 		}
 		

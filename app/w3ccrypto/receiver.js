@@ -29,7 +29,7 @@ define(function(require) {
             // for decrypt are the same operations available
             var opConfig = (op === "decrypt") ? "encrypt" : op;
 
-            var algorithmsForOperation = Config.supportedAlgorithms[opConfig];
+            var algorithmsForOperation = Protocol.supportedAlgorithms[opConfig];
 
             var algoConfig = Util.inArray(algo, algorithmsForOperation);
 

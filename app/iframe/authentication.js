@@ -57,7 +57,7 @@ define(function(require) {
 
 		// ------- C'tor
 
-		if(this.window === window) {
+		if(!(this instanceof Authentication)) {
 			throw Error('Authentication called statically'); // define exception
 		}
 
