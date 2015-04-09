@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 
-    <script data-main="lib/skytrust" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+<!--    <script data-main="lib/skytrust" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script> -->
+    <script src="../../app/skytrust-event-listener.js"></script>
+    <script data-main="../../app/skytrust" src="../../bower_components/requirejs/require.js"></script>
+
     <script src="testpage.js"></script>
 
     <style type="text/css">
@@ -48,7 +51,6 @@
 </head>
 
 <body>
-
 
 <div id="wrapper">
 
@@ -95,8 +97,12 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Export Key</label><br />
+                    <label>Export Wrapped Key</label><br />
                     <input type="button" id="btnExport" value="key+certificate" class="btn btn-default" />
+                </div>
+                <div class="form-group">
+                    <label>Import Wrapped Key</label><br />
+                    <input type="button" id="btnImport" value="key+certificate" class="btn btn-default" />
                 </div>
             </div>
 
@@ -190,7 +196,7 @@
 </div>
 
 <script type="text/javascript">
-    window.setTimeout(initTestpage, 500);
+    window.onCryptoProviderLoad(initTestpage);    
 </script>
 
 </body>

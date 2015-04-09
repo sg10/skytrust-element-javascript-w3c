@@ -43,9 +43,30 @@ define(function(require) {
 
         // for all requests that have "algorithm, key, data" as input
         var createSimpleRequestPromise = function(protocolFunction, algorithmType, 
-            algorithm, key, data) {
+            algorithm, cryptoKey, data) {
 
-            if(CryptoKey)
+            if($.isArray(cryptoKey)) {
+                $.each(cryptoKey, function(k, value) {
+                    if(!(value instanceof CryptoKey)) {
+                        return Util.rejectedPromise(new E.KeyError("not an array"));
+                    }
+                });
+            }
+            else if(!(cryptoKey instanceof CryptoKey)) {
+                return Util.rejectedPromise(new E.KeyError());
+            }
+
+            if($.isArray(data)) {
+                $.each(data, function(k, value) {
+                    if(!(value instanceof ArrayBuffer) && !Util.isArrayBufferView(value)) {
+                        return Util.rejectedPromise(new E.DataError("Data is not a valid ArrayBuffer/ArrayBufferView array"));
+                    }
+                });
+            }
+            else if(!(data instanceof ArrayBuffer) && !Util.isArrayBufferView(data)) {
+                return Util.rejectedPromise(new E.DataError("Data is not a valid ArrayBuffer/ArrayBufferView"));
+            }
+
 
             try {
                 algorithm = normalizeAlgorithm(algorithm, algorithmType);
@@ -55,7 +76,7 @@ define(function(require) {
 
             return new Promise(function(resolve, reject){
                 var object = new CryptoObject();
-                protocolFunction(object, algorithm, key, data);       
+                protocolFunction(object, algorithm, cryptoKey, data);       
                 object.resolve = resolve;
                 object.reject = reject;
 
@@ -68,61 +89,76 @@ define(function(require) {
 
             encrypt : {
                 request : function(algorithm, key, data){
+                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+
                     return createSimpleRequestPromise(
                         Protocol.setEncryptRequest, "encrypt",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
                     if( payload.encryptedData[0] && payload.encryptedData[0][0] ) {
-                        object.resolve( payload.encryptedData[0][0] );
+                        object.resolve( Util.base64ToArrayBuffer(payload.encryptedData[0][0]) );
                     }
                     else {
-                        object.rejected( new Error("skyTrust error") );
+                        object.rejected( new E.SkyTrustError(object.getErrorCode()) );
                     }
                 }
             },
 
             decrypt : {
                 request : function(algorithm, key, data){
+                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+
                     return createSimpleRequestPromise(
                         Protocol.setDecryptRequest, "decrypt",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
-                    object.resolve( window.atob(payload.plainData[0]) );
+                    object.resolve( Util.base64ToArrayBuffer(payload.plainData[0]) );
                 }
             },
 
             sign : {
                 request : function(algorithm, key, data){
+                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+
                     return createSimpleRequestPromise(
                         Protocol.setSignRequest, "sign",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
-                    object.resolve( payload.signedHashes[0] );
+                    object.resolve( Util.base64ToArrayBuffer(payload.signedHashes[0]) );
                 }
             },
 
             encryptCMS : {
                 request : function(algorithm, key, data){
+                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key has to be an array"));
+                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data has to be an array"));
+
                     return createSimpleRequestPromise(
                         Protocol.setEncryptCMSRequest, "cms",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
-                    object.resolve( payload.encryptedCMSData );
+                    object.resolve( Util.base64ToArrayBuffer_array(payload.encryptedCMSData) ); // ARRAY
                 }
             },
 
             decryptCMS : {
                 request : function(algorithm, key, data){
+                    if($.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data has to be an array"));
+
                     return createSimpleRequestPromise(
                         Protocol.setDecryptCMSRequest, "cms",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(object, payload) {
-                    object.resolve( Util.atob(payload.plainData) );
+                    object.resolve( Util.base64ToArrayBuffer_array(payload.plainData) ); // ARRAY
                 }
             },
 
@@ -143,7 +179,7 @@ define(function(require) {
                     var keys = []; // for CryptoObjects
                     for(var i=0; i<result.length; i++) {
                         var keyData = { id : result[i].id, subId : result[i].subId };
-                        keys.push(new CryptoKey(null, null, "handle", keyData));
+                        keys.push(new CryptoKey("handle", keyData));
                     }
 
                     object.resolve(keys);
@@ -173,7 +209,7 @@ define(function(require) {
                 },
                 response : function(object, payload) {
                     // payload object's keys matches the ones CryptoKey needs
-                    var key = new CryptoKey(null, null, "wrappedKey", payload);
+                    var key = new CryptoKey("wrappedKey", payload);
                     object.resolve( key );
                 }
             },
@@ -181,21 +217,26 @@ define(function(require) {
             exportKey : function(format, key) {
                 return new Promise(function(resolve, reject) {
                     if(!(key instanceof CryptoKey)) {
-                        reject(new Error("invalid CryptoKey object"));
+                        reject(new E.KeyError(key));
                     }
 
                     if(key.extractable !== true) {
                         reject(new E.InvalidAccessError());
                     }
 
-                    if(format === "x509") {
+                    if(format === "wrapped") {
                         resolve({
-                            key : key.encodedWrappedKey,
-                            certificate : key.encodedX509Certificate
+                            encodedWrappedKey : key.encodedWrappedKey,
+                            encodedX509Certificate : key.encodedX509Certificate
+                        });
+                    }
+                    else if(format === "x509") {
+                        resolve({
+                            encodedCertificate : key.encodedCertificate
                         });
                     }
                     else {
-                        reject(new Error("export format has to be x509"));
+                        reject(new Error("invalid export format"));
                     }
                 });
             },
@@ -204,11 +245,15 @@ define(function(require) {
                 var keyData2 = Util.copyOf(keyData);
 
                 return new Promise(function(resolve, reject) {
-                    if(format === "x509") {
-                        
-                    }
-                    else if(format === "id") {
+                    var keyTypes = { // mapping format --> keyType
+                        "x509" : "externalCertificate",
+                        "id" : "handle",
+                        "wrapped" : "wrappedKey"
+                    };
 
+                    if(keyTypes.hasOwnProperty(format)) {
+                        var cryptoKey = new CryptoKey(keyTypes[format], keyData);
+                        resolve(cryptoKey);
                     }
                     else {
                         reject(new E.NotSupportedError(format));
@@ -219,11 +264,11 @@ define(function(require) {
         };
 
 
-        // public methods
+        // ------- public methods
 
     	this.onReceive = function(object) {
     		console.log('[w3c   ] received at receiver component');
-    		console.log(object.json());
+    		console.log(object.jsonInternal().substr(0,1000));
 
             var error = Protocol.getError(object);
             if(error !== false) {

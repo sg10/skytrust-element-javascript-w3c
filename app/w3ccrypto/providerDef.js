@@ -18,7 +18,7 @@ define(function(require) {
             case "SkyTrust": 
                return new SkyTrustCryptoProvider();    
             default:
-                throw new E.NoSuchProviderError(); // TODO: check
+                throw new E.NoSuchProviderError();
         }
     };
 

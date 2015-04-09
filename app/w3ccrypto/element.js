@@ -8,7 +8,7 @@ define(function(require) {
 	var $ = require('jQuery');
 
 
-	return function() {
+	var Element = function() {
 
 		// ------- private members
 
@@ -31,11 +31,6 @@ define(function(require) {
 			component.send = function(to, object) {
 				router.route(name, to, object);
 			};
-		};
-
-		var setIFrameLoaded = function() {
-			console.log("[w3c   ] IFrame target loaded");
-			components['communication'].start();
 		};
 
 
@@ -64,7 +59,6 @@ define(function(require) {
 		$( document ).ready(function() {
 			console.log("[w3c   ] loading iframe target ...");
 			$('#' + iframe_id).attr('src', IFRAME_SRC);
-			$('#' + iframe_id).on('load', setIFrameLoaded);
 		});
 
 		addComponent('receiver', new Receiver());
@@ -73,6 +67,12 @@ define(function(require) {
 		this.operation = components['receiver'].operation;
 
 	};
+	
+
+
+	// ------ export
+
+	return Element;
 
 
 });

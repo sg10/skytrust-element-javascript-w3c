@@ -2,12 +2,10 @@ define(function(require) {
 
     var Util = require("./util");
 
-    var CryptoKey = function(algo, usages, keyType, keyData) {
+    var CryptoKey = function(keyType, keyData) {
         if(!(this instanceof CryptoKey)) {
             throw new Error("CryptoKey called statically");
         }
-
-        Util.warningIfNotNull({'algo' : algo, 'usages' : usages});
 
         // SkyTrust specific
         Object.defineProperty(this, "keyType", {value: keyType});
@@ -37,13 +35,13 @@ define(function(require) {
             Object.defineProperty(this, "extractable", {value: true});
         }
         else {
-            throw new Error("Invalid keyType specified");
+            throw new KeyError("Invalid keyType specified: " + keyType);
         }
 
         // according to W3C specification
         Object.defineProperty(this, "type", {value: "secret"}); // unused
-        Object.defineProperty(this, "algorithm", {value: algo}); // unused
-        Object.defineProperty(this, "usages", {value: usages}); // unused
+        Object.defineProperty(this, "algorithm", {value: null}); // unused
+        Object.defineProperty(this, "usages", {value: null}); // unused
     };
 
 

@@ -1,5 +1,9 @@
-define(function() { 
+define(function(require) { 
 
+    // needed for window.getCryptoProvider() to be available from 
+    require("../../app/w3ccrypto/providerDef");
+
+    var TestUtil = require("../test/testutil");
 
     QUnit.start();
 
@@ -7,8 +11,8 @@ define(function() {
 
     QUnit.begin(function( details ) {
         console.log( "Test amount:", details.totalTests );
-        console.log( "[test] creating IFrame" );
-        var iframe = $( "<iframe src=\"#\" id=\"skytrust-iframe\" style=\"border: none;\" />" );
+        console.log( "[test]   creating IFrame" );
+        var iframe = $( "<iframe src=\"about:blank\" id=\"skytrust-iframe\" style=\"border: none;\" />" );
         $(document.body).append(iframe);
         cp = window.getCryptoProviderByName("SkyTrust");
     });
@@ -107,5 +111,52 @@ define(function() {
             done();
         }
     }
+
+    QUnit.test('test CMS encrypt and decrypt large file', function(assert) {
+        assert.expect(9);
+
+        var str = ["hello", "world"];
+        var data = [TestUtil.str2ab(str[0]), TestUtil.str2ab(str[1])];
+        var algo = "CMS-AES-192-CCM";
+
+        var done1 = assert.async();
+        cp.extended.listKeys().then(function(keys) {
+            
+            assert.ok(typeof keys[0] !== "undefined", "loaded first CryptoKey from server");
+            assert.ok(typeof keys[1] !== "undefined", "loaded second CryptoKey from server");
+            done1();
+
+            var done2 = assert.async();
+            cp.extended.encryptCMS(algo, [keys[0], keys[1]], [data[0], data[1]]).then(function(dataEncrypted) {
+
+                assert.ok(dataEncrypted.length === 2, "expecting two encrypted byte arrays");
+                done2();
+
+                var done3 = assert.async();
+                cp.extended.decryptCMS(algo, keys[0], [dataEncrypted[0], dataEncrypted[1]]).then(function(dataDecrypted) {
+
+                        assert.ok(dataDecrypted.length === 2, "expecting two decrypted byte arrays");
+                        assert.equal(str[0], TestUtil.ab2str(dataDecrypted[0]), "expecting decrypted string 0 to equal input string 0 (keys[0])");
+                        assert.equal(str[1], TestUtil.ab2str(dataDecrypted[1]), "expecting decrypted string 1 to equal input string 1 (keys[0])");
+                        done3();
+
+                  });
+
+                var done4 = assert.async();
+                cp.extended.decryptCMS(algo, keys[1], [dataEncrypted[0], dataEncrypted[1]]).then(function(dataDecrypted) {
+
+                        assert.ok(dataDecrypted.length === 2, "expecting two decrypted byte arrays");
+                        assert.equal(str[0], TestUtil.ab2str(dataDecrypted[0]), "expecting decrypted string 0 to equal input string 0 (keys[1])");
+                        assert.equal(str[1], TestUtil.ab2str(dataDecrypted[1]), "expecting decrypted string 1 to equal input string 1 (keys[1])");
+                        done4();
+
+                  });
+
+            });
+
+        });
+
+    });
+
 
 });

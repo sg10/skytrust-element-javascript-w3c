@@ -3,6 +3,7 @@ define(function(require) {
     // ------- imports  
     
     var Util = require('../common/util');
+    var $ = require('jQuery');
 
 
     // ------- private members      
@@ -19,12 +20,12 @@ define(function(require) {
         try {
             for(var i=0; i<parts.length; i++) {
                 if(!val.hasOwnProperty(key[i])) {
-                    throw new Error();
+                    throw new Error(); // jump to catch
                 }
                 val = val[key[i]];
             }
         } catch(e) {
-            throw new Error("key '"+key+"' does not exist");
+            throw new SkyError(0, "key '"+key+"' does not exist");
         }
 
         return val;
@@ -130,13 +131,13 @@ define(function(require) {
     };
 
     Protocol.setEncryptRequest = function(object, algorithm, key, data) {
-        var b64Data = Util.btoa(data); // Base64 conversion
+        var b64Data = Util.arrayBufferToBase64(data); // Base64 conversion
 
         var payload = {
             "type" : "encryptRequest",
-                "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
+            "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
             "algorithm" : algorithm,
-            "plainData" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
+            "plainData" : [ b64Data ]
         };
 
         if(object.setPayload) {
@@ -145,11 +146,13 @@ define(function(require) {
     };
 
     Protocol.setDecryptRequest = function(object, algorithm, key, data) {
+        var b64Data = Util.arrayBufferToBase64(data);
+
         var payload =  {
             "type" : "decryptRequest",
             "decryptionKey" : cryptoKeyToSkyTrustKey(key),
             "algorithm" : algorithm,
-            "encryptedData" : ((typeof data === "string") ? [ data ] : data)
+            "encryptedData" : [ b64Data ]
         };
 
         if(object.setPayload) {
@@ -157,14 +160,18 @@ define(function(require) {
         }
     };
 
-    Protocol.setEncryptCMSRequest = function(object, algorithm, key, data) {
-        var b64Data = Util.btoa(data); // Base64 conversion
+    Protocol.setEncryptCMSRequest = function(object, algorithm, keyArray, dataArray) {
+        var b64Data = Util.arrayBufferToBase64_array(dataArray);
+        var keys = [];
+        $.each(keyArray, function(k, v) {
+            keys.push(cryptoKeyToSkyTrustKey(v));
+        });
 
         var payload = {
             "type" : "encryptCMSRequest",
-            "encryptionKeys" : [ cryptoKeyToSkyTrustKey(key) ],
+            "encryptionKeys" : keys,
             "algorithm" : algorithm,
-            "plainData" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
+            "plainData" : b64Data // array
         };
 
         if(object.setPayload) {
@@ -172,11 +179,13 @@ define(function(require) {
         }
     };
 
-    Protocol.setDecryptCMSRequest = function(object, algorithm, key, data) {
+    Protocol.setDecryptCMSRequest = function(object, algorithm, key, dataArray) {
+        var b64Data = Util.arrayBufferToBase64_array(dataArray);
+
         var payload =  {
             "type" : "decryptCMSRequest",
             "decryptionKey" : cryptoKeyToSkyTrustKey(key),
-            "encryptedCMSData" : ((typeof data === "string") ? [ data ] : data)
+            "encryptedCMSData" : b64Data // array
         };
 
         if(object.setPayload) {
@@ -185,13 +194,13 @@ define(function(require) {
     };
 
     Protocol.setSignRequest = function(object, algorithm, key, data) {
-        var b64Data = Util.btoa(data);
+        var b64Data = Util.arrayBufferToBase64(data);
 
         var payload =  {
                 "type" : "signRequest",
                 "signatureKey" : cryptoKeyToSkyTrustKey(key),
                 "algorithm" : algorithm,
-                "hashesToBeSigned" : ((typeof b64Data === "string") ? [ b64Data ] : b64Data)
+                "hashesToBeSigned" : [ b64Data ]
             };
 
         if(object.setPayload) {

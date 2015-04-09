@@ -1,4 +1,7 @@
-define(function() {
+define(function(require){
+
+    var E = {};
+
 
     // Custom errors
 
@@ -8,40 +11,72 @@ define(function() {
      * @param {} message
      * @return 
      */
-    var NotYetImplemented = function(message) {
+    E.NotYetImplementedError = function(message) {
         Error.call(this);
         this.name = "NotYetImplementedException";
         this.message = message;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    NotYetImplemented.prototype = Object.create(Error.prototype);
+    E.NotYetImplementedError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method NoSuchProviderError
      * @return 
      */
-    var NoSuchProvider = function() {
+    E.NoSuchProviderError = function() {
         Error.call(this);
         this.name = "NoSuchProviderError";
         this.message = "Provider does not exist.";
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    NoSuchProvider.prototype = Object.create(Error.prototype);
+    E.NoSuchProviderError.prototype = Object.create(Error.prototype);
 
     /**
      * [UnauthorizedError description]
      */
-    var Unauthorized = function() {
+    E.UnauthorizedError = function() {
         Error.call(this);
         this.name = "UnauthorizedError";
         this.message = "Please authorize, no active or invalid session.";
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    Unauthorized.prototype = Object.create(Error.prototype);
+    E.UnauthorizedError.prototype = Object.create(Error.prototype);
+
+    /**
+     * Description
+     * @method KeyError
+     * @return 
+     */
+    E.KeyError = function(message) {
+        Error.call(this);
+        this.name = "KeyError";
+        this.message = "CryptoKey provided to an operation does not meet requirements"
+                        + ((message !== null) ? ":" + message : "");
+        this.stack = (new Error()).stack;
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
+    };
+    E.KeyError.prototype = Object.create(Error.prototype);
+
+
+    /**
+     * Description
+     * @method SkyTrustError
+     * @return 
+     */
+    E.SkyTrustError = function(code, message) {
+        Error.call(this);
+        this.name = "KeyError";
+        this.message = "CryptoKey provided to an operation does not meet requirements"
+                        + ((message !== null) ? ": " + message : "");
+        this.code = code;
+        this.stack = (new Error()).stack;
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
+    };
+    E.SkyTrustError.prototype = Object.create(Error.prototype);
 
 
     // Errors defined by the W3C Crypto API
@@ -55,161 +90,148 @@ define(function() {
      * @param {} message
      * @return 
      */
-    var QuotaExceeded = function(message) {
+    E.QuotaExceededError = function(message) {
         Error.call(this);
         this.name = "QuotaExceededError";
         this.message = message;
         this.code = 22;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    QuotaExceeded.prototype = Object.create(Error.prototype);
+    E.QuotaExceededError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method InvalidAccessError
      * @return 
      */
-    var InvalidAccess = function() {
+    E.InvalidAccessError = function() {
         Error.call(this);
         this.name = "InvalidAccessError";
         this.message = "The requested operation is not valid for the provided key.";
         this.code = 15;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    InvalidAccess.prototype = Object.create(Error.prototype);
+    E.InvalidAccessError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method SyntaxError
      * @return 
      */
-    var Syntax = function() {
+    E.SyntaxError = function() {
         Error.call(this);
         this.name = "SyntaxError";
         this.message = "A required parameter was missing or out-of-range";
         this.code = 12;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    Syntax.prototype = Object.create(Error.prototype);
+    E.SyntaxError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method NotSupportedError
      * @return 
      */
-    var NotSupported = function(algorithm) {
+    E.NotSupportedError = function(algorithm) {
         Error.call(this);
         this.name = "NotSupportedError";
         this.message = "This algorithm is not supported: " + algorithm;
         this.code = 9;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    NotSupported.prototype = Object.create(Error.prototype);
+    E.NotSupportedError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method NotSupportedError
      * @return 
      */
-    var OperationNotSupported = function() {
+    E.OperationNotSupportedError = function() {
         Error.call(this);
         this.name = "OperationNotSupported";
         this.message = "SkyTrust doesn't support this operation.";
         this.code = 9;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    OperationNotSupported.prototype = Object.create(Error.prototype);
+    E.OperationNotSupportedError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method InvalidStateError
      * @return 
      */
-    var InvalidState = function() {
+    E.InvalidStateError = function() {
         Error.call(this);
         this.name = "InvalidStateError";
         this.message = "The requested operation is not valid for the current state of the provided key.";
         this.code = 11;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    InvalidState.prototype = Object.create(Error.prototype);
+    E.InvalidStateError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method OperationError
      * @return 
      */
-    var Operation = function() {
+    E.OperationError = function() {
         Error.call(this);
         this.name = "OperationError";
         this.message = "The operation failed for an operation-specific reason.";
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    Operation.prototype = Object.create(Error.prototype);
+    E.OperationError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method UnknownError
      * @return 
      */
-    var Unknown = function() {
+    E.UnknownError = function() {
         Error.call(this);
         this.name = "UnknownError";
         this.message = "The operation failed for an unknown transient reason (e.g. out of memory).";
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    Unknown.prototype = Object.create(Error.prototype);
+    E.UnknownError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method DataError
      * @return 
      */
-    var Data = function() {
+    E.DataError = function(message) {
         Error.call(this);
         this.name = "DataError";
-        this.message = "Data provided to an operation does not meet requirements.";
+        this.message = "Data provided to an operation does not meet requirements"
+                        + ((message !== null) ? ":" + message : "");
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    Data.prototype = Object.create(Error.prototype);
+    E.DataError.prototype = Object.create(Error.prototype);
 
     /**
      * Description
      * @method TypeMismatchError 
      * @return 
      */
-    var TypeMismatch = function(message) {
+    E.TypeMismatchError = function(message) {
         Error.call(this);
         this.name = "TypeMismatchError";
         this.message = message;
         this.stack = (new Error()).stack;
-        this.toString = function() {return "Error: " + this.name + ": " + this.message;};
+        this.toStringError = function() {return "Error: " + this.name + ": " + this.message;};
     };
-    TypeMismatch.prototype = Object.create(Error.prototype);
+    E.TypeMismatchError.prototype = Object.create(Error.prototype);
 
-    return {
-        NotYetImplementedException :    NotYetImplemented,
-        NoSuchProviderError :           NoSuchProvider,
-        UnauthorizedError :             Unauthorized,
-        QuotaExceededError :            QuotaExceeded,
-        InvalidStateError :             InvalidState,
-        SyntaxError :                   Syntax,
-        OperationNotSupportedError :    OperationNotSupported,
-        NotSupportedError :    			NotSupported,
-        InvalidAccessError :            InvalidAccess,
-        OperationError :                Operation,
-        UnknownError :                  Unknown,
-        DataError :                     Data,
-        TypeMismatchError :             TypeMismatch
-    };
+    return E;
 
 });

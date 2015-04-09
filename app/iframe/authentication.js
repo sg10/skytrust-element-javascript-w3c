@@ -28,7 +28,7 @@ define(function(require) {
 			Protocol.setUserPasswortAuth(object, username, password);
 
 			console.log("[iframe] object after auth");
-			console.log(object.json());
+			console.log(object.jsonInternal().substr(0,200));
 
 			$('#loginform').hide();
 			$('#loginform').off('submit');        

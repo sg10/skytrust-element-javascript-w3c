@@ -21,7 +21,7 @@ define(function(require) {
 
     	var makeServerRequest = function(requestObject) {
 
-    		var jsonRequest = requestObject.json();
+    		var jsonRequest = requestObject.jsonSkyTrust();
 
             // AJAX REQUEST
             $.ajax({
@@ -36,11 +36,7 @@ define(function(require) {
                     })
                     .fail(function(jqXHR, statusText, errorThrown) {
                         console.log("[iframe] request error " + errorThrown);
-                        var errorPayload = {
-                            "type" : "status",
-                            "code" : jqXHR.status }; // ?
-                        console.log(jqXHR);
-                        requestObject.setPayload(errorPayload);
+                        requestObject.setErrorCode(jqXHR.status);
                         self.send('receiver', requestObject);
                     });
     	};

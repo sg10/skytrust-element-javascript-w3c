@@ -28,7 +28,7 @@ define(function(require) {
 			var iframe = document.getElementById(iframe_id);
 
 			console.log("[w3c   ] data to send: ");
-			console.log(requestObject.json());
+			console.log(requestObject.jsonInternal().substr(0,1000));
 
 			var id = "";
 			do {
@@ -38,7 +38,7 @@ define(function(require) {
 			requestObject.setRequestID(id);
 			pendingRequests[id] = requestObject;
 
-			var jsonData = requestObject.jsonWithRequestID();
+			var jsonData = requestObject.jsonInternal();
 			
 			// IFrame not yet loaded --> wait
 			if(iFrameLoaded === false) {
@@ -47,6 +47,7 @@ define(function(require) {
 						window.clearInterval(interval);
 						iframe.contentWindow.postMessage(jsonData, "*");
 					}
+					console.log("[w3c   ] request " + id + ", waiting for IFrame to be loaded");
 				}, 500);
 			}
 			else {
@@ -74,7 +75,14 @@ define(function(require) {
 	        console.log("[w3c   ] received post message ...");
         	console.log("[w3c   ] postMessage origin: " + event.origin);
         	console.log("[w3c   ] postMessage data:");
-        	console.log(event.data);
+        	console.log((event.data + "").substr(0,1000));
+
+        	// "hello" request? (on init)
+        	if(event.data === "hello-skytrust") {
+				console.log("[w3c   ] recevied 'alive-message': SkyTrust IFrame element loaded");
+		 		iFrameLoaded = true;
+		 		return;
+        	}
 
 	        // check origin
 
@@ -100,10 +108,6 @@ define(function(require) {
 
 			makeIFrameRequest(object);
 		};
-
-        this.start = function() {
-        	iFrameLoaded = true;
-        };
 
 
 		// ------- C'tor

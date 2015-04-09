@@ -19,6 +19,9 @@ define(function(require) {
             console.log("[iframe] init post message listener");
 
             window.addEventListener("message", onReceivePostMessage, false);
+
+            // send "hello" message to parent frame
+            window.parent.postMessage("hello-skytrust", "*");
         };
 
 
@@ -36,13 +39,13 @@ define(function(require) {
             
             object.resolve = function() {
                 console.log("[iframe] sending post message back ...");
-                event.source.postMessage(object.jsonWithRequestID(), "*"); // remove *
+                event.source.postMessage(object.jsonInternal(), "*"); // remove *
             };
 
             object.reject = function(error) {
                 console.log("[iframe] sending post message back ...");
                 object.payload.nodeError = error.toString(); // make skytrust protocol conform
-                event.source.postMessage(object.jsonWithRequestID(), "*"); // remove *
+                event.source.postMessage(object.jsonInternal(), "*"); // remove *
             };
 
             self.send('communication', object);

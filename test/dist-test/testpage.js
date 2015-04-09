@@ -3,6 +3,7 @@ var cryptoKeysList = [];
 var initTestpage = function() {
     console.log("init testpage");
 
+    console.log(requirejs);
     var provider = window.getCryptoProviderByName("SkyTrust");
 
     var algoSimple = "RSA-OAEP";
@@ -40,22 +41,24 @@ var initTestpage = function() {
 
     $('#btnEncryptCMS').on('click', function() {
         var cryptoKey = cryptoKeysList[fieldKeys.val()];
-        var values = [$('#fieldPlain').val(), $('#fieldPlain2').val()];
+        var values = [stringToArrayBuffer($('#fieldPlain').val()), 
+                        stringToArrayBuffer($('#fieldPlain2').val())];
 
         if(!cryptoKey) return;
 
         console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoCMS);
 
-        provider.extended.encryptCMS(algoCMS, cryptoKey, values)
+        provider.extended.encryptCMS(algoCMS, [cryptoKey], values)
          .then(function(result) { 
-            $('#fieldEncrypted').val(result[0]); 
-            $('#fieldEncrypted2').val(result[1]);
+            $('#fieldEncrypted').val(arrayBufferToString(result[0])); 
+            $('#fieldEncrypted2').val(arrayBufferToString(result[1]));
          }).catch(displayError);
     });
 
     $('#btnDecryptCMS').on('click', function() {
         var cryptoKey = cryptoKeysList[fieldKeys.val()];
-        var values = [$('#fieldEncrypted').val(), $('#fieldEncrypted2').val()];
+        var values = [stringToArrayBuffer($('#fieldEncrypted').val()), 
+                        stringToArrayBuffer($('#fieldEncrypted2').val())];
 
         if(!cryptoKey) return;
 
@@ -63,8 +66,8 @@ var initTestpage = function() {
 
         provider.extended.decryptCMS(algoCMS, cryptoKey, values)
          .then(function(result) { 
-            $('#fieldDecrypted').val(result[0]); 
-            $('#fieldDecrypted2').val(result[1]);
+            $('#fieldDecrypted').val(arrayBufferToString(result[0])); 
+            $('#fieldDecrypted2').val(arrayBufferToString(result[1]));
          }).catch(displayError);
     });
 
@@ -96,10 +99,24 @@ var initTestpage = function() {
 
         console.log("[w3c   ] using CryptoKey " + cryptoKey);
 
-        provider.subtle.exportKey("x509", cryptoKey)
+        provider.subtle.exportKey("wrapped", cryptoKey)
          .then(function(result) {
-            $("#fieldExportedKey").val(result.key);
-            $("#fieldExportedCertificate").val(result.certificate);
+            $("#fieldExportedKey").val(result.encodedWrappedKey);
+            $("#fieldExportedCertificate").val(result.encodedX509Certificate);
+         })
+         .catch(displayError);
+    });
+
+    $('#btnImport').on('click', function() {
+        var keyData = {
+            encodedWrappedKey: $("#fieldExportedKey").val(),
+            encodedX509Certificate: $("#fieldExportedCertificate").val() };
+
+        provider.subtle.importKey("wrapped", keyData)
+         .then(function(resultKey) {
+            cryptoKeysList.push(resultKey);
+            updateCryptoKeysList(cryptoKeysList);
+            $('#fieldKeys').val(cryptoKeysList.length - 1);
          })
          .catch(displayError);
     });
@@ -118,26 +135,44 @@ var initTestButtonEventHandlerSimple = function(options) {
 
         console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + options.algo);
 
-        options.func(options.algo, cryptoKey, $(options.source).val())
-         .then(function(result) { $(options.target).val(result) })
+        var value = $(options.source).val();
+        value = stringToArrayBuffer(value);
+
+        options.func(options.algo, cryptoKey, value)
+         .then(function(result) { 
+            $(options.target).val(arrayBufferToString(result)); 
+         })
          .catch(displayError);
     });
 }
 
 var timeoutHideError = null;
-var displayError = function(e) {
+function displayError(e) {
     window.clearTimeout(timeoutHideError);
     $('#errorField').show();
     $('#errorField').html(e.toString());
     window.setTimeout(function() {$('#errorField').hide();}, 5000);
 };
 
-var updateCryptoKeysList = function(cryptoKeys) {
+function updateCryptoKeysList(cryptoKeys) {
     var fieldKeys = $("#fieldKeys");
 
-    cryptoKeysList = cryptoKeys;
     fieldKeys.html("");
-    for(var i=0; i<cryptoKeys.length; i++) {
-        fieldKeys.append($("<option />").val(i).text(cryptoKeys[i]));
+    cryptoKeysList = (cryptoKeys !== null) ? cryptoKeys : cryptoKeysList;
+    for(var i=0; i<cryptoKeysList.length; i++) {
+        fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
     }
 };
+
+function arrayBufferToString(buffer) {
+    return String.fromCharCode.apply(null, new Uint16Array(buffer));
+}
+
+function stringToArrayBuffer(str) {
+    var buffer = new ArrayBuffer(2*str.length); // 2 bytes per character
+    var bufferView = new Uint16Array(buffer);
+    for (var i=0, strLen=str.length; i<strLen; i++) {
+        bufferView[i] = str.charCodeAt(i);
+    }
+    return buffer;
+}

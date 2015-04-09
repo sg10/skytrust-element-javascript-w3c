@@ -150,6 +150,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
+
     // Default task
     grunt.registerTask('default', ['jshint', /*'qunit', */'clean', 'requirejs', 'concat', 'copy:dist']);
     grunt.registerTask('buildtest', ['clean', 'requirejs', 'concat', 'copy:disttest']);

@@ -9,6 +9,7 @@ define(function() {
         var header = {};
         var payload = {};
         var requestID = -1;
+        var error = 0;
 
 
         // ------- public members
@@ -45,23 +46,33 @@ define(function() {
             return requestID;
         };
 
-        this.json = function() {
+        this.setErrorCode = function(e) {
+            error = e;
+        };
+
+        this.getErrorCode = function() {
+            return error;
+        };
+
+        this.jsonSkyTrust = function() {
             return JSON.stringify({
                 "header" : header,
                 "payload" : payload
             });
         };
 
-        this.jsonWithRequestID = function() {
+        this.jsonInternal = function() {
             return JSON.stringify({
                 "header" : header,
                 "payload" : payload,
-                "requestID" : requestID
+                "requestID" : requestID,
+                "error" : error
             });
         };
 
         this.toString = function() {
-            return "[CryptoObject #"+requestID+"] header=" + header + ", payload=" + payload;
+            return "[CryptoObject #"+requestID+"] header=" + header + ", payload="
+                 + payload + ", requestID=" + requestID + ", error=" + error;
         };
 
 

@@ -9,9 +9,10 @@ requirejs.config({
     }
 });
 
-requirejs([ 'jQuery', 'skytrust-config', 'w3ccrypto/providerDef', 'iframe/element' ], 
+requirejs([ 'jQuery', 'skytrust-config', 'w3ccrypto/providerDef', 'iframe/element',
+    'w3ccrypto/provider' ], 
 
-    function($, Config, providerDef, SkyTrustIFrameElement) {
+    function($, Config, providerDef, SkyTrustIFrameElement, provider) {
         // -> IFrame Level Element 
         if (typeof ___skytrust_javascript_iframe___ !== 'undefined') {
             console.log("[iframe] initializing SkyTrust")
@@ -23,6 +24,15 @@ requirejs([ 'jQuery', 'skytrust-config', 'w3ccrypto/providerDef', 'iframe/elemen
             console.log("[w3c   ] initializing SkyTrust: window.getCryptoProviderByName()");
             // make SkyTrust Crypto Provider accessible via window object         
             window.getCryptoProviderByName = providerDef.getCryptoProviderByName;
-        }
+
+            // run and remove registered onLoad callbacks
+            console.log("[w3c   ] onCryptoProviderLoad() callbacks")
+            if($.isArray(window._cryptoProviderListenerFunctions)) {
+                $.each(window._cryptoProviderListenerFunctions, function(k, func) {
+                    func();
+                });
+            }
+            delete window._cryptoProviderListenerFunctions;
+       }
     }
 );
