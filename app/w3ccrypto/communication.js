@@ -4,6 +4,7 @@ define(function(require) {
 	
 	var Component = require('../common/component');
 	var Protocol = require('../common/protocol');
+    var ComObject = require('../common/com-object');
 
 
 	var Communication = function(iframeid) {
@@ -24,37 +25,50 @@ define(function(require) {
             window.addEventListener("message", onPostMessageReceive, false);
         };
 
-		var addPendingRequest = function(requestObject) {
-			var iframe = document.getElementById(iframe_id);
-
-			console.log("[w3c   ] data to send: ");
-			console.log(requestObject.jsonInternal().substr(0,1000));
+        var newComObject = function(cryptoObject) {
+        	var comObject = new ComObject();
+        	comObject.type = "request";
 
 			var id = "";
 			do {
 				id = Math.round(Math.random()*10E5);
 			}while(pendingRequests.hasOwnProperty(id));
 
-			requestObject.setRequestID(id);
-			pendingRequests[id] = requestObject;
+        	comObject.requestID = id;
+        	comObject.data = cryptoObject.comObjectData();
+			pendingRequests[id] = cryptoObject; 
 
-			var jsonData = requestObject.jsonInternal();
-			
+			return comObject;    	
+        }
+
+        var sendRequestIfReady = function(comObject) {
+			var iframe = document.getElementById(iframe_id);
+
 			// IFrame not yet loaded --> wait
 			if(iFrameLoaded === false) {
 				var interval = window.setInterval(function() {
 					if(iFrameLoaded === true) {
 						window.clearInterval(interval);
-						iframe.contentWindow.postMessage(jsonData, "*");
+						iframe.contentWindow.postMessage(comObject, "*");
 					}
-					console.log("[w3c   ] request " + id + ", waiting for IFrame to be loaded");
+					console.log("[w3c   ] request " + comObject.requestID + ", waiting for IFrame to be loaded");
 				}, 500);
 			}
 			else {
-				iframe.contentWindow.postMessage(jsonData, "*");
+				console.log("[w3c   ] sending request " + comObject.requestID + " to IFrame");
+				iframe.contentWindow.postMessage(comObject, "*");
 			}
 
 			console.log("[w3c   ] pending requests: " + Object.keys(pendingRequests).length);
+        };
+
+		var pushPendingRequest = function(requestObject) {
+			console.log("[w3c   ] data to send: ");
+			console.log(requestObject);
+
+			var comObject = newComObject(requestObject);
+
+			sendRequestIfReady(comObject);
 		};
 
 		var popPendingRequest = function(requestID) {
@@ -68,45 +82,66 @@ define(function(require) {
 		var makeIFrameRequest = function(requestObject) {
 			console.log("[w3c   ] sending post message to iframe ...");
 
-			addPendingRequest(requestObject);
+			pushPendingRequest(requestObject);
 		};
 
 		var onPostMessageReceive = function(event) {
 	        console.log("[w3c   ] received post message ...");
         	console.log("[w3c   ] postMessage origin: " + event.origin);
         	console.log("[w3c   ] postMessage data:");
-        	console.log((event.data + "").substr(0,1000));
+        	console.log(event.data);
 
-        	// "hello" request? (on init)
-        	if(event.data === "hello-skytrust") {
-				console.log("[w3c   ] recevied 'alive-message': SkyTrust IFrame element loaded");
-		 		iFrameLoaded = true;
-		 		return;
-        	}
+	        // TODO: check origin
 
-	        // check origin
+	        var comObject = event.data;
 
-	        var dataReceived = JSON.parse(event.data);
-	        var requestObject = popPendingRequest(dataReceived.requestID);
-
-	        if(!requestObject) {
-				throw new Error("no matching request with ID '" + dataReceived.requestID + "' found!");
+	        if(!comObject.type) {
+	        	reject(new Error("Invalid response from IFrame"));
+	        	return;
 	        }
 
-	        requestObject.setPayload(dataReceived.payload);
-		   	requestObject.setHeader(dataReceived.header);
+	        // type: IFrame is initialized
+	        if(comObject.type === "hello") {
+				console.log("[w3c   ] recevied 'alive-message': IFrame element loaded");
+		 		iFrameLoaded = true;
+		 		return;
+	        }
+	        // type: crypto operation
+	        else if(comObject.type === "request") {
+		        var dataReceived = comObject.data;
 
-        	self.send('receiver', requestObject);
+		        if(!comObject.requestID || !comObject.data) {
+		        	throw new Error("Invalid response from IFrame");
+		        	return;
+		        }
+
+		        var requestObject = popPendingRequest(comObject.requestID);
+		        if(!requestObject) {
+					throw new Error("no matching request with ID '" + dataReceived.requestID + "' found!");
+		        }
+
+		        requestObject.setPayload(dataReceived.payload);
+			   	requestObject.setHeader(dataReceived.header);
+
+	        	self.send('receiver', requestObject);
+        	}
+        	// type: show/hide authentication iframe (if IFrame isn't in body)
+	        else if(comObject.type === "show-auth" && $('#' + iframe_id).parent() !== $('body')) {
+        		$('#' + iframe_id).parent().show();
+	        }
+	        else if(comObject.type === "hide-auth" && $('#' + iframe_id).parent() !== $('body')) {
+        		$('#' + iframe_id).parent().hide();
+	        }
         };
 
 		// ------- public methods
 
-		this.onReceive = function(object) {
+		this.onReceive = function(cryptoObject) {
 			console.log("[w3c   ] received at communication component");
 
-			Protocol.setBlankHeader(object);
+			Protocol.setBlankHeader(cryptoObject);
 
-			makeIFrameRequest(object);
+			makeIFrameRequest(cryptoObject);
 		};
 
 

@@ -6,9 +6,20 @@
 
     <script data-main="skytrust" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
 
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
     <style type="text/css">
-        #loginform {
-            display: none;   
+        body {
+            padding: 15px;
+        }
+
+        #loginforminfo {
+            display: none;
         }
     </style>
 
@@ -16,45 +27,53 @@
 
 <body>
 
+
 <form action="javascript:;" id="loginform">
-    <table>
-        <thead>
-            <caption>SkyTrust Login</caption>
-            <div id="loginform-message"></div>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    Server:
-                </td>
-                <td>
-                    <input type="text" id="loginserver" value="" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    User name:
-                </td>
-                <td>
-                    <input type="text" id="loginusername" value="testuser1" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Password:
-                </td>
-                <td>
-                    <input type="password" id="loginpassword" value="testpass1" />
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" id="loginbutton" value="Login" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
+
+<h2>SkyTrust Login</h2>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-info" id="loginforminfo">123</div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label for="loginserver">Server:</label>
+                <input type="text" class="form-control" id="loginserver" placeholder="Enter server" />
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="loginusername">User name:</label>
+                <input type="text" class="form-control" id="loginusername" placeholder="Enter user name" value="testuser1" />
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="loginpassword">Password:</label>
+                <input type="password" class="form-control" id="loginpassword" placeholder="Enter password" value="testpass1" />
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <button type="submit" id="loginbutton" class="btn btn-default" class="btn btn-default" aria-label="Left Align">
+            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+            Login
+        </button>
+    </div>
+
 </form>
 
 </body>

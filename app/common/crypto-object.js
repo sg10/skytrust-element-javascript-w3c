@@ -8,7 +8,6 @@ define(function() {
 
         var header = {};
         var payload = {};
-        var requestID = -1;
         var error = 0;
 
 
@@ -38,14 +37,6 @@ define(function() {
             return payload;
         };
 
-        this.setRequestID = function(id) {
-            requestID = id;
-        };
-
-        this.getRequestID = function() {
-            return requestID;
-        };
-
         this.setErrorCode = function(e) {
             error = e;
         };
@@ -61,18 +52,17 @@ define(function() {
             });
         };
 
-        this.jsonInternal = function() {
-            return JSON.stringify({
+        this.comObjectData = function() {
+            return {
                 "header" : header,
                 "payload" : payload,
-                "requestID" : requestID,
                 "error" : error
-            });
+            };
         };
 
         this.toString = function() {
-            return "[CryptoObject #"+requestID+"] header=" + header + ", payload="
-                 + payload + ", requestID=" + requestID + ", error=" + error;
+            return "[CryptoObject] header=" + header + ", payload="
+                 + payload + ", error=" + error;
         };
 
 

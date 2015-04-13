@@ -2,55 +2,114 @@ define(function(require) {
 
 	// ------- imports	
 	
-	// var $ = require('jQuery');
+	var $ = require('jQuery');
 
+	var Config = require('../skytrust-config');
 	var Component = require('../common/component');
 	var Protocol = require('../common/protocol');
 
 
-	var Authentication = function() {
+	var Authentication = function(element) {
 
 		// ------- private members	
 
 		var self = this;
+		var queue = null;
+		var formInUse = false;
+
+
+		var RequestQueue = function() {
+			var queue = [];
+			var self_ = this;
+
+			self_.enqueue = function(cryptoObject) {
+				queue.push(cryptoObject);
+			};
+
+			self_.dequeue = function() {
+				if(queue.length !== 0) {
+					var cryptoObject = queue.slice(0, 1)[0];
+					queue = queue.slice(1, queue.length);
+					return cryptoObject;
+				}
+				
+				return null;
+			};
+			
+			this.length = function() {
+				return queue.length;
+			}
+
+		};
+
+		var showAuthFormForNextQueueObject = function() {
+			var cryptoObject = queue.dequeue();
+			updateQueueDiv();
+			if(cryptoObject === null)  return;
+
+			formInUse = true;
+
+			$('#loginform').submit(cryptoObject, onLoginFormSubmit);
+			element.parentAuthHandler.show();
+		};
+
+		var updateQueueDiv = function() {
+			console.log("[iframe] queue length: " + queue.length());
+
+			if(queue.length() > 0) {
+				$('#loginforminfo').show();
+				$('#loginforminfo').html("<b>" + queue.length() + "</b> requests remaining after this one.");
+			}
+			else {
+				$('#loginforminfo').hide();
+			}
+		};
 
 
 		// ------- private methods	
 
 		var onLoginFormSubmit = function(event) {
-			var object = event.data;
+			var cryptoObject = event.data;
+
+			//$('#loginform')[0].reset();
+            $('#loginserver').val(Config.server);
 
 			var username = $("#loginusername").val();
 			var password = $("#loginpassword").val();
-			console.log("[iframe] user name: " + username);
-			console.log("[iframe] password: " + password);
 
-			Protocol.setUserPasswortAuth(object, username, password);
+			Protocol.setUserPasswortAuth(cryptoObject, username, password);
 
-			console.log("[iframe] object after auth");
-			console.log(object.jsonInternal().substr(0,200));
+			console.log("[iframe] cryptoObject after auth");
+			console.log(cryptoObject);
 
-			$('#loginform').hide();
-			$('#loginform').off('submit');        
+			$('#loginform').off('submit');
 
-	        self.send('communication', object);
+			console.log("hide");
+   			element.parentAuthHandler.hide();
+
+	        self.send('communication', cryptoObject);
+
+			if(queue.length() > 0) {
+	   			showAuthFormForNextQueueObject();
+	   		}
+	   		else {
+	   			formInUse = false;
+	   		}
 		};
 
 
 		// ------- public methods
 
-		this.onReceive = function(object) {
+		this.onReceive = function(cryptoObject) {
 			console.log("[iframe] received at authentication component");
 
-			// TODO: check if request still active
-			$('#loginform').show();
-			$('#loginform-message').hide();
-			$('#loginform').submit(object, onLoginFormSubmit);
+			queue.enqueue(cryptoObject);
+			updateQueueDiv();
+			
+			console.log("[iframe] queue length: " + queue.length());
 
-			// auth failure on SkyTrust server
-			if(Protocol.getError(object) === "609") {
-				$('#loginform-message').html("Invalid username/password");
-				$('#loginform-message').show();
+			if(formInUse === false) {
+				showAuthFormForNextQueueObject();
 			}
 		};
 
@@ -60,6 +119,8 @@ define(function(require) {
 		if(!(this instanceof Authentication)) {
 			throw Error('Authentication called statically'); // define exception
 		}
+
+		queue = new RequestQueue();
 
 	};
 

@@ -75,12 +75,12 @@ define(function(require) {
             }
 
             return new Promise(function(resolve, reject){
-                var object = new CryptoObject();
-                protocolFunction(object, algorithm, cryptoKey, data);       
-                object.resolve = resolve;
-                object.reject = reject;
+                var cryptoObject = new CryptoObject();
+                protocolFunction(cryptoObject, algorithm, cryptoKey, data);       
+                cryptoObject.resolve = resolve;
+                cryptoObject.reject = reject;
 
-                self.send('communication', object);
+                self.send('communication', cryptoObject);
             });
         };
 
@@ -89,48 +89,48 @@ define(function(require) {
 
             encrypt : {
                 request : function(algorithm, key, data){
-                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
-                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+                    if($.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if($.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
 
                     return createSimpleRequestPromise(
                         Protocol.setEncryptRequest, "encrypt",
                         algorithm, key, Util.copyOf(data));
                 },
-                response : function(object, payload) {
+                response : function(cryptoObject, payload) {
                     if( payload.encryptedData[0] && payload.encryptedData[0][0] ) {
-                        object.resolve( Util.base64ToArrayBuffer(payload.encryptedData[0][0]) );
+                        cryptoObject.resolve( Util.base64ToArrayBuffer(payload.encryptedData[0][0]) );
                     }
                     else {
-                        object.rejected( new E.SkyTrustError(object.getErrorCode()) );
+                        cryptoObject.rejected( new E.SkyTrustError(cryptoObject.getErrorCode()) );
                     }
                 }
             },
 
             decrypt : {
                 request : function(algorithm, key, data){
-                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
-                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+                    if($.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if($.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
 
                     return createSimpleRequestPromise(
                         Protocol.setDecryptRequest, "decrypt",
                         algorithm, key, Util.copyOf(data));
                 },
-                response : function(object, payload) {
-                    object.resolve( Util.base64ToArrayBuffer(payload.plainData[0]) );
+                response : function(cryptoObject, payload) {
+                    cryptoObject.resolve( Util.base64ToArrayBuffer(payload.plainData[0]) );
                 }
             },
 
             sign : {
                 request : function(algorithm, key, data){
-                    if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
-                    if(!$.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
+                    if($.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
+                    if($.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
 
                     return createSimpleRequestPromise(
                         Protocol.setSignRequest, "sign",
                         algorithm, key, Util.copyOf(data));
                 },
-                response : function(object, payload) {
-                    object.resolve( Util.base64ToArrayBuffer(payload.signedHashes[0]) );
+                response : function(cryptoObject, payload) {
+                    cryptoObject.resolve( Util.base64ToArrayBuffer(payload.signedHashes[0]) );
                 }
             },
 
@@ -143,8 +143,8 @@ define(function(require) {
                         Protocol.setEncryptCMSRequest, "cms",
                         algorithm, key, Util.copyOf(data));
                 },
-                response : function(object, payload) {
-                    object.resolve( Util.base64ToArrayBuffer_array(payload.encryptedCMSData) ); // ARRAY
+                response : function(cryptoObject, payload) {
+                    cryptoObject.resolve( Util.base64ToArrayBuffer_array(payload.encryptedCMSData) ); // ARRAY
                 }
             },
 
@@ -157,23 +157,23 @@ define(function(require) {
                         Protocol.setDecryptCMSRequest, "cms",
                         algorithm, key, Util.copyOf(data));
                 },
-                response : function(object, payload) {
-                    object.resolve( Util.base64ToArrayBuffer_array(payload.plainData) ); // ARRAY
+                response : function(cryptoObject, payload) {
+                    cryptoObject.resolve( Util.base64ToArrayBuffer_array(payload.plainData) ); // ARRAY
                 }
             },
 
             discoverKeys : {
                 request : function(){
                     return new Promise(function(resolve, reject){
-                        var object = new CryptoObject();
-                        Protocol.setDiscoverKeysRequest(object);       
-                        object.resolve = resolve;
-                        object.reject = reject;
+                        var cryptoObject = new CryptoObject();
+                        Protocol.setDiscoverKeysRequest(cryptoObject);       
+                        cryptoObject.resolve = resolve;
+                        cryptoObject.reject = reject;
 
-                        self.send('communication', object);
+                        self.send('communication', cryptoObject);
                     });
                 },
-                response : function(object, payload) {
+                response : function(cryptoObject, payload) {
                     var result = payload.key;
 
                     var keys = []; // for CryptoObjects
@@ -182,7 +182,7 @@ define(function(require) {
                         keys.push(new CryptoKey("handle", keyData));
                     }
 
-                    object.resolve(keys);
+                    cryptoObject.resolve(keys);
                 }
             },
 
@@ -197,20 +197,20 @@ define(function(require) {
                     }
 
                     return new Promise(function(resolve, reject) {
-                        var object = new CryptoObject();
-                        Protocol.setGenerateWrappedKeyRequest(object, algorithm,
+                        var cryptoObject = new CryptoObject();
+                        Protocol.setGenerateWrappedKeyRequest(cryptoObject, algorithm,
                             encryptionKeys, signingKey, certificateSubject2);
 
-                        object.resolve = resolve;
-                        object.reject = reject;
+                        cryptoObject.resolve = resolve;
+                        cryptoObject.reject = reject;
 
-                        self.send('communication', object);
+                        self.send('communication', cryptoObject);
                     });
                 },
-                response : function(object, payload) {
-                    // payload object's keys matches the ones CryptoKey needs
+                response : function(cryptoObject, payload) {
+                    // payload cryptoObject's keys matches the ones CryptoKey needs
                     var key = new CryptoKey("wrappedKey", payload);
-                    object.resolve( key );
+                    cryptoObject.resolve( key );
                 }
             },
 
@@ -266,16 +266,16 @@ define(function(require) {
 
         // ------- public methods
 
-    	this.onReceive = function(object) {
+    	this.onReceive = function(cryptoObject) {
     		console.log('[w3c   ] received at receiver component');
-    		console.log(object.jsonInternal().substr(0,1000));
+    		console.log(cryptoObject);
 
-            var error = Protocol.getError(object);
+            var error = Protocol.getError(cryptoObject);
             if(error !== false) {
-                object.reject(new Error("SkyTrust/HTTP error code " + error));
+                cryptoObject.reject(new Error("SkyTrust/HTTP error code " + error));
             }
             else {
-                var payload = object.getPayload();
+                var payload = cryptoObject.getPayload();
                 var responseType = payload.type;
 
                 var responseFunctions = {
@@ -289,10 +289,10 @@ define(function(require) {
                 };
 
                 try { 
-                    responseFunctions[responseType](object, payload);
+                    responseFunctions[responseType](cryptoObject, payload);
                 }
                 catch(e) {
-                    object.reject(e);
+                    cryptoObject.reject(e);
                 }
 
             }

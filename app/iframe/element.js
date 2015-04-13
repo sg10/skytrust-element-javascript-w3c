@@ -6,6 +6,8 @@ define(function(require) {
 	var Receiver = require('../iframe/receiver');
 	var Authentication = require('../iframe/authentication');
 	var Communication = require('../iframe/communication');
+	var $ = require("jQuery");
+	var Config = require("../skytrust-config");
 
 	
 
@@ -27,8 +29,8 @@ define(function(require) {
 
 			components[name] = component;
 
-			component.send = function(to, object) {
-				router.route(name, to, object);
+			component.send = function(to, cryptoObject) {
+				router.route(name, to, cryptoObject);
 			};
 		};
 
@@ -58,10 +60,15 @@ define(function(require) {
 		router = new Router(this);
 
 		addComponent('receiver', new Receiver());
-		addComponent('authentication', new Authentication());
+		addComponent('authentication', new Authentication(this));
 		addComponent('communication', new Communication());
 
-		this.operation = components['receiver'].operation;
+		this.parentAuthHandler = {
+			show: components['receiver'].sendShowAuth,
+			hide: components['receiver'].sendHideAuth
+		};
+
+        $('#loginserver').val(Config.server);
 	};
 
 

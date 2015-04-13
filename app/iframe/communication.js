@@ -2,8 +2,6 @@ define(function(require) {
 
 	// ------- imports	
 	
-	// var $ = require('jQuery');
-
 	var Component = require('../common/component');
     var Config = require('../skytrust-config');
     var Protocol = require('../common/protocol');
@@ -49,14 +47,14 @@ define(function(require) {
             responseObject.setHeader(dataReceived.header);
             responseObject.setPayload(dataReceived.payload);
 
-            console.log(requestObject.getHeader());
-
             // set session ID for this SkyTrust element if it has changed
             var responseSessionId = responseObject.getHeader().sessionId;
             if(sessionId !== responseSessionId) {
                 console.log("[iframe] setting session ID: " + responseSessionId);
                 sessionId = responseSessionId;
             }
+
+            console.log("[iframe] error code:" + Protocol.getError(responseObject));
 
             // Authentication: enter username/password
             if(Protocol.isAuthRequired(responseObject)) {
@@ -70,17 +68,7 @@ define(function(require) {
                     // TODO: error handling other auth methods
                 }
             }
-            // Authentication: sent credentials were incorrect
-            else if(Protocol.getError(responseObject) === "609") {
-                console.log("[iframe] wrong username/password");
-                // keep command id!
-                var commandId = Protocol.getCommandId(JSON.parse(jsonRequest).header);
-
-                console.log("header command id: " + commandId);
-                Protocol.setCommandId(responseObject, commandId);
-                self.send('authentication', responseObject);
-            }
-            // correct result
+            // correct result or error from server
             else {
                 self.send('receiver', requestObject);
             }
@@ -89,18 +77,18 @@ define(function(require) {
 
     	// ------- public methods
 
-    	this.onReceive = function(object) {
+    	this.onReceive = function(cryptoObject) {
     		console.log("[iframe] received at communication component");
 
-    		if(object.getHeader() === null) {
+    		if(cryptoObject.getHeader() === null) {
     			var header = Protocol.getBlankHeader();
     			console.log("[iframe] header was blank, setting new header");
-    			object.setHeader(header);
+    			cryptoObject.setHeader(header);
     		}
 
-    		Protocol.setSessionId(object, sessionId);
+    		Protocol.setSessionId(cryptoObject, sessionId);
 
-    		makeServerRequest(object);
+    		makeServerRequest(cryptoObject);
     	};
 
     };

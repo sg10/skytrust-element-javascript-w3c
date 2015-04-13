@@ -18,22 +18,37 @@
 <!--    <script data-main="lib/skytrust" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script> -->
     <script src="../../app/skytrust-event-listener.js"></script>
     <script data-main="../../app/skytrust" src="../../bower_components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../../app/external/pkijs/common.js"></script>
+    <script type="text/javascript" src="../../app/external/pkijs/asn1.js"></script>
+    <script type="text/javascript" src="../../app/external/pkijs/x509_schema.js"></script>
+    <script type="text/javascript" src="../../app/external/pkijs/x509_simpl.js"></script>
 
     <script src="testpage.js"></script>
 
     <style type="text/css">
         
-        div.skytrust-iframe {
-            float: right;
-        }
 
         #skytrust-iframe {
+            overflow: hidden;
+            width: 370px;
+            height: 370px;
+            background: white;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-            overflow: auto;
-            width: 350px;
-            height: 200px;
+        }
+
+        div#skytrust-auth {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background: white;
+            padding-top: 45px;
         }
 
         .btn {
@@ -54,12 +69,16 @@
 
 <div id="wrapper">
 
+    <div id="skytrust-auth"></div>
+    
+
     <form>
 
         <button type="reset" class="btn btn-default" aria-label="Left Align" style="float: right;">
             <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
         </button>
-    
+
+
 
         <h1>SkyTrust Test Page</h1>
 
@@ -67,9 +86,6 @@
 
         <div class="row">
 
-            <div class="col-md-5 skytrust-iframe">
-                <iframe src="#" id="skytrust-iframe"></iframe>
-            </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="fieldKeys">Select Key</label>

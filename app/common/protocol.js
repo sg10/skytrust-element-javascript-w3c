@@ -13,9 +13,9 @@ define(function(require) {
 
     // ------- private methods      
 
-    var getKey = function(object, key) {
+    var getKey = function(cryptoObject, key) {
         var parts = key.split(".");
-        var val = object;
+        var val = cryptoObject;
 
         try {
             for(var i=0; i<parts.length; i++) {
@@ -32,15 +32,15 @@ define(function(require) {
     };
 
 
-    var cryptoKeysToSkyTrustKeys = function(objects) {
+    var cryptoKeysToSkyTrustKeys = function(cryptoObjects) {
 
-        if( Object.prototype.toString.call( objects ) !== '[object Array]' ) {
-            return cryptoKeyToSkyTrustKey(objects);
+        if( Object.prototype.toString.call( cryptoObjects ) !== '[object Array]' ) {
+            return cryptoKeyToSkyTrustKey(cryptoObjects);
         }
         else {
             var keys = [];
-            for(var i=0; i<objects.length; i++) {
-                keys.push(cryptoKeyToSkyTrustKey(objects[i]));
+            for(var i=0; i<cryptoObjects.length; i++) {
+                keys.push(cryptoKeyToSkyTrustKey(cryptoObjects[i]));
             }
             return keys;
         }
@@ -84,40 +84,40 @@ define(function(require) {
         return header;
     };
 
-    Protocol.setBlankHeader = function(object) {
-        object.setHeader(Protocol.getBlankHeader());
+    Protocol.setBlankHeader = function(cryptoObject) {
+        cryptoObject.setHeader(Protocol.getBlankHeader());
     };
 
-    Protocol.setDiscoverKeysRequest = function(object) {
+    Protocol.setDiscoverKeysRequest = function(cryptoObject) {
         var payload = {
             "type" : "discoverKeysRequest",
             "representation" : "handle"
         };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setSessionId = function(object, id) {
-        if(object.getHeader) {
-            var header = object.getHeader();
+    Protocol.setSessionId = function(cryptoObject, id) {
+        if(cryptoObject.getHeader) {
+            var header = cryptoObject.getHeader();
             header.sessionId = id;
-            object.setHeader(header);
+            cryptoObject.setHeader(header);
         }
         // only header was passed as object
         else {
-            object.sessionId = id;
+            cryptoObject.sessionId = id;
         }
     };
 
-    Protocol.getSessionId = function(object) {
-        if(object.getHeader) { // whole object
-            return getKey(object.getHeader(), "sessionId");
+    Protocol.getSessionId = function(cryptoObject) {
+        if(cryptoObject.getHeader) { // whole cryptoObject
+            return getKey(cryptoObject.getHeader(), "sessionId");
         }
     };
 
-    Protocol.setUserPasswortAuth = function(object, username, password) {
+    Protocol.setUserPasswortAuth = function(cryptoObject, username, password) {
         var payload = {
             "type": "authChallengeResponse",
             "authInfo": {
@@ -125,12 +125,12 @@ define(function(require) {
                 "userName": username,
                 "passWord": password } };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setEncryptRequest = function(object, algorithm, key, data) {
+    Protocol.setEncryptRequest = function(cryptoObject, algorithm, key, data) {
         var b64Data = Util.arrayBufferToBase64(data); // Base64 conversion
 
         var payload = {
@@ -140,12 +140,12 @@ define(function(require) {
             "plainData" : [ b64Data ]
         };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setDecryptRequest = function(object, algorithm, key, data) {
+    Protocol.setDecryptRequest = function(cryptoObject, algorithm, key, data) {
         var b64Data = Util.arrayBufferToBase64(data);
 
         var payload =  {
@@ -155,12 +155,12 @@ define(function(require) {
             "encryptedData" : [ b64Data ]
         };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setEncryptCMSRequest = function(object, algorithm, keyArray, dataArray) {
+    Protocol.setEncryptCMSRequest = function(cryptoObject, algorithm, keyArray, dataArray) {
         var b64Data = Util.arrayBufferToBase64_array(dataArray);
         var keys = [];
         $.each(keyArray, function(k, v) {
@@ -174,12 +174,12 @@ define(function(require) {
             "plainData" : b64Data // array
         };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setDecryptCMSRequest = function(object, algorithm, key, dataArray) {
+    Protocol.setDecryptCMSRequest = function(cryptoObject, algorithm, key, dataArray) {
         var b64Data = Util.arrayBufferToBase64_array(dataArray);
 
         var payload =  {
@@ -188,12 +188,12 @@ define(function(require) {
             "encryptedCMSData" : b64Data // array
         };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.setSignRequest = function(object, algorithm, key, data) {
+    Protocol.setSignRequest = function(cryptoObject, algorithm, key, data) {
         var b64Data = Util.arrayBufferToBase64(data);
 
         var payload =  {
@@ -203,13 +203,13 @@ define(function(require) {
                 "hashesToBeSigned" : [ b64Data ]
             };
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
     Protocol.setGenerateWrappedKeyRequest = 
-        function(object, algorithm, encryptionKeys, signingKey, certificateSubject) {
+        function(cryptoObject, algorithm, encryptionKeys, signingKey, certificateSubject) {
 
         var skyTrustSigningKey = cryptoKeyToSkyTrustKey(signingKey);
 
@@ -224,13 +224,13 @@ define(function(require) {
             payload.signingKey = skyTrustSigningKey;
         }
 
-        if(object.setPayload) {
-            object.setPayload(payload);
+        if(cryptoObject.setPayload) {
+            cryptoObject.setPayload(payload);
         }
     };
 
-    Protocol.isAuthRequired = function(object) {
-        var payload = object.getPayload();
+    Protocol.isAuthRequired = function(cryptoObject) {
+        var payload = cryptoObject.getPayload();
 
         if(payload && payload.type === "authChallengeRequest") {
             return true;
@@ -239,8 +239,8 @@ define(function(require) {
         return false;
     };
 
-    Protocol.getAuthTypes = function(object) {
-        var types = object.getPayload().authTypes;
+    Protocol.getAuthTypes = function(cryptoObject) {
+        var types = cryptoObject.getPayload().authTypes;
         var typesArray = [];
 
         for(var i=0; types && i<types.length; i++) {
@@ -250,8 +250,8 @@ define(function(require) {
         return typesArray;
     };
 
-    Protocol.getError = function(object) {
-        var payload = object.getPayload();
+    Protocol.getError = function(cryptoObject) {
+        var payload = cryptoObject.getPayload();
 
         if(payload && payload.type === "status") {
             return payload.code;
@@ -260,20 +260,20 @@ define(function(require) {
         return false;
     };
 
-    Protocol.getCommandId = function(object) {
-        if(!object.getHeader) {
-            return object.commandId;
+    Protocol.getCommandId = function(cryptoObject) {
+        if(!cryptoObject.getHeader) {
+            return cryptoObject.commandId;
         }
 
-        return object.getHeader().commandId;
+        return cryptoObject.getHeader().commandId;
     };
 
-    Protocol.setCommandId = function(object, commandId) {
-        if(!object.getHeader) {
-            object.commandId = commandId;
+    Protocol.setCommandId = function(cryptoObject, commandId) {
+        if(!cryptoObject.getHeader) {
+            cryptoObject.commandId = commandId;
         }
 
-        object.getHeader().commandId = commandId;
+        cryptoObject.getHeader().commandId = commandId;
     };
 
 

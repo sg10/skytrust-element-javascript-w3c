@@ -13,10 +13,10 @@ define(function(require) {
 
 		// ------- public methods
 
-		this.route = function(from, to, object) {
+		this.route = function(from, to, cryptoObject) {
 			console.log("[common][router]  FROM=" + from + " TO=" + to);
 
-			if(!(object instanceof CryptoObject)) {
+			if(!(cryptoObject instanceof CryptoObject)) {
 				throw new Error("Router can only transmit instances of CryptoObject");
 			}
 
@@ -32,7 +32,7 @@ define(function(require) {
 				throw new Error("Router: onReceive() method not defined");
 			}
 
-			element.getComponent(to).onReceive(object);
+			element.getComponent(to).onReceive(cryptoObject);
 		};
 
 

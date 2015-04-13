@@ -102,14 +102,13 @@ module.exports = function(grunt) {
                     {expand: false, src: ['app/skytrust-config.js'], dest: 'dist/skytrust-config.js', filter: 'isFile'},
                 ],
             },
-            disttest: {
+            dropbox: {
                 files: [
-                    // includes files within path
-                    {expand: false, src: ['app/skytrust-iframe.html'], dest: 'test/dist-test/lib/skytrust-iframe.html', filter: 'isFile'},
-                    {expand: false, src: ['dist/skytrust.js'], dest: 'test/dist-test/lib/skytrust.js', filter: 'isFile'},
-                    {expand: false, src: ['app/skytrust-config.js'], dest: 'test/dist-test/lib/skytrust-config.js', filter: 'isFile'},
+                    {expand: false, src: ['app/skytrust-iframe.html'], dest: 'D:\\Cloud Storage\\Dropbox\\Apps\\KISSr\\skytrust-iframe.kissr.com\\skytrust-iframe.html', filter: 'isFile'},
+                    {expand: false, src: ['dist/skytrust.js'], dest: 'D:\\Cloud Storage\\Dropbox\\Apps\\KISSr\\skytrust-iframe.kissr.com\\skytrust.js', filter: 'isFile'},
+                    {expand: false, src: ['app/skytrust-config.js'], dest: 'D:\\Cloud Storage\\Dropbox\\Apps\\KISSr\\skytrust-iframe.kissr.com\\skytrust-config.js', filter: 'isFile'},
                 ],
-            },
+            }
         },
         connect: {
             development: {
@@ -153,7 +152,7 @@ module.exports = function(grunt) {
 
     // Default task
     grunt.registerTask('default', ['jshint', /*'qunit', */'clean', 'requirejs', 'concat', 'copy:dist']);
-    grunt.registerTask('buildtest', ['clean', 'requirejs', 'concat', 'copy:disttest']);
+    grunt.registerTask('buildtest', ['clean', 'requirejs', 'concat', 'copy:dropbox']);
     grunt.registerTask('preview', ['connect:development']);
     grunt.registerTask('preview-live', ['default', 'connect:production']);
 

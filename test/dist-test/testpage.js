@@ -6,7 +6,7 @@ var initTestpage = function() {
     console.log(requirejs);
     var provider = window.getCryptoProviderByName("SkyTrust");
 
-    var algoSimple = "RSA-OAEP";
+    var algoSimple = "RSAES-PKCS1-v1_5";
     var algoCMS = "CMS-AES-192-GCM";
     var algoSign = "RSASSA-PKCS1-v1_5-SHA-256";
 
@@ -122,8 +122,8 @@ var initTestpage = function() {
     });
 
     window.setTimeout(function() {
-        provider.extended.listKeys().then(updateCryptoKeysList);
-    }, 2000);
+        provider.extended.listKeys().then(updateCryptoKeysList).catch(displayError);
+    }, 1000);
 };
 
 var initTestButtonEventHandlerSimple = function(options) {
