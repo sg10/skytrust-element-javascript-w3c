@@ -1,7 +1,13 @@
+/*
+
+	based on PKI-JS example
+
+ */
 define(function() {
 
 		function getCertificateData(CertPEM)
         {
+
             // function to convert string to ArrayBuffer
             function str2ab(str)
             {
@@ -42,8 +48,8 @@ define(function() {
                     },
                     typeval = typemap[cert_simpl.subject.types_and_values[i].type],
                     subjval = cert_simpl.subject.types_and_values[i].value.value_block.value,
-                    certSubjectString = certSubjectString + delimiter + typeval+"="+subjval;
 
+                    certSubjectString = certSubjectString + delimiter + typeval+"="+subjval;
                     delimiter = ", "
 
                 

@@ -162,10 +162,11 @@ define(function(require) {
 
         /**
          * retrieves all SkyTrust keys on the server as CryptoKey objects
+         * @param  {} fetchCertificate also loads the X.509 certificate
          * @return [] list of CryptoKeys
          */
-        this.extended.listKeys = function() {
-            return skyTrustElement.operation.discoverKeys();
+        this.extended.listKeys = function(fetchCertificates) {
+            return skyTrustElement.operation.discoverKeys(fetchCertificates);
         };
 
         /**

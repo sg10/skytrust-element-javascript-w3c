@@ -88,10 +88,10 @@ define(function(require) {
         cryptoObject.setHeader(Protocol.getBlankHeader());
     };
 
-    Protocol.setDiscoverKeysRequest = function(cryptoObject) {
+    Protocol.setDiscoverKeysRequest = function(cryptoObject, fetchCertificates) {
         var payload = {
             "type" : "discoverKeysRequest",
-            "representation" : "handle"
+            "representation" : ((fetchCertificates === true) ? "certificate" : "handle")
         };
 
         if(cryptoObject.setPayload) {

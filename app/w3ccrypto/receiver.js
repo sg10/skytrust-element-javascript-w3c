@@ -19,6 +19,7 @@ define(function(require) {
 
 
 	    // ------- private methods	
+    
 
         var normalizeAlgorithm = function(algorithm, operation) {
             var algo = algorithm.name ? algorithm.name : algorithm;
@@ -92,11 +93,14 @@ define(function(require) {
                     if($.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key can't be an array"));
                     if($.isArray(data)) return Util.rejectedPromise(new E.DataError("Data can't to be an array"));
 
+                    // is algo SkyTrust or Browser impl.?
                     return createSimpleRequestPromise(
                         Protocol.setEncryptRequest, "encrypt",
                         algorithm, key, Util.copyOf(data));
                 },
                 response : function(cryptoObject, payload) {
+                    // if local
+                    
                     if( payload.encryptedData[0] && payload.encryptedData[0][0] ) {
                         cryptoObject.resolve( Util.base64ToArrayBuffer(payload.encryptedData[0][0]) );
                     }
@@ -134,6 +138,10 @@ define(function(require) {
                 }
             },
 
+            verify : {
+
+            },
+
             encryptCMS : {
                 request : function(algorithm, key, data){
                     if(!$.isArray(key)) return Util.rejectedPromise(new E.KeyError("Key has to be an array"));
@@ -163,10 +171,10 @@ define(function(require) {
             },
 
             discoverKeys : {
-                request : function(){
+                request : function(fetchCertificates){
                     return new Promise(function(resolve, reject){
                         var cryptoObject = new CryptoObject();
-                        Protocol.setDiscoverKeysRequest(cryptoObject);       
+                        Protocol.setDiscoverKeysRequest(cryptoObject, fetchCertificates);       
                         cryptoObject.resolve = resolve;
                         cryptoObject.reject = reject;
 
@@ -178,8 +186,7 @@ define(function(require) {
 
                     var keys = []; // for CryptoObjects
                     for(var i=0; i<result.length; i++) {
-                        var keyData = { id : result[i].id, subId : result[i].subId };
-                        keys.push(new CryptoKey("handle", keyData));
+                        keys.push(new CryptoKey(result[i].type, result[i]));
                     }
 
                     cryptoObject.resolve(keys);
@@ -269,6 +276,8 @@ define(function(require) {
     	this.onReceive = function(cryptoObject) {
     		console.log('[w3c   ] received at receiver component');
     		console.log(cryptoObject);
+
+            // if local
 
             var error = Protocol.getError(cryptoObject);
             if(error !== false) {

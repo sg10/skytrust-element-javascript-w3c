@@ -10,12 +10,10 @@ define(function(require) {
 
 		var self = this;
 		
-		var db = null;
+		var db = [];
 
 		var provider = null;
 
-		console.log(Cert.getCertificateData("MIIDITCCAoqgAwIBAgIQT52W2WawmStUwpV8tBV9TTANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJaQTElMCMGA1UEChMcVGhhd3RlIENvbnN1bHRpbmcgKFB0eSkgTHRkLjEWMBQGA1UEAxMNVGhhd3RlIFNHQyBDQTAeFw0xMTEwMjYwMDAwMDBaFw0xMzA5MzAyMzU5NTlaMGgxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHFA1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKFApHb29nbGUgSW5jMRcwFQYDVQQDFA53d3cuZ29vZ2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA3rcmQ6aZhc04pxUJuc8PycNVjIjujI0oJyRLKl6g2Bb6YRhLz21ggNM1QDJywI8S2OVOj7my9tkVXlqGMaO6hqpryNlxjMzNJxMenUJdOPanrO/6YvMYgdQkRn8Bd3zGKokUmbuYOR2oGfs5AER9G5RqeC1prcB6LPrQ2iASmNMCAwEAAaOB5zCB5DAMBgNVHRMBAf8EAjAAMDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwudGhhd3RlLmNvbS9UaGF3dGVTR0NDQS5jcmwwKAYDVR0lBCEwHwYIKwYBBQUHAwEGCCsGAQUFBwMCBglghkgBhvhCBAEwcgYIKwYBBQUHAQEEZjBkMCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC50aGF3dGUuY29tMD4GCCsGAQUFBzAChjJodHRwOi8vd3d3LnRoYXd0ZS5jb20vcmVwb3NpdG9yeS9UaGF3dGVfU0dDX0NBLmNydDANBgkqhkiG9w0BAQUFAAOBgQAhrNWuyjSJWsKrUtKyNGadeqvu5nzVfsJcKLt0AMkQH0IT/GmKHiSgAgDpulvKGQSy068Bsn5fFNum21K5mvMSf3yinDtvmX3qUA12IxL/92ZzKbeVCq3Yi7LeIOkKcGQRCMha8X2e7GmlpdWC1ycenlbN0nbVeSv3JUMcafC4+Q=="));
-		
 		// expiration window.setTimeout for cached keys 
 		var cachingTime = Config.keyStore.cachingTime;
 		var cacheTimeout = null; 
@@ -25,10 +23,16 @@ define(function(require) {
 			return new Promise(function(resolve, reject) {
 				if(cacheReload === true) {
 					// get keys from server
-					provider.extended.listKeys().then(function(keys) {
-						db = {};
+					provider.extended.listKeys(true).then(function(keys) {
+						db = [];
 						$.each(keys, function(idx, cryptoKey) {
-							db[cryptoKey.id+"-"+cryptoKey.subId] = cryptoKey;
+							db.push({
+								"key" : cryptoKey,
+								"handle" : cryptoKey.id+"-"+cryptoKey.subId,
+								"id" : cryptoKey.id,
+								"subId" : cryptoKey.subId,
+								"subject" : Cert.getCertificateData(cryptoKey.encodedCertificate)
+							});
 						});
 
 						// cache
@@ -48,7 +52,6 @@ define(function(require) {
 				}
 			});
 		};
-
 
 		self.open = function() {
 			return new Promise(function(resolve, reject) {
@@ -96,20 +99,18 @@ define(function(require) {
 
 				loadKeys().then(function() {
 
-					if(propertyName === "handle") { //id
-						if(db.hasOwnKey(propertyName)) {
-							resolve(db[propertyName]);
+					$.each(db, function(k, v) {
+						if(v.hasOwnProperty(propertyName)) {
+							if(propertyValue === v[propertyName]) {
+								resolve(v.key);
+							}
 						}
 						else {
-							reject(new Error("no key with handle"));
+							reject(new Error("No key with property name " + propertyName));
 						}
-					}
-					else if(propertyName === "co") {
-						reject(new Error("not yet implemented"));
-					}
-					else {
-						reject(new Error("propertyName '"+propertyName+"' not supported"));
-					}
+					});
+
+					reject(new Error("No key with property value " + propertyValue));
 				}).
 				catch(reject);
 
@@ -118,24 +119,32 @@ define(function(require) {
 
 		// listKeys method
 		//
-		// Takes no parameters.
-		//
 		// Returns a Promise. Unless there is an error, resolves the
 		// Promise with an array of all objects
 		// Otherwise it rejects it with an Error.
 		//
-		self.listKeys = function() {
+		self.listKeys = function(arrayKey) {
 			return new Promise(function(resolve, reject) {
 				if (!db) {
 					reject(new Error("KeyStore is not open."));
 				}
 				
 				loadKeys().then(function() {
-					// create array
-					var list = [];
-					$.each(db, function(k, v) {
-						list.push(v);
-					});
+					if(arrayKey === "handle" || arrayKey === "subject") {
+						// create array
+						var list = {};
+						$.each(db, function(k, v) {
+							list[v[arrayKey]] = v.key;
+						});
+					}
+					else {
+						// create array
+						var list = [];
+						$.each(db, function(k, v) {
+							list.push(v.key);
+						});						
+					}
+
 					resolve(list);
 				}).
 				catch(reject);

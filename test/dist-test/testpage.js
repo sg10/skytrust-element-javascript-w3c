@@ -1,18 +1,23 @@
-var cryptoKeysList = [];
+var keyStore = null;
 
 var initTestpage = function() {
     console.log("init testpage");
 
+
     console.log(requirejs);
     var provider = window.getCryptoProviderByName("SkyTrust");
+
+    keyStore = new provider.extended.KeyStore();
+    keyStore.open();
 
     var algoSimple = "RSAES-PKCS1-v1_5";
     var algoCMS = "CMS-AES-192-GCM";
     var algoSign = "RSASSA-PKCS1-v1_5-SHA-256";
 
+
     // buttons
     $('#btnDiscoverKeys').on('click', function() {
-        provider.extended.listKeys().then(updateCryptoKeysList);
+        keyStore.listKeys("subject").then(updateCryptoKeysList);
     });
 
     initTestButtonEventHandlerSimple({
@@ -40,109 +45,119 @@ var initTestpage = function() {
     var fieldKeys = $("#fieldKeys");        
 
     $('#btnEncryptCMS').on('click', function() {
-        var cryptoKey = cryptoKeysList[fieldKeys.val()];
         var values = [stringToArrayBuffer($('#fieldPlain').val()), 
                         stringToArrayBuffer($('#fieldPlain2').val())];
 
-        if(!cryptoKey) return;
+        keyStore.getKey("subject", fieldKeys.val()).then(function(cryptoKey) {
+            if(!cryptoKey) {
+                displayError("invalid CryptoKey");
+                return;
+            }
 
-        console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoCMS);
+            console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoCMS);
 
-        provider.extended.encryptCMS(algoCMS, [cryptoKey], values)
-         .then(function(result) { 
-            $('#fieldEncrypted').val(arrayBufferToString(result[0])); 
-            $('#fieldEncrypted2').val(arrayBufferToString(result[1]));
-         }).catch(displayError);
+            provider.extended.encryptCMS(algoCMS, [cryptoKey], values)
+             .then(function(result) { 
+                $('#fieldEncrypted').val(arrayBufferToString(result[0])); 
+                $('#fieldEncrypted2').val(arrayBufferToString(result[1]));
+             }).catch(displayError);            
+        }).catch(displayError);
     });
 
     $('#btnDecryptCMS').on('click', function() {
-        var cryptoKey = cryptoKeysList[fieldKeys.val()];
         var values = [stringToArrayBuffer($('#fieldEncrypted').val()), 
                         stringToArrayBuffer($('#fieldEncrypted2').val())];
 
-        if(!cryptoKey) return;
+        keyStore.getKey("subject", fieldKeys.val()).then(function(cryptoKey) {
+            if(!cryptoKey) {
+                displayError("invalid CryptoKey");
+                return;
+            }
 
-        console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoCMS);
+            console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoCMS);
 
-        provider.extended.decryptCMS(algoCMS, cryptoKey, values)
-         .then(function(result) { 
-            $('#fieldDecrypted').val(arrayBufferToString(result[0])); 
-            $('#fieldDecrypted2').val(arrayBufferToString(result[1]));
-         }).catch(displayError);
+            provider.extended.decryptCMS(algoCMS, cryptoKey, values)
+             .then(function(result) { 
+                $('#fieldDecrypted').val(arrayBufferToString(result[0])); 
+                $('#fieldDecrypted2').val(arrayBufferToString(result[1]));
+             }).catch(displayError);
+        }).catch(displayError);
     });
 
-    $('#btnGenWrappedKey2048').on('click', function() { genWrappedKey("RSA-2048") });
-    $('#btnGenWrappedKey4096').on('click', function() { genWrappedKey("RSA-4096") });
+    // $('#btnGenWrappedKey2048').on('click', function() { genWrappedKey("RSA-2048") });
+    // $('#btnGenWrappedKey4096').on('click', function() { genWrappedKey("RSA-4096") });
 
-    var genWrappedKey = function(algoWrappedKey) {
-        var cryptoKey = cryptoKeysList[fieldKeys.val()];
-        
-        if(!cryptoKey) return;
+    // var genWrappedKey = function(algoWrappedKey) {
+    //     keyStore.getKey("subject", fieldKeys.val()).then(function(cryptoKey) {
+    //         if(!cryptoKey) displayError("invalid CryptoKey");
 
-        console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoWrappedKey);
+    //         console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + algoWrappedKey);
 
-        provider.subtle.generateKey(algoWrappedKey, true, null, [cryptoKey], null, "CN=Wonderful")
-         .then(function(result) { 
-            var i = cryptoKeysList.length;
-            cryptoKeysList[i] = result;
-            fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
-            fieldKeys.val(i);
-            console.log(i + ": " + cryptoKeysList[i]);
-         })
-         .catch(displayError);
-    };
+    //         provider.subtle.generateKey(algoWrappedKey, true, null, [cryptoKey], null, "CN=Wonderful")
+    //          .then(function(result) { 
+    //             var i = cryptoKeysList.length;
+    //             cryptoKeysList[i] = result;
+    //             fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
+    //             fieldKeys.val(i);
+    //             console.log(i + ": " + cryptoKeysList[i]);
+    //          })
+    //          .catch(displayError);
+    //     }).catch(displayError);
+    // };
 
-    $('#btnExport').on('click', function() {
-        var cryptoKey = cryptoKeysList[fieldKeys.val()];
+    // $('#btnExport').on('click', function() {
+    //     keyStore.getKey("subject", fieldKeys.val()).then(function(cryptoKey) {
+    //         if(!cryptoKey) displayError("invalid CryptoKey");
 
-        if(!cryptoKey) return;
+    //         console.log("[w3c   ] using CryptoKey " + cryptoKey);
 
-        console.log("[w3c   ] using CryptoKey " + cryptoKey);
+    //         provider.subtle.exportKey("wrapped", cryptoKey)
+    //          .then(function(result) {
+    //             $("#fieldExportedKey").val(result.encodedWrappedKey);
+    //             $("#fieldExportedCertificate").val(result.encodedX509Certificate);
+    //          })
+    //          .catch(displayError);
+    //     }).catch(displayError);
+    // });
 
-        provider.subtle.exportKey("wrapped", cryptoKey)
-         .then(function(result) {
-            $("#fieldExportedKey").val(result.encodedWrappedKey);
-            $("#fieldExportedCertificate").val(result.encodedX509Certificate);
-         })
-         .catch(displayError);
-    });
+    // $('#btnImport').on('click', function() {
+    //     var keyData = {
+    //         encodedWrappedKey: $("#fieldExportedKey").val(),
+    //         encodedX509Certificate: $("#fieldExportedCertificate").val() };
 
-    $('#btnImport').on('click', function() {
-        var keyData = {
-            encodedWrappedKey: $("#fieldExportedKey").val(),
-            encodedX509Certificate: $("#fieldExportedCertificate").val() };
-
-        provider.subtle.importKey("wrapped", keyData)
-         .then(function(resultKey) {
-            cryptoKeysList.push(resultKey);
-            updateCryptoKeysList(cryptoKeysList);
-            $('#fieldKeys').val(cryptoKeysList.length - 1);
-         })
-         .catch(displayError);
-    });
+    //     provider.subtle.importKey("wrapped", keyData)
+    //      .then(function(resultKey) {
+    //         cryptoKeysList.push(resultKey);
+    //         updateCryptoKeysList(cryptoKeysList);
+    //         $('#fieldKeys').val(cryptoKeysList.length - 1);
+    //      })
+    //      .catch(displayError);
+    // });
 
     window.setTimeout(function() {
-        provider.extended.listKeys().then(updateCryptoKeysList).catch(displayError);
+        keyStore.listKeys("subject").then(updateCryptoKeysList).catch(displayError);
     }, 1000);
 };
 
 var initTestButtonEventHandlerSimple = function(options) {
     $(options.button).on('click', function() {
-        var fieldKeys = $("#fieldKeys");        
-        var cryptoKey = cryptoKeysList[fieldKeys.val()];
+        keyStore.getKey("subject", $("#fieldKeys").val()).then(function(cryptoKey) {
+            if(!cryptoKey) {
+                displayError("invalid CryptoKey");
+                return;
+            }
 
-        if(!cryptoKey) return;
+            console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + options.algo);
 
-        console.log("[w3c   ] using CryptoKey " + cryptoKey + ", algorithm " + options.algo);
+            var value = $(options.source).val();
+            value = stringToArrayBuffer(value);
 
-        var value = $(options.source).val();
-        value = stringToArrayBuffer(value);
-
-        options.func(options.algo, cryptoKey, value)
-         .then(function(result) { 
-            $(options.target).val(arrayBufferToString(result)); 
-         })
-         .catch(displayError);
+            options.func(options.algo, cryptoKey, value)
+             .then(function(result) { 
+                $(options.target).val(arrayBufferToString(result)); 
+             })
+             .catch(displayError);
+        });
     });
 }
 
@@ -158,10 +173,9 @@ function updateCryptoKeysList(cryptoKeys) {
     var fieldKeys = $("#fieldKeys");
 
     fieldKeys.html("");
-    cryptoKeysList = (cryptoKeys !== null) ? cryptoKeys : cryptoKeysList;
-    for(var i=0; i<cryptoKeysList.length; i++) {
-        fieldKeys.append($("<option />").val(i).text(cryptoKeysList[i]));
-    }
+    $.each(cryptoKeys, function(idx, key) {
+        fieldKeys.append($("<option />").text(idx).val(idx));
+    });
 };
 
 function arrayBufferToString(buffer) {

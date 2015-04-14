@@ -9,6 +9,7 @@ define(function() {
         var header = {};
         var payload = {};
         var error = 0;
+        var local = false;
 
 
         // ------- public members
@@ -59,6 +60,14 @@ define(function() {
                 "error" : error
             };
         };
+
+        this.setLocal = function() {
+            local = true;
+        }
+
+        this.isLocal = function() {
+            return local;
+        }
 
         this.toString = function() {
             return "[CryptoObject] header=" + header + ", payload="
