@@ -96,7 +96,7 @@ define(function(require) {
 	        var comObject = event.data;
 
 	        if(!comObject.type) {
-	        	reject(new Error("Invalid response from IFrame"));
+	        	// another script might use postMessages
 	        	return;
 	        }
 

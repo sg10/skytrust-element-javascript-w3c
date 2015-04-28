@@ -69,7 +69,7 @@ module.exports = function(grunt) {
                     name: 'skytrust',
                     mainConfigFile: 'app/skytrust.js',
                     out: 'dist/skytrust.js',
-                    optimize: 'uglify2',
+                    optimize: 'none',//'uglify2',
                     findNestedDependencies: true,
                     //include : ["w3ccrypto/load-w3c"],
                     exclude : ["jQuery", "skytrust-config"]

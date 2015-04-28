@@ -25,13 +25,19 @@ define(function(require) {
 					// get keys from server
 					provider.extended.listKeys(true).then(function(keys) {
 						db = [];
+
 						$.each(keys, function(idx, cryptoKey) {
+							var subject = "";
+							if(Cert.isAvailable()) {
+								subject = Cert.getCertificateData(cryptoKey.encodedCertificate);	
+							}
+
 							db.push({
 								"key" : cryptoKey,
 								"handle" : cryptoKey.id+"-"+cryptoKey.subId,
 								"id" : cryptoKey.id,
 								"subId" : cryptoKey.subId,
-								"subject" : Cert.getCertificateData(cryptoKey.encodedCertificate)
+								"subject" : subject
 							});
 						});
 
@@ -59,7 +65,7 @@ define(function(require) {
 				provider = new Provider();
 				if(!provider) reject(new Error("No SkyTrust Crypto provider"));
 				
-				loadKeys().then(function(){resolve(self)}).catch(reject);
+				//loadKeys().then(function(){resolve(self)}).catch(reject);
 			});
 		};
 
@@ -98,6 +104,10 @@ define(function(require) {
 				}
 
 				loadKeys().then(function() {
+					if(propertyName === "subject" && !Cert.isAvailable()) {
+						reject(new Error("PKI JS not loaded"));
+						return;
+					}
 
 					$.each(db, function(k, v) {
 						if(v.hasOwnProperty(propertyName)) {
@@ -130,6 +140,11 @@ define(function(require) {
 				}
 				
 				loadKeys().then(function() {
+					if(arrayKey === "subject" && !Cert.isAvailable()) {
+						reject(new Error("PKI JS not loaded"));
+						return;
+					}
+
 					if(arrayKey === "handle" || arrayKey === "subject") {
 						// create array
 						var list = {};
